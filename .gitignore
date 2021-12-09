@@ -18,4 +18,5 @@
 main
 Go_T_TestDBAccess
 
+tmp/*
 *.logfile
