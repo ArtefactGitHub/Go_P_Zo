@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v2"
 )
@@ -10,18 +11,38 @@ import (
 func main() {
 	fmt.Println("hello world")
 
-	confContent, err := ioutil.ReadFile("conf.yml")
+	config, err := LoadConfig("conf.yml")
 	if err != nil {
 		panic(err)
 	}
-	conf := &Config{}
-	if err := yaml.Unmarshal(confContent, conf); err != nil {
-		panic(err)
+
+	fmt.Printf("config: %v\n", config)
+}
+
+// 設定ファイルを読み込む
+// 秘匿情報は環境変数から読み込みます
+// https://mtyurt.net/post/go-using-environment-variables-in-configuration-files.html
+func LoadConfig(filePath string) (config *Config, err error) {
+	confContent, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, err
 	}
-	fmt.Printf("config: %v\n", conf)
+	confContent = []byte(os.ExpandEnv(string(confContent)))
+
+	result := &Config{}
+	if err := yaml.Unmarshal(confContent, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 type Config struct {
 	Environment string `yaml:"environment"`
-	Key         string `yaml:"key"`
+
+	SqlDriver string `yaml:"sqldriver"`
+	User      string `yaml:"user"`     // 環境変数から取得
+	Password  string `yaml:"password"` // 環境変数から取得
+	Address   string `yaml:"address"`
+	DataBase  string `yaml:"database"`
 }
