@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/config"
+	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/database"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -16,17 +17,10 @@ func main() {
 	}
 	fmt.Printf("config: %v\n", config)
 
-	// データベース接続
-	db, err := sql.Open(config.SqlDriver, fmt.Sprintf("%s:%s@%s(%s)/%s",
-		config.User,
-		config.Password,
-		config.Protocol,
-		config.Address,
-		config.DataBase))
+	// データベースへ接続
+	err = database.Init(config)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
-	defer db.Close()
-
 	fmt.Println(sql.Drivers())
 }
