@@ -13,6 +13,7 @@ type Config struct {
 	SqlDriver string `yaml:"sqldriver"`
 	User      string `yaml:"user"`     // 環境変数から取得
 	Password  string `yaml:"password"` // 環境変数から取得
+	Protocol  string `yaml:"protocol"`
 	Address   string `yaml:"address"`
 	DataBase  string `yaml:"database"`
 }
