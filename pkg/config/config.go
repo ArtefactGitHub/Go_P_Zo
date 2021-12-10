@@ -1,20 +1,20 @@
-package main
+package config
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 
 	"gopkg.in/yaml.v2"
 )
 
-func main() {
-	config, err := LoadConfig("config.yml")
-	if err != nil {
-		panic(err)
-	}
+type Config struct {
+	Environment string `yaml:"environment"`
 
-	fmt.Printf("config: %v\n", config)
+	SqlDriver string `yaml:"sqldriver"`
+	User      string `yaml:"user"`     // 環境変数から取得
+	Password  string `yaml:"password"` // 環境変数から取得
+	Address   string `yaml:"address"`
+	DataBase  string `yaml:"database"`
 }
 
 // 設定ファイルを読み込む
@@ -33,14 +33,4 @@ func LoadConfig(filePath string) (config *Config, err error) {
 	}
 
 	return result, nil
-}
-
-type Config struct {
-	Environment string `yaml:"environment"`
-
-	SqlDriver string `yaml:"sqldriver"`
-	User      string `yaml:"user"`     // 環境変数から取得
-	Password  string `yaml:"password"` // 環境変数から取得
-	Address   string `yaml:"address"`
-	DataBase  string `yaml:"database"`
 }
