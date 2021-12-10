@@ -9,9 +9,7 @@ import (
 )
 
 func main() {
-	fmt.Println("hello world")
-
-	config, err := LoadConfig("conf.yml")
+	config, err := LoadConfig("config.yml")
 	if err != nil {
 		panic(err)
 	}
