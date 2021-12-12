@@ -1,11 +1,11 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 
 	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/config"
-	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/database"
+	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/models"
+	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/models/zo"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -17,10 +17,17 @@ func main() {
 	}
 	fmt.Printf("config: %v\n", config)
 
-	// データベースへ接続
-	err = database.Init(config)
+	err = models.Init(config)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(sql.Drivers())
+	defer models.Finalize()
+
+	zos, err := zo.FindAll()
+	if err != nil {
+		panic(err)
+	}
+	for _, zo := range zos {
+		fmt.Println(zo)
+	}
 }

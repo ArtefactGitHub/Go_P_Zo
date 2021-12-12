@@ -1,4 +1,4 @@
-module github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/database
+module github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/models
 
 go 1.17
 
