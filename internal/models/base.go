@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/config"
 )
@@ -19,7 +20,16 @@ func Init(config *config.Config) error {
 		config.Address,
 		config.DataBase))
 
-	return err
+	if err != nil {
+		log.Fatal("Open() Error: ", err)
+		return err
+	}
+
+	if err = Db.Ping(); err != nil {
+		log.Fatal("Ping() Error: ", err)
+		return err
+	}
+	return nil
 }
 
 func Finalize() {
