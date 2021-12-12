@@ -1,4 +1,4 @@
-# Go_T_TestDBAccess
+# Go_P_Zo
 
 ## Introduction
 
@@ -9,6 +9,12 @@ To install it, run:
 
 ```
 go get XXX/XXX
+```
+
+## Configuration
+```
+export Go_P_Zo_DB_USER=XXXX
+export Go_P_Zo_DB_PASSWORD=XXXX
 ```
 
 ## License

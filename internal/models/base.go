@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/config"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 )
 
 var Db *sql.DB

@@ -6,7 +6,7 @@
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # ホスト: localhost (MySQL 8.0.12)
-# データベース: Go_T_TestDBAccess
+# データベース: Go_P_Zo
 # 生成時間: 2021-12-09 03:00:48 +0000
 # ************************************************************
 

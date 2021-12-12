@@ -1,7 +1,7 @@
 package zo
 
 import (
-	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/models"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
 )
 
 func findall() ([]Zo, error) {

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/config"
-	"github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/models"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
 	_ "github.com/go-sql-driver/mysql"
 )
 

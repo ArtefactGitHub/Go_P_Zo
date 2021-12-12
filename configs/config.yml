@@ -1,8 +1,8 @@
 environment: develop
 
 sqldriver: mysql
-user: ${Go_T_TestDBAccess_DB_USER}
-password: ${Go_T_TestDBAccess_DB_PASSWORD}
+user: ${Go_P_Zo_DB_USER}
+password: ${Go_P_Zo_DB_PASSWORD}
 protocol: tcp
 address: 127.0.0.1:3306
-database: Go_T_TestDBAccess?parseTime=true
+database: Go_P_Zo?parseTime=true

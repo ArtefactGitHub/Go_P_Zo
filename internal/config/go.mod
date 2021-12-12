@@ -1,4 +1,4 @@
-module github.com/ArtefactGitHub/Go_T_TestDBAccess/internal/config
+module github.com/ArtefactGitHub/Go_P_Zo/internal/config
 
 go 1.17
 
