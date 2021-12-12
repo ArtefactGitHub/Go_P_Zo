@@ -86,9 +86,9 @@ func update(zo *Zo) error {
 		UPDATE zos
 		SET achievementDate = ?,
 		    exp = ?,
-				categoryId = ?,
-				message = ?,
-				updatedAt = now()
+		    categoryId = ?,
+		    message = ?,
+		    updatedAt = now()
 		WHERE id = ?`,
 		zo.AchievementDate,
 		zo.Exp,
