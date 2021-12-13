@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
@@ -21,4 +23,27 @@ func main() {
 		panic(err)
 	}
 	defer models.Finalize()
+
+	http.HandleFunc("/zo", zoHandler)
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+
+func zoHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, "MethodGet")
+	case http.MethodPost:
+		w.WriteHeader(http.StatusCreated)
+		fmt.Fprint(w, "MethodPost")
+	case http.MethodPut, http.MethodPatch:
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, "MethodPut")
+	case http.MethodDelete:
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, "MethodDelete")
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "StatusMethodNotAllowed")
+	}
 }
