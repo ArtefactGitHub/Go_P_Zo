@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/controllers"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -31,6 +32,9 @@ func main() {
 func zoHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
+		zc := controllers.ZoController{}
+		zc.GetAll()
+
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "MethodGet")
 	case http.MethodPost:

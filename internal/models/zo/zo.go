@@ -31,6 +31,6 @@ func (zo *Zo) Update() error {
 	return update(zo)
 }
 
-func Delete(zo Zo) error {
+func Delete(zo *Zo) error {
 	return delete(zo)
 }

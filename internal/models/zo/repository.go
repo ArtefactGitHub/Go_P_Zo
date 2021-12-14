@@ -102,7 +102,7 @@ func update(zo *Zo) error {
 	return nil
 }
 
-func delete(zo Zo) error {
+func delete(zo *Zo) error {
 	_, err := models.Db.Exec(`
 		DELETE FROM zos
 		WHERE id = ?`,
