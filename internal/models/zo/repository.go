@@ -1,6 +1,8 @@
 package zo
 
 import (
+	"database/sql"
+
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
 )
 
@@ -36,13 +38,8 @@ func findall() ([]Zo, error) {
 }
 
 func find(id int) (*Zo, error) {
-	row := models.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id)
-	if row.Err() != nil {
-		return nil, row.Err()
-	}
-
 	zo := Zo{}
-	err := row.Scan(
+	err := models.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id).Scan(
 		&zo.Id,
 		&zo.AchievementDate,
 		&zo.Exp,
@@ -50,7 +47,9 @@ func find(id int) (*Zo, error) {
 		&zo.Message,
 		&zo.CreatedAt,
 		&zo.UpdatedAt)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 
