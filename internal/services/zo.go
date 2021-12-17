@@ -43,8 +43,8 @@ func (s *ZoService) Update(z *zo.Zo) (*zo.Zo, error) {
 	return z, nil
 }
 
-func (s *ZoService) Delete(z *zo.Zo) error {
-	err := zo.Delete(z)
+func (s *ZoService) Delete(id int) error {
+	err := zo.Delete(id)
 	if err != nil {
 		return err
 	}
