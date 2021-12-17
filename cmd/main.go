@@ -25,29 +25,16 @@ func main() {
 	}
 	defer models.Finalize()
 
-	http.HandleFunc("/zo", zoHandler)
+	r := MyRouter{}
+	r.Routing()
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
-func zoHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		zc := controllers.ZoController{}
-		zc.GetAll()
+type MyRouter struct {
+}
 
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, "MethodGet")
-	case http.MethodPost:
-		w.WriteHeader(http.StatusCreated)
-		fmt.Fprint(w, "MethodPost")
-	case http.MethodPut, http.MethodPatch:
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, "MethodPut")
-	case http.MethodDelete:
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, "MethodDelete")
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprint(w, "StatusMethodNotAllowed")
-	}
+func (r *MyRouter) Routing() {
+	zc := controllers.ZoController{}
+	http.HandleFunc("/zo", zc.ZoHandler)
+	http.HandleFunc("/zo/", zc.ZoHandler)
 }

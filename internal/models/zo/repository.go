@@ -1,6 +1,8 @@
 package zo
 
 import (
+	"database/sql"
+
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
 )
 
@@ -36,13 +38,8 @@ func findall() ([]Zo, error) {
 }
 
 func find(id int) (*Zo, error) {
-	row := models.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id)
-	if row.Err() != nil {
-		return nil, row.Err()
-	}
-
 	zo := Zo{}
-	err := row.Scan(
+	err := models.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id).Scan(
 		&zo.Id,
 		&zo.AchievementDate,
 		&zo.Exp,
@@ -50,7 +47,9 @@ func find(id int) (*Zo, error) {
 		&zo.Message,
 		&zo.CreatedAt,
 		&zo.UpdatedAt)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 
@@ -61,7 +60,7 @@ func create(zo *Zo) (int, error) {
 	result, err := models.Db.Exec(`
 		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt)
 		            values(?, ?, ?, ?, ?, ?, ?)`,
-		zo.Id,
+		nil,
 		zo.AchievementDate,
 		zo.Exp,
 		zo.CategoryId,
@@ -88,12 +87,13 @@ func update(zo *Zo) error {
 		    exp = ?,
 		    categoryId = ?,
 		    message = ?,
-		    updatedAt = now()
+		    updatedAt = ?
 		WHERE id = ?`,
 		zo.AchievementDate,
 		zo.Exp,
 		zo.CategoryId,
 		zo.Message,
+		zo.UpdatedAt,
 		zo.Id)
 	if err != nil {
 		return err
@@ -102,11 +102,11 @@ func update(zo *Zo) error {
 	return nil
 }
 
-func delete(zo *Zo) error {
+func delete(id int) error {
 	_, err := models.Db.Exec(`
 		DELETE FROM zos
 		WHERE id = ?`,
-		zo.Id)
+		id)
 	if err != nil {
 		return err
 	}
