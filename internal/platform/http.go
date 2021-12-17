@@ -1,12 +1,17 @@
-package controllers
+package platform
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/myerror"
 )
+
+type ResponseBase struct {
+	StatusCode int   `json:"statuscode"`
+	Error      error `json:"error"`
+}
 
 func WriteSuccess(w http.ResponseWriter, response interface{}, statusCode int) {
 	result, _ := json.MarshalIndent(response, "", "\t")
@@ -25,9 +30,9 @@ func WriteSuccessWithLocation(w http.ResponseWriter, response interface{}, statu
 }
 
 func WriteError(w http.ResponseWriter, err error, statusCode int, description string) {
-	response := models.ResponseBase{
+	response := ResponseBase{
 		StatusCode: statusCode,
-		Error:      models.NewError(err, description)}
+		Error:      myerror.NewError(err, description)}
 	result, _ := json.MarshalIndent(response, "", "\t")
 	log.Println(err)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

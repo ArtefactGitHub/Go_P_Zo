@@ -13,6 +13,8 @@ require (
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/models/zo v0.0.0-00010101000000-000000000000 // indirect
+	github.com/ArtefactGitHub/Go_P_Zo/internal/myerror v0.0.0-00010101000000-000000000000 // indirect
+	github.com/ArtefactGitHub/Go_P_Zo/internal/platform v0.0.0-00010101000000-000000000000 // indirect
 	github.com/ArtefactGitHub/Go_P_Zo/internal/services v0.0.0-00010101000000-000000000000 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
@@ -24,3 +26,7 @@ replace github.com/ArtefactGitHub/Go_P_Zo/internal/services => ../internal/servi
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/models => ../internal/models
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/models/zo => ../internal/models/zo
+
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/myerror => ../internal/myerror
+
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform => ../internal/platform
