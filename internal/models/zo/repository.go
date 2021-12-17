@@ -60,7 +60,7 @@ func create(zo *Zo) (int, error) {
 	result, err := models.Db.Exec(`
 		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt)
 		            values(?, ?, ?, ?, ?, ?, ?)`,
-		zo.Id,
+		nil,
 		zo.AchievementDate,
 		zo.Exp,
 		zo.CategoryId,
@@ -87,12 +87,13 @@ func update(zo *Zo) error {
 		    exp = ?,
 		    categoryId = ?,
 		    message = ?,
-		    updatedAt = now()
+		    updatedAt = ?
 		WHERE id = ?`,
 		zo.AchievementDate,
 		zo.Exp,
 		zo.CategoryId,
 		zo.Message,
+		zo.UpdatedAt,
 		zo.Id)
 	if err != nil {
 		return err
@@ -101,11 +102,11 @@ func update(zo *Zo) error {
 	return nil
 }
 
-func delete(zo *Zo) error {
+func delete(id int) error {
 	_, err := models.Db.Exec(`
 		DELETE FROM zos
 		WHERE id = ?`,
-		zo.Id)
+		id)
 	if err != nil {
 		return err
 	}
