@@ -19,7 +19,7 @@ type ZoController struct {
 	zs ZoService
 }
 
-func (zc *ZoController) ZoHandler(w http.ResponseWriter, r *http.Request) {
+func (zc *ZoController) Handle(w http.ResponseWriter, r *http.Request) {
 	log.Println(r)
 
 	switch r.Method {
