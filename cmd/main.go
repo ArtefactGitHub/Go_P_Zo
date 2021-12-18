@@ -7,7 +7,7 @@ import (
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -19,11 +19,11 @@ func main() {
 	}
 	fmt.Printf("config: %v\n", config)
 
-	err = models.Init(config)
+	err = mydb.Init(config)
 	if err != nil {
 		panic(err)
 	}
-	defer models.Finalize()
+	defer mydb.Finalize()
 
 	r := MyRouter{}
 	r.Routing()

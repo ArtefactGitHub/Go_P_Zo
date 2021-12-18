@@ -1,4 +1,4 @@
-package models
+package mydb
 
 import (
 	"database/sql"
