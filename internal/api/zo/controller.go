@@ -1,4 +1,4 @@
-package controllers
+package zo
 
 import (
 	"database/sql"
@@ -10,15 +10,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/models/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/services"
 )
 
 var resourceName string = "zo"
 
 type ZoController struct {
-	zs services.ZoService
+	zs ZoService
 }
 
 func (zc *ZoController) ZoHandler(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +46,7 @@ func (c *ZoController) get(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		res := zo.GetAllResponse{
+		res := GetAllResponse{
 			ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 			Zos:          datas}
 		platform.WriteSuccess(w, res, http.StatusOK)
@@ -71,7 +69,7 @@ func (c *ZoController) get(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		res := zo.GetResponse{
+		res := GetResponse{
 			ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 			Zo:           model}
 		platform.WriteSuccess(w, res, http.StatusOK)
@@ -93,7 +91,7 @@ func (c *ZoController) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := zo.PostResponse{
+	res := PostResponse{
 		ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Zo:           m}
 	platform.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
@@ -116,7 +114,7 @@ func (c *ZoController) update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u := zo.NewZo(
+	u := NewZo(
 		id,
 		m.AchievementDate,
 		m.Exp,
@@ -130,7 +128,7 @@ func (c *ZoController) update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := zo.PutResponse{
+	res := PutResponse{
 		ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Zo:           u}
 	platform.WriteSuccess(w, res, http.StatusOK)
@@ -152,15 +150,15 @@ func (c *ZoController) delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := zo.DeleteResponse{ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil}}
+	res := DeleteResponse{ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil}}
 	platform.WriteSuccess(w, res, http.StatusOK)
 }
 
 // リクエスト情報からモデルの生成
-func contentToModel(r *http.Request) (*zo.Zo, error) {
+func contentToModel(r *http.Request) (*Zo, error) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
-	var result zo.Zo
+	var result Zo
 	err := json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err

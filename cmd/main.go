@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/controllers"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -34,7 +34,7 @@ type MyRouter struct {
 }
 
 func (r *MyRouter) Routing() {
-	zc := controllers.ZoController{}
+	zc := zo.ZoController{}
 	http.HandleFunc("/zo", zc.ZoHandler)
 	http.HandleFunc("/zo/", zc.ZoHandler)
 }
