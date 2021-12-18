@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 )
 
 var resourceName string = "zo"
@@ -32,7 +32,7 @@ func (zc *ZoController) ZoHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodDelete:
 		zc.delete(w, r)
 	default:
-		platform.WriteError(w, nil, http.StatusMethodNotAllowed, fmt.Sprintf("%s method not allowed", r.Method))
+		myhttp.WriteError(w, nil, http.StatusMethodNotAllowed, fmt.Sprintf("%s method not allowed", r.Method))
 	}
 }
 
@@ -42,37 +42,37 @@ func (c *ZoController) get(w http.ResponseWriter, r *http.Request) {
 	if path.Base(r.URL.Path) == resourceName {
 		datas, err := c.zs.GetAll()
 		if err != nil {
-			platform.WriteError(w, err, http.StatusInternalServerError, "")
+			myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 			return
 		}
 
 		res := GetAllResponse{
-			ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
+			ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 			Zos:          datas}
-		platform.WriteSuccess(w, res, http.StatusOK)
+		myhttp.WriteSuccess(w, res, http.StatusOK)
 	} else {
 		// 指定リソースの取得
 		// 末尾のid指定を取得
 		id, err := strconv.Atoi(path.Base(r.URL.Path))
 		if err != nil {
-			platform.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
+			myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 			return
 		}
 
 		model, err := c.zs.Get(id)
 		if err != nil {
-			platform.WriteError(w, err, http.StatusInternalServerError, "")
+			myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 			return
 		} else if model == nil {
-			platform.WriteError(w, fmt.Errorf("resource not found: id = %d", id),
+			myhttp.WriteError(w, fmt.Errorf("resource not found: id = %d", id),
 				http.StatusNotFound, "")
 			return
 		}
 
 		res := GetResponse{
-			ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
+			ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 			Zo:           model}
-		platform.WriteSuccess(w, res, http.StatusOK)
+		myhttp.WriteSuccess(w, res, http.StatusOK)
 	}
 }
 
@@ -81,20 +81,20 @@ func (c *ZoController) post(w http.ResponseWriter, r *http.Request) {
 	// リクエスト情報からモデルを生成
 	m, err := contentToModel(r)
 	if err != nil {
-		platform.WriteError(w, err, http.StatusInternalServerError, "")
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
 	id, err := c.zs.Post(m)
 	if err != nil {
-		platform.WriteError(w, err, http.StatusInternalServerError, "")
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
 	res := PostResponse{
-		ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
+		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Zo:           m}
-	platform.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
+	myhttp.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
 }
 
 // 指定のリソース情報で更新
@@ -102,7 +102,7 @@ func (c *ZoController) update(w http.ResponseWriter, r *http.Request) {
 	// 末尾のid指定を取得
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
-		platform.WriteError(w, err, http.StatusInternalServerError, "")
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
@@ -110,7 +110,7 @@ func (c *ZoController) update(w http.ResponseWriter, r *http.Request) {
 	m, err := contentToModel(r)
 	log.Printf("contentToModel: %v", m)
 	if err != nil {
-		platform.WriteError(w, err, http.StatusInternalServerError, "")
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
@@ -124,14 +124,14 @@ func (c *ZoController) update(w http.ResponseWriter, r *http.Request) {
 		sql.NullTime{Time: time.Now(), Valid: true})
 	u, err = c.zs.Update(u)
 	if err != nil {
-		platform.WriteError(w, err, http.StatusInternalServerError, "")
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
 	res := PutResponse{
-		ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil},
+		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Zo:           u}
-	platform.WriteSuccess(w, res, http.StatusOK)
+	myhttp.WriteSuccess(w, res, http.StatusOK)
 }
 
 // 指定のリソースの削除
@@ -140,18 +140,18 @@ func (c *ZoController) delete(w http.ResponseWriter, r *http.Request) {
 	// 末尾のid指定を取得
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
-		platform.WriteError(w, nil, http.StatusBadRequest, "incorrect resource specification")
+		myhttp.WriteError(w, nil, http.StatusBadRequest, "incorrect resource specification")
 		return
 	}
 
 	err = c.zs.Delete(id)
 	if err != nil {
-		platform.WriteError(w, err, http.StatusInternalServerError, "")
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
-	res := DeleteResponse{ResponseBase: platform.ResponseBase{StatusCode: http.StatusOK, Error: nil}}
-	platform.WriteSuccess(w, res, http.StatusOK)
+	res := DeleteResponse{ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil}}
+	myhttp.WriteSuccess(w, res, http.StatusOK)
 }
 
 // リクエスト情報からモデルの生成

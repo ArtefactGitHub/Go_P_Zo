@@ -13,13 +13,13 @@ require (
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/myerror v0.0.0-00010101000000-000000000000 // indirect
-	github.com/ArtefactGitHub/Go_P_Zo/internal/platform v0.0.0-00010101000000-000000000000 // indirect
+	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp v0.0.0-00010101000000-000000000000 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/myerror => ../internal/myerror
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform => ../internal/platform
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../internal/platform/myhttp
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb => ../internal/platform/mydb
 

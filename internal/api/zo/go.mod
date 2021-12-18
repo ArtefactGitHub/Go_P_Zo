@@ -4,15 +4,15 @@ go 1.17
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/config => ../../config
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform => ../../platform
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../../platform/myhttp
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb => ../../platform/mydb
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/myerror => ../../myerror
 
 require (
-	github.com/ArtefactGitHub/Go_P_Zo/internal/platform v0.0.0-00010101000000-000000000000
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb v0.0.0-00010101000000-000000000000
+	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp v0.0.0-00010101000000-000000000000
 )
 
 require (

@@ -1,4 +1,4 @@
-module github.com/ArtefactGitHub/Go_P_Zo/internal/platform
+module github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp
 
 go 1.17
 

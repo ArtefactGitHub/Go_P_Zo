@@ -1,29 +1,29 @@
 package zo
 
 import (
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 )
 
 type GetAllResponse struct {
-	platform.ResponseBase
+	myhttp.ResponseBase
 	Zos []Zo `json:"zos"`
 }
 
 type GetResponse struct {
-	platform.ResponseBase
+	myhttp.ResponseBase
 	Zo *Zo `json:"zo"`
 }
 
 type PostResponse struct {
-	platform.ResponseBase
+	myhttp.ResponseBase
 	Zo *Zo `json:"zo"`
 }
 
 type PutResponse struct {
-	platform.ResponseBase
+	myhttp.ResponseBase
 	Zo *Zo `json:"zo"`
 }
 
 type DeleteResponse struct {
-	platform.ResponseBase
+	myhttp.ResponseBase
 }
