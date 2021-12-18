@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/myerror"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror"
 )
 
 type ResponseBase struct {

@@ -8,7 +8,7 @@ replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../../plat
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb => ../../platform/mydb
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/myerror => ../../myerror
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror => ../../platform/myerror
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb v0.0.0-00010101000000-000000000000
@@ -17,6 +17,6 @@ require (
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/config v0.0.0-20211217011354-173852cfa445 // indirect
-	github.com/ArtefactGitHub/Go_P_Zo/internal/myerror v0.0.0-00010101000000-000000000000 // indirect
+	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror v0.0.0-00010101000000-000000000000 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
