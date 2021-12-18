@@ -1,11 +1,6 @@
-package models
+package myerror
 
 import "fmt"
-
-type ResponseBase struct {
-	StatusCode int   `json:"statuscode"`
-	Error      error `json:"error"`
-}
 
 type myError struct {
 	Message string `json:"message"`

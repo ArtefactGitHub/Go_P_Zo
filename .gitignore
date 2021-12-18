@@ -18,5 +18,6 @@
 main
 Go_P_Zo
 
+*.code-workspace
 tmp/*
 *.logfile

@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/controllers"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/models"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -19,22 +19,13 @@ func main() {
 	}
 	fmt.Printf("config: %v\n", config)
 
-	err = models.Init(config)
+	err = mydb.Init(config)
 	if err != nil {
 		panic(err)
 	}
-	defer models.Finalize()
+	defer mydb.Finalize()
 
-	r := MyRouter{}
+	r := myrouter.MyRouter{}
 	r.Routing()
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
-}
-
-type MyRouter struct {
-}
-
-func (r *MyRouter) Routing() {
-	zc := controllers.ZoController{}
-	http.HandleFunc("/zo", zc.ZoHandler)
-	http.HandleFunc("/zo/", zc.ZoHandler)
 }
