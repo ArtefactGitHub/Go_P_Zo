@@ -5,7 +5,7 @@ import (
 )
 
 func Routing() {
-	zc := ZoController{}
-	http.HandleFunc("/zo", zc.Handle)
-	http.HandleFunc("/zo/", zc.Handle)
+	zc := zoController{}
+	http.HandleFunc("/zo", zc.handle)
+	http.HandleFunc("/zo/", zc.handle)
 }

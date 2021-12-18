@@ -6,29 +6,32 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 )
 
-func findall() ([]Zo, error) {
+type zoRepository struct {
+}
+
+func (r *zoRepository) findall() ([]zo, error) {
 	rows, err := mydb.Db.Query("SELECT * FROM zos")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var zo Zo
-	var result []Zo
+	var z zo
+	var result []zo
 	for rows.Next() {
 		err := rows.Scan(
-			&zo.Id,
-			&zo.AchievementDate,
-			&zo.Exp,
-			&zo.CategoryId,
-			&zo.Message,
-			&zo.CreatedAt,
-			&zo.UpdatedAt)
+			&z.Id,
+			&z.AchievementDate,
+			&z.Exp,
+			&z.CategoryId,
+			&z.Message,
+			&z.CreatedAt,
+			&z.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		result = append(result, zo)
+		result = append(result, z)
 	}
 	if err = rows.Err(); err != nil {
 		return nil, err
@@ -37,8 +40,8 @@ func findall() ([]Zo, error) {
 	return result, nil
 }
 
-func find(id int) (*Zo, error) {
-	zo := Zo{}
+func (r *zoRepository) find(id int) (*zo, error) {
+	zo := zo{}
 	err := mydb.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id).Scan(
 		&zo.Id,
 		&zo.AchievementDate,
@@ -56,7 +59,7 @@ func find(id int) (*Zo, error) {
 	return &zo, nil
 }
 
-func create(zo *Zo) (int, error) {
+func (r *zoRepository) create(zo *zo) (int, error) {
 	result, err := mydb.Db.Exec(`
 		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt)
 		            values(?, ?, ?, ?, ?, ?, ?)`,
@@ -80,7 +83,7 @@ func create(zo *Zo) (int, error) {
 	return zo.Id, nil
 }
 
-func update(zo *Zo) error {
+func (r *zoRepository) update(zo *zo) error {
 	_, err := mydb.Db.Exec(`
 		UPDATE zos
 		SET achievementDate = ?,
@@ -102,7 +105,7 @@ func update(zo *Zo) error {
 	return nil
 }
 
-func delete(id int) error {
+func (r *zoRepository) delete(id int) error {
 	_, err := mydb.Db.Exec(`
 		DELETE FROM zos
 		WHERE id = ?`,

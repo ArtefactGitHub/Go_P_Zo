@@ -4,26 +4,26 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 )
 
-type GetAllResponse struct {
+type getAllResponse struct {
 	myhttp.ResponseBase
-	Zos []Zo `json:"zos"`
+	Zos []zo `json:"zos"`
 }
 
-type GetResponse struct {
+type getResponse struct {
 	myhttp.ResponseBase
-	Zo *Zo `json:"zo"`
+	Zo *zo `json:"zo"`
 }
 
-type PostResponse struct {
+type postResponse struct {
 	myhttp.ResponseBase
-	Zo *Zo `json:"zo"`
+	Zo *zo `json:"zo"`
 }
 
-type PutResponse struct {
+type putResponse struct {
 	myhttp.ResponseBase
-	Zo *Zo `json:"zo"`
+	Zo *zo `json:"zo"`
 }
 
-type DeleteResponse struct {
+type deleteResponse struct {
 	myhttp.ResponseBase
 }
