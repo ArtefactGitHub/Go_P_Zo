@@ -3,7 +3,6 @@ package zo
 import (
 	"context"
 	"database/sql"
-	"log"
 	"testing"
 	"time"
 
@@ -11,11 +10,22 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
 
-var tests map[string]func(t *testing.T) = map[string]func(t *testing.T){
-	"_test_findall": _test_findall}
+var r_tests = map[string]func(t *testing.T){
+	"test_r_findall": test_r_findall,
+	"test_r_update":  test_r_update}
+
+var ac, _ = time.Parse(test.TimeLayout, "2021-12-18")
+var seeds []zo = []zo{
+	newZo(1, ac, 100, 0, "test-1", time.Now(), sql.NullTime{}),
+	newZo(2, ac, 200, 0, "test-2", time.Now(), sql.NullTime{}),
+	newZo(3, ac, 300, 0, "test-3", time.Now(), sql.NullTime{})}
+
+func Test_repository(t *testing.T) {
+	test.Run(t, r_tests, test_r_before, nil)
+}
 
 // findall()のテスト
-func _test_findall(t *testing.T) {
+func test_r_findall(t *testing.T) {
 	r := zoRepository{}
 	zos, err := r.findall()
 	if err != nil {
@@ -28,43 +38,54 @@ func _test_findall(t *testing.T) {
 	}
 }
 
-// repositoryのテスト本体
-func Test_repository(t *testing.T) {
-	// テスト共通のセットアップ
-	teardown := test.Setup(t)
-	t.Cleanup(teardown)
+// update()のテスト
+func test_r_update(t *testing.T) {
+	r := zoRepository{}
+	z := seeds[0]
+	z.Exp = 500
+	err := r.update(&z)
+	if err != nil {
+		t.Fatalf("update() has error: %v", err)
+	}
 
-	for name, test := range tests {
-		// テスト毎のセットアップ
-		before()
-		t.Run(name, test)
+	var want int
+	err = mydb.Db.QueryRow("SELECT * FROM zos WHERE id = ?", z.Id).Scan(
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&want,
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&test.TrashScanner{})
+	if err != nil {
+		t.Fatalf("update() has error: %v", err)
+	}
+
+	if z.Exp != want {
+		t.Errorf("z.Exp = %d, want %d", z.Exp, want)
 	}
 }
 
-func before() {
+func test_r_before() {
 	_, err := mydb.Db.Exec("TRUNCATE zos")
 	if err != nil {
-		failuer(err)
+		test.Failuer(err)
 	}
 
-	seed()
+	test_r_seed()
 }
 
-func seed() {
+func test_r_seed() {
 	ctx := context.Background()
 	tx, err := mydb.Db.BeginTx(ctx, nil)
 	if err != nil {
-		failuer(err)
+		test.Failuer(err)
 	}
 	// Defer a rollback in case anything fails.
 	// https://go.dev/doc/database/execute-transactions
 	defer tx.Rollback()
 
-	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
-	zos := []zo{newZo(0, ac, 100, 0, "test-1", time.Now(), sql.NullTime{}),
-		newZo(0, ac, 200, 0, "test-2", time.Now(), sql.NullTime{}),
-		newZo(0, ac, 300, 0, "test-3", time.Now(), sql.NullTime{})}
-	for _, z := range zos {
+	for _, z := range seeds {
 		_, err := mydb.Db.ExecContext(
 			ctx,
 			`INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt)
@@ -77,16 +98,12 @@ func seed() {
 			z.CreatedAt,
 			z.UpdatedAt)
 		if err != nil {
-			failuer(err)
+			test.Failuer(err)
 		}
 	}
 
 	// Commit the transaction.
 	if err = tx.Commit(); err != nil {
-		failuer(err)
+		test.Failuer(err)
 	}
-}
-
-func failuer(err error) {
-	log.Panicf("failuer: %v", err)
 }

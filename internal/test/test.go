@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"log"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -29,4 +30,36 @@ func Setup(t *testing.T) func() {
 	}
 
 	return mydb.Finalize
+}
+
+func Run(
+	t *testing.T,
+	tests map[string]func(t *testing.T),
+	before func(),
+	after func()) {
+	// テスト共通のセットアップ
+	teardown := Setup(t)
+	t.Cleanup(teardown)
+
+	for name, test := range tests {
+		if before != nil {
+			before()
+		}
+
+		t.Run(name, test)
+
+		if after != nil {
+			after()
+		}
+	}
+}
+
+func Failuer(err error) {
+	log.Panicf("failuer: %v", err)
+}
+
+type TrashScanner struct{}
+
+func (TrashScanner) Scan(interface{}) error {
+	return nil
 }
