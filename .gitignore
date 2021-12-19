@@ -21,3 +21,4 @@ Go_P_Zo
 *.code-workspace
 tmp/*
 *.logfile
+cover.html

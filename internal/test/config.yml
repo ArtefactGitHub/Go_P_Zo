@@ -1,0 +1,8 @@
+environment: test
+
+sqldriver: mysql
+user: ${Go_P_Zo_DB_USER}
+password: ${Go_P_Zo_DB_PASSWORD}
+protocol: tcp
+address: 127.0.0.1:3306
+database: Go_P_Zo_Test?parseTime=true
