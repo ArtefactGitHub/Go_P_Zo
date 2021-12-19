@@ -12,7 +12,9 @@ import (
 
 var r_tests = map[string]func(t *testing.T){
 	"test_r_findall": test_r_findall,
-	"test_r_update":  test_r_update}
+	"test_r_find":    test_r_find,
+	"test_r_update":  test_r_update,
+	"test_r_delete":  test_r_delete}
 
 var ac, _ = time.Parse(test.TimeLayout, "2021-12-18")
 var seeds []zo = []zo{
@@ -21,7 +23,7 @@ var seeds []zo = []zo{
 	newZo(3, ac, 300, 0, "test-3", time.Now(), sql.NullTime{})}
 
 func Test_repository(t *testing.T) {
-	test.Run(t, r_tests, test_r_before, nil)
+	test.Run(t, r_tests, nil, nil, test_seed)
 }
 
 // findall()のテスト
@@ -35,6 +37,23 @@ func test_r_findall(t *testing.T) {
 	want := 3
 	if len(zos) != want {
 		t.Errorf("len() = %d, want %d", len(zos), want)
+	}
+}
+
+// find()のテスト
+func test_r_find(t *testing.T) {
+	r := zoRepository{}
+	z, err := r.find(1)
+	if err != nil {
+		t.Errorf("findall() has error: %v", err)
+	}
+
+	if z.Exp != 100 {
+		t.Errorf("exp = %d, want %d", z.Exp, 100)
+	}
+
+	if z.Message != "test-1" {
+		t.Errorf("exp = %s, want %s", z.Message, "test-1")
 	}
 }
 
@@ -66,17 +85,28 @@ func test_r_update(t *testing.T) {
 	}
 }
 
-func test_r_before() {
-	_, err := mydb.Db.Exec("TRUNCATE zos")
+// delete()のテスト
+func test_r_delete(t *testing.T) {
+	r := zoRepository{}
+	z := seeds[0]
+	err := r.delete(z.Id)
 	if err != nil {
-		test.Failuer(err)
+		t.Fatalf("delete() has error: %v", err)
 	}
 
-	test_r_seed()
+	var count int
+	want := 2
+	err = mydb.Db.QueryRow("SELECT COUNT(*) FROM zos").Scan(&count)
+	if err != nil {
+		t.Fatalf("delete() has error: %v", err)
+	}
+
+	if count != want {
+		t.Errorf("count = %d, want %d", count, want)
+	}
 }
 
-func test_r_seed() {
-	ctx := context.Background()
+func test_seed(ctx context.Context) {
 	tx, err := mydb.Db.BeginTx(ctx, nil)
 	if err != nil {
 		test.Failuer(err)

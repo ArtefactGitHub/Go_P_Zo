@@ -1,8 +1,8 @@
 package test
 
 import (
+	"context"
 	"fmt"
-	"log"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -12,9 +12,44 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const TimeLayout = "2006-01-02"
+func Run(
+	t *testing.T,
+	tests map[string]func(t *testing.T),
+	before func(),
+	after func(),
+	seed func(context.Context)) {
 
-func Setup(t *testing.T) func() {
+	teardown := testInit(t)
+	t.Cleanup(teardown)
+
+	for name, test := range tests {
+		beforeAll(before, seed)
+
+		t.Run(name, test)
+
+		afterAll(before)
+	}
+}
+
+func beforeAll(before func(), seed func(context.Context)) {
+	ctx := context.Background()
+	truncateAll(ctx)
+	if seed != nil {
+		seed(ctx)
+	}
+
+	if before != nil {
+		before()
+	}
+}
+
+func afterAll(after func()) {
+	if after != nil {
+		after()
+	}
+}
+
+func testInit(t *testing.T) func() {
 	// 設定ファイルの取得
 	_, pwd, _, _ := runtime.Caller(0)
 	path := fmt.Sprintf("%s/config.yml", filepath.Dir(pwd))
@@ -32,34 +67,9 @@ func Setup(t *testing.T) func() {
 	return mydb.Finalize
 }
 
-func Run(
-	t *testing.T,
-	tests map[string]func(t *testing.T),
-	before func(),
-	after func()) {
-	// テスト共通のセットアップ
-	teardown := Setup(t)
-	t.Cleanup(teardown)
-
-	for name, test := range tests {
-		if before != nil {
-			before()
-		}
-
-		t.Run(name, test)
-
-		if after != nil {
-			after()
-		}
+func truncateAll(ctx context.Context) {
+	_, err := mydb.Db.Exec("TRUNCATE zos")
+	if err != nil {
+		Failuer(err)
 	}
-}
-
-func Failuer(err error) {
-	log.Panicf("failuer: %v", err)
-}
-
-type TrashScanner struct{}
-
-func (TrashScanner) Scan(interface{}) error {
-	return nil
 }
