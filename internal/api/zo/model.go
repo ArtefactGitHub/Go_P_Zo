@@ -23,8 +23,8 @@ func newZo(
 	message string,
 	createdAt time.Time,
 	updatedAt sql.NullTime,
-) *zo {
-	return &zo{
+) zo {
+	return zo{
 		Id:              id,
 		AchievementDate: achievementDate,
 		Exp:             exp,

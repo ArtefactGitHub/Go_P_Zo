@@ -13,7 +13,7 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 )
 
-var resourceName string = "zo"
+const resourceName string = "zo"
 
 type zoController struct {
 	zs zoService
@@ -122,7 +122,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request) {
 		m.Message,
 		m.CreatedAt,
 		sql.NullTime{Time: time.Now(), Valid: true})
-	u, err = c.zs.update(u)
+	err = c.zs.update(&u)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -130,7 +130,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request) {
 
 	res := putResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
-		Zo:           u}
+		Zo:           &u}
 	myhttp.WriteSuccess(w, res, http.StatusOK)
 }
 

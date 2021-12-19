@@ -31,13 +31,13 @@ func (s *zoService) post(z *zo) (int, error) {
 	return result, nil
 }
 
-func (s *zoService) update(z *zo) (*zo, error) {
+func (s *zoService) update(z *zo) error {
 	err := s.zr.update(z)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return z, nil
+	return nil
 }
 
 func (s *zoService) delete(id int) error {
