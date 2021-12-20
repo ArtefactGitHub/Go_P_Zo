@@ -13,6 +13,7 @@ import (
 var r_tests = map[string]func(t *testing.T){
 	"test_r_findall": test_r_findall,
 	"test_r_find":    test_r_find,
+	"test_r_create":  test_r_create,
 	"test_r_update":  test_r_update,
 	"test_r_delete":  test_r_delete}
 
@@ -54,6 +55,45 @@ func test_r_find(t *testing.T) {
 
 	if z.Message != "test-1" {
 		t.Errorf("exp = %s, want %s", z.Message, "test-1")
+	}
+}
+
+// create()のテスト
+func test_r_create(t *testing.T) {
+	r := zoRepository{}
+	z := seeds[0]
+	z.Message = "created by test"
+	id, err := r.create(&z)
+	if err != nil {
+		t.Fatalf("create() has error: %v", err)
+	}
+
+	want := "created by test"
+	var message string
+	err = mydb.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id).Scan(
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&message,
+		&test.TrashScanner{},
+		&test.TrashScanner{})
+	if err != nil {
+		t.Fatalf("create() has error: %v", err)
+	}
+
+	if message != want {
+		t.Errorf("z.Message = %s, want %s", z.Message, want)
+	}
+
+	var count int
+	err = mydb.Db.QueryRow("SELECT COUNT(*) FROM zos").Scan(&count)
+	if err != nil {
+		t.Fatalf("create() has error: %v", err)
+	}
+
+	if count != cap(seeds)+1 {
+		t.Errorf("count = %d, want %d", count, cap(seeds)+1)
 	}
 }
 
