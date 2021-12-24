@@ -20,7 +20,7 @@ type zoController struct {
 }
 
 func (c *zoController) handle(w http.ResponseWriter, r *http.Request) {
-	log.Println(r)
+	log.Printf("request: %v", r)
 
 	switch r.Method {
 	case http.MethodGet:
