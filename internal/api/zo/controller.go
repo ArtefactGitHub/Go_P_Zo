@@ -102,7 +102,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request) {
 	// 末尾のid指定を取得
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
-		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return
 	}
 
@@ -140,7 +140,7 @@ func (c *zoController) delete(w http.ResponseWriter, r *http.Request) {
 	// 末尾のid指定を取得
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
-		myhttp.WriteError(w, nil, http.StatusBadRequest, "incorrect resource specification")
+		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return
 	}
 
