@@ -4,8 +4,8 @@ import (
 	"net/http"
 )
 
-func Routing() {
+func Routing(mux *http.ServeMux) {
 	zc := zoController{}
-	http.HandleFunc("/zo", zc.handle)
-	http.HandleFunc("/zo/", zc.handle)
+	mux.HandleFunc("/zo", zc.handle)
+	mux.HandleFunc("/zo/", zc.handle)
 }
