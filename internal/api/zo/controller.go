@@ -92,7 +92,7 @@ func (c *zoController) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res := postResponse{
-		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
+		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
 		Zo:           m}
 	myhttp.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
 }
