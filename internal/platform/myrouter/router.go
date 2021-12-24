@@ -4,11 +4,21 @@ import (
 	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
+	"github.com/julienschmidt/httprouter"
 )
 
-type MyRouter struct {
+type Router struct {
+	r httprouter.Router
 }
 
-func (r *MyRouter) Routing(mux *http.ServeMux) {
-	zo.Routing(mux)
+func New() *Router {
+	return &Router{r: *httprouter.New()}
+}
+
+func (mr *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	mr.r.ServeHTTP(w, req)
+}
+
+func (mr *Router) Routing() {
+	zo.Routing(&mr.r)
 }
