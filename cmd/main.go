@@ -25,7 +25,8 @@ func main() {
 	}
 	defer mydb.Finalize()
 
+	mux := http.NewServeMux()
 	r := myrouter.MyRouter{}
-	r.Routing()
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	r.Routing(mux)
+	log.Fatal(http.ListenAndServe("localhost:8000", mux))
 }
