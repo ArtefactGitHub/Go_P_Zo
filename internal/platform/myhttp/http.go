@@ -34,7 +34,6 @@ func WriteError(w http.ResponseWriter, err error, statusCode int, description st
 		StatusCode: statusCode,
 		Error:      myerror.NewError(err, description)}
 	result, _ := json.MarshalIndent(response, "", "\t")
-	log.Println(err)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(statusCode)
 	w.Write(result)

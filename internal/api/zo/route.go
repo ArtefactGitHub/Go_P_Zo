@@ -1,11 +1,14 @@
 package zo
 
 import (
-	"net/http"
+	"github.com/julienschmidt/httprouter"
 )
 
-func Routing(mux *http.ServeMux) {
+func Routing(router *httprouter.Router) {
 	zc := zoController{}
-	mux.HandleFunc("/zo", zc.handle)
-	mux.HandleFunc("/zo/", zc.handle)
+	router.GET("/zo", zc.getAll)
+	router.GET("/zo/:id", zc.get)
+	router.POST("/zo", zc.post)
+	router.PUT("/zo/:id", zc.update)
+	router.DELETE("/zo/:id", zc.delete)
 }

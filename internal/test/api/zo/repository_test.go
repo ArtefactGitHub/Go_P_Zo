@@ -1,8 +1,9 @@
-package zo
+package zo_test
 
 import (
 	"testing"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
@@ -20,8 +21,8 @@ func Test_repository(t *testing.T) {
 
 // findall()のテスト
 func test_r_findall(t *testing.T) {
-	r := zoRepository{}
-	zos, err := r.findall()
+	r := zo.ZoRepository{}
+	zos, err := r.Findall()
 	if err != nil {
 		t.Errorf("findall() has error: %v", err)
 	}
@@ -34,8 +35,8 @@ func test_r_findall(t *testing.T) {
 
 // find()のテスト
 func test_r_find(t *testing.T) {
-	r := zoRepository{}
-	z, err := r.find(1)
+	r := zo.ZoRepository{}
+	z, err := r.Find(1)
 	if err != nil {
 		t.Errorf("findall() has error: %v", err)
 	}
@@ -51,10 +52,10 @@ func test_r_find(t *testing.T) {
 
 // create()のテスト
 func test_r_create(t *testing.T) {
-	r := zoRepository{}
+	r := zo.ZoRepository{}
 	z := seeds[0]
 	z.Message = "created by test"
-	id, err := r.create(&z)
+	id, err := r.Create(&z)
 	if err != nil {
 		t.Fatalf("create() has error: %v", err)
 	}
@@ -90,10 +91,10 @@ func test_r_create(t *testing.T) {
 
 // update()のテスト
 func test_r_update(t *testing.T) {
-	r := zoRepository{}
+	r := zo.ZoRepository{}
 	z := seeds[0]
 	z.Exp = 500
-	err := r.update(&z)
+	err := r.Update(&z)
 	if err != nil {
 		t.Fatalf("update() has error: %v", err)
 	}
@@ -118,9 +119,9 @@ func test_r_update(t *testing.T) {
 
 // delete()のテスト
 func test_r_delete(t *testing.T) {
-	r := zoRepository{}
+	r := zo.ZoRepository{}
 	z := seeds[0]
-	err := r.delete(z.Id)
+	err := r.Delete(z.Id)
 	if err != nil {
 		t.Fatalf("delete() has error: %v", err)
 	}

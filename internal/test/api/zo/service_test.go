@@ -1,10 +1,11 @@
-package zo
+package zo_test
 
 import (
 	"database/sql"
 	"testing"
 	"time"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
 
@@ -21,8 +22,8 @@ func Test_service(t *testing.T) {
 
 // getAll() のテスト
 func test_s_getall(t *testing.T) {
-	s := zoService{}
-	zos, err := s.getAll()
+	s := zo.ZoService{}
+	zos, err := s.GetAll()
 	if err != nil {
 		t.Errorf("getAll() has error: %v", err)
 	}
@@ -35,8 +36,8 @@ func test_s_getall(t *testing.T) {
 
 // get() のテスト
 func test_s_get(t *testing.T) {
-	s := zoService{}
-	z, err := s.get(3)
+	s := zo.ZoService{}
+	z, err := s.Get(3)
 	if err != nil {
 		t.Errorf("get() has error: %v", err)
 	}
@@ -49,12 +50,12 @@ func test_s_get(t *testing.T) {
 
 // post() のテスト
 func test_s_post(t *testing.T) {
-	s := zoService{}
+	s := zo.ZoService{}
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
-	z := newZo(
+	z := zo.NewZo(
 		0, ac, 555, 0, "created by test",
 		time.Now(), sql.NullTime{})
-	_, err := s.post(&z)
+	_, err := s.Post(&z)
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
@@ -64,7 +65,7 @@ func test_s_post(t *testing.T) {
 		t.Errorf("exp = %d, want %d", z.Exp, want)
 	}
 
-	zos, err := s.zr.findall()
+	zos, err := s.Zr.Findall()
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
@@ -76,10 +77,10 @@ func test_s_post(t *testing.T) {
 
 // update() のテスト
 func test_s_update(t *testing.T) {
-	s := zoService{}
+	s := zo.ZoService{}
 	z := seeds[2]
 	z.Message = "updated by test"
-	err := s.update(&z)
+	err := s.Update(&z)
 	if err != nil {
 		t.Errorf("update() has error: %v", err)
 	}
@@ -92,14 +93,14 @@ func test_s_update(t *testing.T) {
 
 // delete() のテスト
 func test_s_delete(t *testing.T) {
-	s := zoService{}
+	s := zo.ZoService{}
 	z := seeds[2]
-	err := s.delete(z.Id)
+	err := s.Delete(z.Id)
 	if err != nil {
 		t.Errorf("delete() has error: %v", err)
 	}
 
-	zos, err := s.zr.findall()
+	zos, err := s.Zr.Findall()
 	if err != nil {
 		t.Errorf("delete() has error: %v", err)
 	}

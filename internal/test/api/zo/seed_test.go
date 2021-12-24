@@ -1,19 +1,20 @@
-package zo
+package zo_test
 
 import (
 	"context"
 	"database/sql"
 	"time"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
 
 var ac, _ = time.Parse(test.TimeLayout, "2021-12-18")
-var seeds []zo = []zo{
-	newZo(1, ac, 100, 0, "test-1", time.Now(), sql.NullTime{}),
-	newZo(2, ac, 200, 0, "test-2", time.Now(), sql.NullTime{}),
-	newZo(3, ac, 300, 0, "test-3", time.Now(), sql.NullTime{})}
+var seeds []zo.Zo = []zo.Zo{
+	zo.NewZo(1, ac, 100, 0, "test-1", time.Now(), sql.NullTime{}),
+	zo.NewZo(2, ac, 200, 0, "test-2", time.Now(), sql.NullTime{}),
+	zo.NewZo(3, ac, 300, 0, "test-3", time.Now(), sql.NullTime{})}
 
 func test_seed(ctx context.Context) {
 	tx, err := mydb.Db.BeginTx(ctx, nil)
