@@ -1,11 +1,11 @@
 package zo
 
-type zoService struct {
-	zr zoRepository
+type ZoService struct {
+	Zr ZoRepository
 }
 
-func (s *zoService) getAll() ([]zo, error) {
-	result, err := s.zr.findall()
+func (s *ZoService) GetAll() ([]Zo, error) {
+	result, err := s.Zr.Findall()
 	if err != nil {
 		return nil, err
 	}
@@ -13,8 +13,8 @@ func (s *zoService) getAll() ([]zo, error) {
 	return result, nil
 }
 
-func (s *zoService) get(id int) (*zo, error) {
-	result, err := s.zr.find(id)
+func (s *ZoService) Get(id int) (*Zo, error) {
+	result, err := s.Zr.Find(id)
 	if err != nil {
 		return nil, err
 	}
@@ -22,8 +22,8 @@ func (s *zoService) get(id int) (*zo, error) {
 	return result, nil
 }
 
-func (s *zoService) post(z *zo) (int, error) {
-	result, err := s.zr.create(z)
+func (s *ZoService) Post(z *Zo) (int, error) {
+	result, err := s.Zr.Create(z)
 	if err != nil {
 		return -1, err
 	}
@@ -31,8 +31,8 @@ func (s *zoService) post(z *zo) (int, error) {
 	return result, nil
 }
 
-func (s *zoService) update(z *zo) error {
-	err := s.zr.update(z)
+func (s *ZoService) Update(z *Zo) error {
+	err := s.Zr.Update(z)
 	if err != nil {
 		return err
 	}
@@ -40,8 +40,8 @@ func (s *zoService) update(z *zo) error {
 	return nil
 }
 
-func (s *zoService) delete(id int) error {
-	err := s.zr.delete(id)
+func (s *ZoService) Delete(id int) error {
+	err := s.Zr.Delete(id)
 	if err != nil {
 		return err
 	}

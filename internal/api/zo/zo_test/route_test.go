@@ -1,4 +1,4 @@
-package zo
+package zo_test
 
 import (
 	"bytes"
@@ -10,6 +10,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
 
@@ -33,7 +35,7 @@ func test_route_getall(t *testing.T) {
 		t.Fatalf("Response code is %v, want %d", writer.Code, want)
 	}
 
-	var res getAllResponse
+	var res zo.GetAllResponse
 	json.Unmarshal(writer.Body.Bytes(), &res)
 	if res.StatusCode != want || res.Error != nil {
 		t.Fatalf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
@@ -53,7 +55,7 @@ func test_route_get(t *testing.T) {
 		t.Fatalf("Response code is %v, want %d", writer.Code, want)
 	}
 
-	var res getResponse
+	var res zo.GetResponse
 	json.Unmarshal(writer.Body.Bytes(), &res)
 	if res.StatusCode != want || res.Error != nil {
 		t.Fatalf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
@@ -67,7 +69,7 @@ func test_route_get(t *testing.T) {
 // [POST] /zo のルーティングのテスト
 func test_route_post(t *testing.T) {
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
-	z := newZo(
+	z := zo.NewZo(
 		0, ac, 555, 0, "created by test_route_post",
 		time.Now(), sql.NullTime{})
 	j, _ := json.MarshalIndent(z, "", "\t")
@@ -79,7 +81,7 @@ func test_route_post(t *testing.T) {
 		t.Fatalf("Response code is %v, want %d", writer.Code, want)
 	}
 
-	var res postResponse
+	var res zo.PostResponse
 	json.Unmarshal(writer.Body.Bytes(), &res)
 	if res.StatusCode != want || res.Error != nil {
 		t.Fatalf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
@@ -103,7 +105,7 @@ func test_route_update(t *testing.T) {
 		t.Fatalf("Response code is %v, want %d", writer.Code, want)
 	}
 
-	var res putResponse
+	var res zo.PutResponse
 	json.Unmarshal(writer.Body.Bytes(), &res)
 	if res.StatusCode != want || res.Error != nil {
 		t.Fatalf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
@@ -123,20 +125,20 @@ func test_route_delete(t *testing.T) {
 		t.Fatalf("Response code is %v, want %d", writer.Code, want)
 	}
 
-	var res deleteResponse
+	var res zo.DeleteResponse
 	json.Unmarshal(writer.Body.Bytes(), &res)
 	if res.StatusCode != want || res.Error != nil {
 		t.Errorf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
 	}
 }
 
+// テスト用のリクエストを実行
 func serveHTTP(method string, url string, body io.Reader) *httptest.ResponseRecorder {
-	mux := http.NewServeMux()
-	Routing(mux)
+	router := myrouter.Router{}
+	router.Routing()
 
 	writer := httptest.NewRecorder()
 	request, _ := http.NewRequest(method, url, body)
-	mux.ServeHTTP(writer, request)
-
+	router.ServeHTTP(writer, request)
 	return writer
 }

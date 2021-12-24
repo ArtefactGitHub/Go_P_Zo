@@ -6,18 +6,18 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 )
 
-type zoRepository struct {
+type ZoRepository struct {
 }
 
-func (r *zoRepository) findall() ([]zo, error) {
+func (r *ZoRepository) Findall() ([]Zo, error) {
 	rows, err := mydb.Db.Query("SELECT * FROM zos")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var z zo
-	var result []zo
+	var z Zo
+	var result []Zo
 	for rows.Next() {
 		err := rows.Scan(
 			&z.Id,
@@ -40,8 +40,8 @@ func (r *zoRepository) findall() ([]zo, error) {
 	return result, nil
 }
 
-func (r *zoRepository) find(id int) (*zo, error) {
-	zo := zo{}
+func (r *ZoRepository) Find(id int) (*Zo, error) {
+	zo := Zo{}
 	err := mydb.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id).Scan(
 		&zo.Id,
 		&zo.AchievementDate,
@@ -59,7 +59,7 @@ func (r *zoRepository) find(id int) (*zo, error) {
 	return &zo, nil
 }
 
-func (r *zoRepository) create(zo *zo) (int, error) {
+func (r *ZoRepository) Create(zo *Zo) (int, error) {
 	result, err := mydb.Db.Exec(`
 		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt)
 		            values(?, ?, ?, ?, ?, ?, ?)`,
@@ -83,7 +83,7 @@ func (r *zoRepository) create(zo *zo) (int, error) {
 	return zo.Id, nil
 }
 
-func (r *zoRepository) update(zo *zo) error {
+func (r *ZoRepository) Update(zo *Zo) error {
 	_, err := mydb.Db.Exec(`
 		UPDATE zos
 		SET achievementDate = ?,
@@ -105,7 +105,7 @@ func (r *zoRepository) update(zo *zo) error {
 	return nil
 }
 
-func (r *zoRepository) delete(id int) error {
+func (r *ZoRepository) Delete(id int) error {
 	_, err := mydb.Db.Exec(`
 		DELETE FROM zos
 		WHERE id = ?`,

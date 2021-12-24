@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type zo struct {
+type Zo struct {
 	Id              int          `json:"id"`
 	AchievementDate time.Time    `json:"achievementdate"`
 	Exp             int          `json:"exp"`
@@ -15,7 +15,7 @@ type zo struct {
 	UpdatedAt       sql.NullTime `json:"updatedat"`
 }
 
-func newZo(
+func NewZo(
 	id int,
 	achievementDate time.Time,
 	exp int,
@@ -23,8 +23,8 @@ func newZo(
 	message string,
 	createdAt time.Time,
 	updatedAt sql.NullTime,
-) zo {
-	return zo{
+) Zo {
+	return Zo{
 		Id:              id,
 		AchievementDate: achievementDate,
 		Exp:             exp,
