@@ -26,7 +26,8 @@ func (r *ZoRepository) Findall() ([]Zo, error) {
 			&z.CategoryId,
 			&z.Message,
 			&z.CreatedAt,
-			&z.UpdatedAt)
+			&z.UpdatedAt,
+			&z.UserId)
 		if err != nil {
 			return nil, err
 		}
@@ -41,35 +42,37 @@ func (r *ZoRepository) Findall() ([]Zo, error) {
 }
 
 func (r *ZoRepository) Find(id int) (*Zo, error) {
-	zo := Zo{}
+	z := Zo{}
 	err := mydb.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id).Scan(
-		&zo.Id,
-		&zo.AchievementDate,
-		&zo.Exp,
-		&zo.CategoryId,
-		&zo.Message,
-		&zo.CreatedAt,
-		&zo.UpdatedAt)
+		&z.Id,
+		&z.AchievementDate,
+		&z.Exp,
+		&z.CategoryId,
+		&z.Message,
+		&z.CreatedAt,
+		&z.UpdatedAt,
+		&z.UserId)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	} else if err != nil {
 		return nil, err
 	}
 
-	return &zo, nil
+	return &z, nil
 }
 
-func (r *ZoRepository) Create(zo *Zo) (int, error) {
+func (r *ZoRepository) Create(z *Zo) (int, error) {
 	result, err := mydb.Db.Exec(`
-		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt)
-		            values(?, ?, ?, ?, ?, ?, ?)`,
+		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
+		            values(?, ?, ?, ?, ?, ?, ?, ?)`,
 		nil,
-		zo.AchievementDate,
-		zo.Exp,
-		zo.CategoryId,
-		zo.Message,
-		zo.CreatedAt,
-		zo.UpdatedAt)
+		z.AchievementDate,
+		z.Exp,
+		z.CategoryId,
+		z.Message,
+		z.CreatedAt,
+		z.UpdatedAt,
+		z.UserId)
 	if err != nil {
 		return -1, err
 	}
@@ -79,25 +82,27 @@ func (r *ZoRepository) Create(zo *Zo) (int, error) {
 		return -1, err
 	}
 
-	zo.Id = int(id)
-	return zo.Id, nil
+	z.Id = int(id)
+	return z.Id, nil
 }
 
-func (r *ZoRepository) Update(zo *Zo) error {
+func (r *ZoRepository) Update(z *Zo) error {
 	_, err := mydb.Db.Exec(`
 		UPDATE zos
 		SET achievementDate = ?,
 		    exp = ?,
 		    categoryId = ?,
 		    message = ?,
-		    updatedAt = ?
+		    updatedAt = ?,
+				user_id = ?
 		WHERE id = ?`,
-		zo.AchievementDate,
-		zo.Exp,
-		zo.CategoryId,
-		zo.Message,
-		zo.UpdatedAt,
-		zo.Id)
+		z.AchievementDate,
+		z.Exp,
+		z.CategoryId,
+		z.Message,
+		z.UpdatedAt,
+		z.UserId,
+		z.Id)
 	if err != nil {
 		return err
 	}

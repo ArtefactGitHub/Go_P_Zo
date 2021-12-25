@@ -1,20 +1,20 @@
-module github.com/ArtefactGitHub/Go_P_Zo/internal/test/api/zo_test
+module github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo_test
 
 go 1.17
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/config => ../../../config
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/config => ../../../../config
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../../../platform/myhttp
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../../../../platform/myhttp
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb => ../../../platform/mydb
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb => ../../../../platform/mydb
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror => ../../../platform/myerror
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror => ../../../../platform/myerror
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter => ../../../platform/myrouter
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter => ../../../../platform/myrouter
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/test => ../../
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/test => ../../../../test
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo => ../../..api/v1/zo
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo => ../
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo v0.0.0-20211224055413-3bb2477ab245

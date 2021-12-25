@@ -69,6 +69,7 @@ func test_r_create(t *testing.T) {
 		&test.TrashScanner{},
 		&message,
 		&test.TrashScanner{},
+		&test.TrashScanner{},
 		&test.TrashScanner{})
 	if err != nil {
 		t.Fatalf("create() has error: %v", err)
@@ -104,6 +105,7 @@ func test_r_update(t *testing.T) {
 		&test.TrashScanner{},
 		&test.TrashScanner{},
 		&want,
+		&test.TrashScanner{},
 		&test.TrashScanner{},
 		&test.TrashScanner{},
 		&test.TrashScanner{},

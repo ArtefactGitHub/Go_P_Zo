@@ -26,9 +26,9 @@ func Test_route(t *testing.T) {
 	test.Run(t, route_tests, nil, nil, test_seed)
 }
 
-// [GET] /zo のルーティングのテスト
+// [GET] /api/v1/zos のルーティングのテスト
 func test_route_getall(t *testing.T) {
-	writer := serveHTTP("GET", "/zo", nil)
+	writer := serveHTTP("GET", "/api/v1/zos", nil)
 
 	want := http.StatusOK
 	if writer.Code != want {
@@ -46,9 +46,9 @@ func test_route_getall(t *testing.T) {
 	}
 }
 
-// [GET] /zo/:id のルーティングのテスト
+// [GET] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_get(t *testing.T) {
-	writer := serveHTTP("GET", "/zo/1", nil)
+	writer := serveHTTP("GET", "/api/v1/zos/1", nil)
 
 	want := http.StatusOK
 	if writer.Code != want {
@@ -66,15 +66,16 @@ func test_route_get(t *testing.T) {
 	}
 }
 
-// [POST] /zo のルーティングのテスト
+// [POST] /api/v1/zos のルーティングのテスト
 func test_route_post(t *testing.T) {
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
+	userId := 1
 	z := zo.NewZo(
 		0, ac, 555, 0, "created by test_route_post",
-		time.Now(), sql.NullTime{})
+		time.Now(), sql.NullTime{}, userId)
 	j, _ := json.MarshalIndent(z, "", "\t")
 
-	writer := serveHTTP("POST", "/zo", bytes.NewReader(j))
+	writer := serveHTTP("POST", "/api/v1/zos", bytes.NewReader(j))
 
 	want := http.StatusCreated
 	if writer.Code != want {
@@ -92,13 +93,13 @@ func test_route_post(t *testing.T) {
 	}
 }
 
-// [UPDATE] /zo のルーティングのテスト
+// [UPDATE] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_update(t *testing.T) {
 	z := seeds[2]
 	z.Message = "updated by test_route_update"
 	j, _ := json.MarshalIndent(z, "", "\t")
 
-	writer := serveHTTP("PUT", "/zo/1", bytes.NewReader(j))
+	writer := serveHTTP("PUT", "/api/v1/zos/1", bytes.NewReader(j))
 
 	want := http.StatusOK
 	if writer.Code != want {
@@ -116,9 +117,9 @@ func test_route_update(t *testing.T) {
 	}
 }
 
-// [DELETE] /zo のルーティングのテスト
+// [DELETE] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_delete(t *testing.T) {
-	writer := serveHTTP("DELETE", "/zo/1", nil)
+	writer := serveHTTP("DELETE", "/api/v1/zos/1", nil)
 
 	want := http.StatusOK
 	if writer.Code != want {

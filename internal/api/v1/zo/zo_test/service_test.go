@@ -52,9 +52,10 @@ func test_s_get(t *testing.T) {
 func test_s_post(t *testing.T) {
 	s := zo.ZoService{}
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
+	userId := 1
 	z := zo.NewZo(
 		0, ac, 555, 0, "created by test",
-		time.Now(), sql.NullTime{})
+		time.Now(), sql.NullTime{}, userId)
 	_, err := s.Post(&z)
 	if err != nil {
 		t.Errorf("post() has error: %v", err)

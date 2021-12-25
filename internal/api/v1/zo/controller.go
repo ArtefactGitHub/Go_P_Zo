@@ -104,7 +104,8 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, ps httprou
 		m.CategoryId,
 		m.Message,
 		m.CreatedAt,
-		sql.NullTime{Time: time.Now(), Valid: true})
+		sql.NullTime{Time: time.Now(), Valid: true},
+		m.UserId)
 	err = c.zs.Update(&u)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
