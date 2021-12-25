@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )

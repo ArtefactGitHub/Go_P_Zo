@@ -2,7 +2,7 @@ module github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter
 
 go 1.17
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo => ../../api/zo
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo => ../..api/v1/zo
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../myhttp
 
@@ -13,7 +13,7 @@ replace github.com/ArtefactGitHub/Go_P_Zo/internal/config => ../../config
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror => ../../platform/myerror
 
 require (
-	github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo v0.0.0-20211224055413-3bb2477ab245
+	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo v0.0.0-20211224055413-3bb2477ab245
 	github.com/julienschmidt/httprouter v1.3.0
 )
 

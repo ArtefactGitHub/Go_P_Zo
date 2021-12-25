@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )

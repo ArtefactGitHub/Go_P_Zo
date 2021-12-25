@@ -14,10 +14,10 @@ replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter => ../../..
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/test => ../../
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo => ../../../api/zo
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo => ../../..api/v1/zo
 
 require (
-	github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo v0.0.0-20211224055413-3bb2477ab245
+	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo v0.0.0-20211224055413-3bb2477ab245
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb v0.0.0-20211224055413-3bb2477ab245
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter v0.0.0-20211224055413-3bb2477ab245
 	github.com/ArtefactGitHub/Go_P_Zo/internal/test v0.0.0-00010101000000-000000000000
