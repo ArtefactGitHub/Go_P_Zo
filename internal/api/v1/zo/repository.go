@@ -1,6 +1,7 @@
 package zo
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
@@ -9,8 +10,8 @@ import (
 type ZoRepository struct {
 }
 
-func (r *ZoRepository) Findall() ([]Zo, error) {
-	rows, err := mydb.Db.Query("SELECT * FROM zos")
+func (r *ZoRepository) Findall(ctx context.Context) ([]Zo, error) {
+	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM zos")
 	if err != nil {
 		return nil, err
 	}
@@ -41,9 +42,9 @@ func (r *ZoRepository) Findall() ([]Zo, error) {
 	return result, nil
 }
 
-func (r *ZoRepository) Find(id int) (*Zo, error) {
+func (r *ZoRepository) Find(ctx context.Context, id int) (*Zo, error) {
 	z := Zo{}
-	err := mydb.Db.QueryRow("SELECT * FROM zos WHERE id = ?", id).Scan(
+	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM zos WHERE id = ?", id).Scan(
 		&z.Id,
 		&z.AchievementDate,
 		&z.Exp,
@@ -61,8 +62,8 @@ func (r *ZoRepository) Find(id int) (*Zo, error) {
 	return &z, nil
 }
 
-func (r *ZoRepository) Create(z *Zo) (int, error) {
-	result, err := mydb.Db.Exec(`
+func (r *ZoRepository) Create(ctx context.Context, z *Zo) (int, error) {
+	result, err := mydb.Db.ExecContext(ctx, `
 		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
 		            values(?, ?, ?, ?, ?, ?, ?, ?)`,
 		nil,
@@ -86,8 +87,8 @@ func (r *ZoRepository) Create(z *Zo) (int, error) {
 	return z.Id, nil
 }
 
-func (r *ZoRepository) Update(z *Zo) error {
-	_, err := mydb.Db.Exec(`
+func (r *ZoRepository) Update(ctx context.Context, z *Zo) error {
+	_, err := mydb.Db.ExecContext(ctx, `
 		UPDATE zos
 		SET achievementDate = ?,
 		    exp = ?,
@@ -110,8 +111,8 @@ func (r *ZoRepository) Update(z *Zo) error {
 	return nil
 }
 
-func (r *ZoRepository) Delete(id int) error {
-	_, err := mydb.Db.Exec(`
+func (r *ZoRepository) Delete(ctx context.Context, id int) error {
+	_, err := mydb.Db.ExecContext(ctx, `
 		DELETE FROM zos
 		WHERE id = ?`,
 		id)

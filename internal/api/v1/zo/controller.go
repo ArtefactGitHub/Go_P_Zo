@@ -22,7 +22,7 @@ const resourceId = "zo_id"
 // リソースを取得
 func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// リソース群の取得
-	datas, err := c.zs.GetAll()
+	datas, err := c.zs.GetAll(r.Context())
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -43,7 +43,7 @@ func (c *zoController) get(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	model, err := c.zs.Get(id)
+	model, err := c.zs.Get(r.Context(), id)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -68,7 +68,7 @@ func (c *zoController) post(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	id, err := c.zs.Post(m)
+	id, err := c.zs.Post(r.Context(), m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -106,7 +106,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, ps httprou
 		m.CreatedAt,
 		sql.NullTime{Time: time.Now(), Valid: true},
 		m.UserId)
-	err = c.zs.Update(&u)
+	err = c.zs.Update(r.Context(), &u)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -128,7 +128,7 @@ func (c *zoController) delete(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	err = c.zs.Delete(id)
+	err = c.zs.Delete(r.Context(), id)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
