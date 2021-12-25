@@ -22,6 +22,7 @@ SET NAMES utf8mb4;
 
 # テーブルのダンプ Users
 # ------------------------------------------------------------
+USE Go_P_Zo;
 
 DROP TABLE IF EXISTS `Users`;
 
@@ -29,6 +30,7 @@ CREATE TABLE `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Userの一意の識別子',
   `given_name` varchar(20) NOT NULL COMMENT '名前',
   `family_name` varchar(20) NOT NULL COMMENT '苗字',
+  `email` varchar(100) NOT NULL COMMENT 'メールアドレス',
   `createdAt` datetime NOT NULL COMMENT 'レコード作成日',
   `updatedAt` datetime DEFAULT NULL COMMENT 'レコード更新日',
   PRIMARY KEY (`id`)
