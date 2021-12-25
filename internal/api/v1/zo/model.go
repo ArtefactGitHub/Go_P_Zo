@@ -13,6 +13,7 @@ type Zo struct {
 	Message         string       `json:"message"`
 	CreatedAt       time.Time    `json:"createdat"`
 	UpdatedAt       sql.NullTime `json:"updatedat"`
+	UserId          int          `json:"user_id"`
 }
 
 func NewZo(
@@ -23,6 +24,7 @@ func NewZo(
 	message string,
 	createdAt time.Time,
 	updatedAt sql.NullTime,
+	userId int,
 ) Zo {
 	return Zo{
 		Id:              id,
@@ -31,5 +33,6 @@ func NewZo(
 		CategoryId:      categoryId,
 		Message:         message,
 		CreatedAt:       createdAt,
-		UpdatedAt:       updatedAt}
+		UpdatedAt:       updatedAt,
+		UserId:          userId}
 }

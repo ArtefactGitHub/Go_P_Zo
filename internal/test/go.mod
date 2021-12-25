@@ -12,7 +12,7 @@ replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../platfor
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror => ../platform/myerror
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/zo => ../api/zo
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo => ../api/v1/zo
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/config v0.0.0-20211224055413-3bb2477ab245
