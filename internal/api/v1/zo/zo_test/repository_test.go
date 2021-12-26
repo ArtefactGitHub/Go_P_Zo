@@ -23,7 +23,7 @@ func Test_repository(t *testing.T) {
 // findall()のテスト
 func test_r_findall(t *testing.T) {
 	r := zo.ZoRepository{}
-	zos, err := r.Findall(context.Background())
+	zos, err := r.FindAll(context.Background())
 	if err != nil {
 		t.Errorf("findall() has error: %v", err)
 	}

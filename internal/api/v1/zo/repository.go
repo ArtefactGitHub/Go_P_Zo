@@ -10,7 +10,7 @@ import (
 type ZoRepository struct {
 }
 
-func (r *ZoRepository) Findall(ctx context.Context) ([]Zo, error) {
+func (r *ZoRepository) FindAll(ctx context.Context) ([]Zo, error) {
 	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM zos")
 	if err != nil {
 		return nil, err

@@ -9,7 +9,7 @@ type ZoService struct {
 }
 
 func (s *ZoService) GetAll(ctx context.Context) ([]Zo, error) {
-	result, err := s.Zr.Findall(ctx)
+	result, err := s.Zr.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
