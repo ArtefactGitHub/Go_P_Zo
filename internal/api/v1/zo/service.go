@@ -2,15 +2,10 @@ package zo
 
 import (
 	"context"
-	"database/sql"
-	"time"
-
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 )
 
 type ZoService struct {
-	Zr  ZoRepository
-	Uzr UserZosRepository
+	Zr ZoRepository
 }
 
 func (s *ZoService) GetAll(ctx context.Context) ([]Zo, error) {
@@ -32,29 +27,11 @@ func (s *ZoService) Get(ctx context.Context, id int) (*Zo, error) {
 }
 
 func (s *ZoService) Post(ctx context.Context, z *Zo) (int, error) {
-	// ZosとUserZosテーブルへレコードを追加するためトランザクション処理を行う
-	result, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {
-		z.CreatedAt = time.Now()
-		result, err := s.Zr.CreateTx(ctx, tx, z)
-		if err != nil {
-			return -1, err
-		}
-
-		// TODO：仮実装
-		uz := UserZos{UserId: z.UserId, ZoId: z.Id, CreatedAt: time.Now()}
-		_, err = s.Uzr.CreateTx(ctx, tx, &uz)
-		if err != nil {
-			return -1, err
-		}
-
-		return result, nil
-	})
-
+	result, err := s.Zr.Create(ctx, z)
 	if err != nil {
 		return -1, err
 	}
-
-	return result.(int), err
+	return result, nil
 }
 
 func (s *ZoService) Update(ctx context.Context, z *Zo) error {
