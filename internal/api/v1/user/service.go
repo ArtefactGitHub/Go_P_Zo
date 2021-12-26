@@ -26,16 +26,16 @@ func (s *UserService) Get(ctx context.Context, id int) (*User, error) {
 	return result, nil
 }
 
-func (s *UserService) Post(ctx context.Context, z *User) (int, error) {
-	result, err := s.Ur.Create(ctx, z)
+func (s *UserService) Post(ctx context.Context, u *User) (int, error) {
+	result, err := s.Ur.Create(ctx, u)
 	if err != nil {
 		return -1, err
 	}
 	return result, nil
 }
 
-func (s *UserService) Update(ctx context.Context, z *User) error {
-	err := s.Ur.Update(ctx, z)
+func (s *UserService) Update(ctx context.Context, u *User) error {
+	err := s.Ur.Update(ctx, u)
 	if err != nil {
 		return err
 	}
