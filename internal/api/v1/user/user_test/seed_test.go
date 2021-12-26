@@ -18,17 +18,17 @@ var seeds []user.User = []user.User{
 
 func test_seed(ctx context.Context) {
 	_, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {
-		for _, z := range seeds {
+		for _, u := range seeds {
 			_, err := mydb.Db.ExecContext(
 				ctx,
 				`INSERT INTO users(id, given_name, family_name, email, createdAt, updatedAt)
 									values(?, ?, ?, ?, ?, ?)`,
 				nil,
-				z.GivenName,
-				z.FamilyName,
-				z.Email,
-				z.CreatedAt,
-				z.UpdatedAt)
+				u.GivenName,
+				u.FamilyName,
+				u.Email,
+				u.CreatedAt,
+				u.UpdatedAt)
 			if err != nil {
 				test.Failuer(err)
 			}

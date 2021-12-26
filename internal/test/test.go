@@ -72,4 +72,8 @@ func truncateAll(ctx context.Context) {
 	if err != nil {
 		Failuer(err)
 	}
+	_, err = mydb.Db.Exec("TRUNCATE users")
+	if err != nil {
+		Failuer(err)
+	}
 }

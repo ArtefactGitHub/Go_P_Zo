@@ -67,7 +67,7 @@ func test_s_post(t *testing.T) {
 		t.Errorf("exp = %d, want %d", z.Exp, want)
 	}
 
-	zos, err := s.Zr.Findall(context.Background())
+	zos, err := s.Zr.FindAll(context.Background())
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
@@ -102,7 +102,7 @@ func test_s_delete(t *testing.T) {
 		t.Errorf("delete() has error: %v", err)
 	}
 
-	zos, err := s.Zr.Findall(context.Background())
+	zos, err := s.Zr.FindAll(context.Background())
 	if err != nil {
 		t.Errorf("delete() has error: %v", err)
 	}
