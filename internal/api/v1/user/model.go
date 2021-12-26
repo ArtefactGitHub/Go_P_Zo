@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 )
 
@@ -29,4 +30,8 @@ func NewUser(
 		Email:      email,
 		CreatedAt:  createdAt,
 		UpdatedAt:  updatedAt}
+}
+
+func (u *User) FullName() string {
+	return fmt.Sprintf("%s %s", u.FamilyName, u.GivenName)
 }

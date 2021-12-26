@@ -20,34 +20,29 @@ var seeds []zo.Zo = []zo.Zo{
 	zo.NewZo(3, ac, 300, 0, "test-3", time.Now(), sql.NullTime{}, userId)}
 
 func test_seed(ctx context.Context) {
-	tx, err := mydb.Db.BeginTx(ctx, nil)
-	if err != nil {
-		test.Failuer(err)
-	}
-	// Defer a rollback in case anything fails.
-	// https://go.dev/doc/database/execute-transactions
-	defer tx.Rollback()
-
-	for _, z := range seeds {
-		_, err := mydb.Db.ExecContext(
-			ctx,
-			`INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
-		            values(?, ?, ?, ?, ?, ?, ?, ?)`,
-			nil,
-			z.AchievementDate,
-			z.Exp,
-			z.CategoryId,
-			z.Message,
-			z.CreatedAt,
-			z.UpdatedAt,
-			z.UserId)
-		if err != nil {
-			test.Failuer(err)
+	_, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {
+		for _, z := range seeds {
+			_, err := mydb.Db.ExecContext(
+				ctx,
+				`INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
+										values(?, ?, ?, ?, ?, ?, ?, ?)`,
+				nil,
+				z.AchievementDate,
+				z.Exp,
+				z.CategoryId,
+				z.Message,
+				z.CreatedAt,
+				z.UpdatedAt,
+				z.UserId)
+			if err != nil {
+				test.Failuer(err)
+			}
 		}
-	}
+		return nil, nil
+	})
 
 	// Commit the transaction.
-	if err = tx.Commit(); err != nil {
+	if err != nil {
 		test.Failuer(err)
 	}
 }
