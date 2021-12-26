@@ -1,6 +1,7 @@
 package zo_test
 
 import (
+	"context"
 	"database/sql"
 	"testing"
 	"time"
@@ -23,7 +24,7 @@ func Test_service(t *testing.T) {
 // getAll() のテスト
 func test_s_getall(t *testing.T) {
 	s := zo.ZoService{}
-	zos, err := s.GetAll()
+	zos, err := s.GetAll(context.Background())
 	if err != nil {
 		t.Errorf("getAll() has error: %v", err)
 	}
@@ -37,7 +38,7 @@ func test_s_getall(t *testing.T) {
 // get() のテスト
 func test_s_get(t *testing.T) {
 	s := zo.ZoService{}
-	z, err := s.Get(3)
+	z, err := s.Get(context.Background(), 3)
 	if err != nil {
 		t.Errorf("get() has error: %v", err)
 	}
@@ -56,7 +57,7 @@ func test_s_post(t *testing.T) {
 	z := zo.NewZo(
 		0, ac, 555, 0, "created by test",
 		time.Now(), sql.NullTime{}, userId)
-	_, err := s.Post(&z)
+	_, err := s.Post(context.Background(), &z)
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
@@ -66,7 +67,7 @@ func test_s_post(t *testing.T) {
 		t.Errorf("exp = %d, want %d", z.Exp, want)
 	}
 
-	zos, err := s.Zr.Findall()
+	zos, err := s.Zr.Findall(context.Background())
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
@@ -81,7 +82,7 @@ func test_s_update(t *testing.T) {
 	s := zo.ZoService{}
 	z := seeds[2]
 	z.Message = "updated by test"
-	err := s.Update(&z)
+	err := s.Update(context.Background(), &z)
 	if err != nil {
 		t.Errorf("update() has error: %v", err)
 	}
@@ -96,12 +97,12 @@ func test_s_update(t *testing.T) {
 func test_s_delete(t *testing.T) {
 	s := zo.ZoService{}
 	z := seeds[2]
-	err := s.Delete(z.Id)
+	err := s.Delete(context.Background(), z.Id)
 	if err != nil {
 		t.Errorf("delete() has error: %v", err)
 	}
 
-	zos, err := s.Zr.Findall()
+	zos, err := s.Zr.Findall(context.Background())
 	if err != nil {
 		t.Errorf("delete() has error: %v", err)
 	}

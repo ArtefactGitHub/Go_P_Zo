@@ -1,6 +1,7 @@
 package mydb
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -36,4 +37,27 @@ func Finalize() {
 	if Db != nil {
 		Db.Close()
 	}
+}
+
+// トランザクション処理
+// 参考：https://go.dev/doc/database/execute-transactions
+func Tran(ctx context.Context, f func(ctx context.Context, tx *sql.Tx) (interface{}, error)) (interface{}, error) {
+	tx, err := Db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	// Defer a rollback in case anything fails.
+	defer tx.Rollback()
+
+	result, err := f(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Commit the transaction.
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

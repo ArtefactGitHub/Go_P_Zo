@@ -1,6 +1,8 @@
 package zo
 
-import "context"
+import (
+	"context"
+)
 
 type ZoService struct {
 	Zr ZoRepository
@@ -29,7 +31,6 @@ func (s *ZoService) Post(ctx context.Context, z *Zo) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-
 	return result, nil
 }
 
