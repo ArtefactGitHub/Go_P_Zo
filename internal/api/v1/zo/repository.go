@@ -112,6 +112,51 @@ func (r *ZoRepository) CreateTx(ctx context.Context, tx *sql.Tx, z *Zo) (int, er
 	return z.Id, nil
 }
 
+func (r *ZoRepository) CreateUserZoTx(ctx context.Context, tx *sql.Tx, uz *UserZo) (int, error) {
+	result, err := tx.ExecContext(ctx, `
+		INSERT INTO zos(id, user_id, zo_id, createdAt, updatedAt)
+		            values(?, ?, ?, ?, ?)`,
+		nil,
+		uz.UserId,
+		uz.ZoId,
+		uz.CreatedAt,
+		uz.UpdatedAt,
+		uz.UserId)
+	if err != nil {
+		return -1, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return -1, err
+	}
+
+	uz.Id = int(id)
+	return uz.Id, nil
+}
+
+func (r *ZoRepository) CreateWithUserZo(ctx context.Context, z *Zo, uz *UserZo) (int, error) {
+	result, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {
+		result, err := r.CreateTx(ctx, tx, z)
+		if err != nil {
+			return -1, err
+		}
+
+		_, err = r.CreateUserZoTx(ctx, tx, uz)
+		if err != nil {
+			return -1, err
+		}
+
+		return result, nil
+	})
+
+	if err != nil {
+		return -1, err
+	}
+
+	return result.(int), err
+}
+
 func (r *ZoRepository) Update(ctx context.Context, z *Zo) error {
 	_, err := mydb.Db.ExecContext(ctx, `
 		UPDATE zos

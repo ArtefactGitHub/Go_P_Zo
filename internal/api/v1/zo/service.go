@@ -2,10 +2,7 @@ package zo
 
 import (
 	"context"
-	"database/sql"
 	"time"
-
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 )
 
 type ZoService struct {
@@ -32,29 +29,32 @@ func (s *ZoService) Get(ctx context.Context, id int) (*Zo, error) {
 }
 
 func (s *ZoService) Post(ctx context.Context, z *Zo) (int, error) {
-	// ZosとUserZosテーブルへレコードを追加するためトランザクション処理を行う
-	result, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {
-		z.CreatedAt = time.Now()
-		result, err := s.Zr.CreateTx(ctx, tx, z)
-		if err != nil {
-			return -1, err
-		}
+	z.CreatedAt = time.Now()
+	uz := &UserZo{UserId: z.UserId, ZoId: z.Id, CreatedAt: time.Now()}
+	return s.Zr.CreateWithUserZo(ctx, z, uz)
+	// // ZosとUserZosテーブルへレコードを追加するためトランザクション処理を行う
+	// result, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {
+	// 	z.CreatedAt = time.Now()
+	// 	result, err := s.Zr.CreateTx(ctx, tx, z)
+	// 	if err != nil {
+	// 		return -1, err
+	// 	}
 
-		// TODO：仮実装
-		uz := UserZos{UserId: z.UserId, ZoId: z.Id, CreatedAt: time.Now()}
-		_, err = s.Uzr.CreateTx(ctx, tx, &uz)
-		if err != nil {
-			return -1, err
-		}
+	// 	// TODO：仮実装
+	// 	uz := UserZo{UserId: z.UserId, ZoId: z.Id, CreatedAt: time.Now()}
+	// 	_, err = s.Uzr.CreateTx(ctx, tx, &uz)
+	// 	if err != nil {
+	// 		return -1, err
+	// 	}
 
-		return result, nil
-	})
+	// 	return result, nil
+	// })
 
-	if err != nil {
-		return -1, err
-	}
+	// if err != nil {
+	// 	return -1, err
+	// }
 
-	return result.(int), err
+	// return result.(int), err
 }
 
 func (s *ZoService) Update(ctx context.Context, z *Zo) error {

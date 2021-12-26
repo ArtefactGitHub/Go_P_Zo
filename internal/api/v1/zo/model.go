@@ -36,3 +36,26 @@ func NewZo(
 		UpdatedAt:       updatedAt,
 		UserId:          userId}
 }
+
+type UserZo struct {
+	Id        int          `json:"id"`
+	UserId    int          `json:"user_id"`
+	ZoId      int          `json:"zo_id"`
+	CreatedAt time.Time    `json:"createdat"`
+	UpdatedAt sql.NullTime `json:"updatedat"`
+}
+
+func NewUserZo(
+	id int,
+	userId int,
+	zoId int,
+	createdAt time.Time,
+	updatedAt sql.NullTime,
+) UserZo {
+	return UserZo{
+		Id:        id,
+		UserId:    userId,
+		ZoId:      zoId,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt}
+}
