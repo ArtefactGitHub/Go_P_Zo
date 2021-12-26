@@ -87,6 +87,31 @@ func (r *ZoRepository) Create(ctx context.Context, z *Zo) (int, error) {
 	return z.Id, nil
 }
 
+func (r *ZoRepository) CreateTx(ctx context.Context, tx *sql.Tx, z *Zo) (int, error) {
+	result, err := tx.ExecContext(ctx, `
+		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
+		            values(?, ?, ?, ?, ?, ?, ?, ?)`,
+		nil,
+		z.AchievementDate,
+		z.Exp,
+		z.CategoryId,
+		z.Message,
+		z.CreatedAt,
+		z.UpdatedAt,
+		z.UserId)
+	if err != nil {
+		return -1, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return -1, err
+	}
+
+	z.Id = int(id)
+	return z.Id, nil
+}
+
 func (r *ZoRepository) Update(ctx context.Context, z *Zo) error {
 	_, err := mydb.Db.ExecContext(ctx, `
 		UPDATE zos
