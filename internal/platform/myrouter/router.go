@@ -43,20 +43,20 @@ func (mr *router) SetRoutes(routes map[RouteKey]func(
 	for key, handlerFunc := range addRoutes {
 		switch key.Method {
 		case http.MethodGet:
-			mr.r.GET(key.Path, mr.createHandle(handlerFunc))
+			mr.r.GET(key.Path, createHandle(handlerFunc))
 		case http.MethodPost:
-			mr.r.POST(key.Path, mr.createHandle(handlerFunc))
+			mr.r.POST(key.Path, createHandle(handlerFunc))
 		case http.MethodPut, http.MethodPatch:
-			mr.r.PUT(key.Path, mr.createHandle(handlerFunc))
+			mr.r.PUT(key.Path, createHandle(handlerFunc))
 		case http.MethodDelete:
-			mr.r.DELETE(key.Path, mr.createHandle(handlerFunc))
+			mr.r.DELETE(key.Path, createHandle(handlerFunc))
 		}
 	}
 
 	merge(mr.routes, addRoutes)
 }
 
-func (mr *router) createHandle(f func(
+func createHandle(f func(
 	w http.ResponseWriter,
 	req *http.Request,
 	params common.QueryMap)) httprouter.Handle {
