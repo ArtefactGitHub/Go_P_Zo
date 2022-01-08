@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
-	"github.com/julienschmidt/httprouter"
+	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
 
 type zoController struct {
@@ -20,7 +20,7 @@ type zoController struct {
 const resourceId = "zo_id"
 
 // リソースを取得
-func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// リソース群の取得
 	datas, err := c.zs.GetAll(r.Context())
 	if err != nil {
@@ -34,10 +34,10 @@ func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, ps httprou
 	myhttp.WriteSuccess(w, res, http.StatusOK)
 }
 
-func (c *zoController) get(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *zoController) get(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// 指定リソースの取得
 	// 末尾のid指定を取得
-	id, err := strconv.Atoi(ps.ByName(resourceId))
+	id, err := strconv.Atoi(params.Get(resourceId))
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return
@@ -60,7 +60,7 @@ func (c *zoController) get(w http.ResponseWriter, r *http.Request, ps httprouter
 }
 
 // 指定のリソース情報で作成
-func (c *zoController) post(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *zoController) post(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// リクエスト情報からモデルを生成
 	m, err := contentToModel(r)
 	if err != nil {
@@ -81,9 +81,9 @@ func (c *zoController) post(w http.ResponseWriter, r *http.Request, ps httproute
 }
 
 // 指定のリソース情報で更新
-func (c *zoController) update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *zoController) update(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// 末尾のid指定を取得
-	id, err := strconv.Atoi(ps.ByName(resourceId))
+	id, err := strconv.Atoi(params.Get(resourceId))
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return
@@ -119,10 +119,10 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, ps httprou
 }
 
 // 指定のリソースの削除
-func (c *zoController) delete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *zoController) delete(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// 指定リソースの取得
 	// 末尾のid指定を取得
-	id, err := strconv.Atoi(ps.ByName(resourceId))
+	id, err := strconv.Atoi(params.Get(resourceId))
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return

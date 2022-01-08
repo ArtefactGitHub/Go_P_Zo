@@ -135,8 +135,7 @@ func test_route_delete(t *testing.T) {
 
 // テスト用のリクエストを実行
 func serveHTTP(method string, url string, body io.Reader) *httptest.ResponseRecorder {
-	router := myrouter.Router{}
-	router.Routing()
+	router := myrouter.NewMyRouterWithRoutes(zo.Routes)
 
 	writer := httptest.NewRecorder()
 	request, _ := http.NewRequest(method, url, body)
