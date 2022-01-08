@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
+
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -17,7 +19,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("config: %v\n", config)
 
 	err = mydb.Init(config)
 	if err != nil {
@@ -25,7 +26,13 @@ func main() {
 	}
 	defer mydb.Finalize()
 
-	r := myrouter.New()
-	r.Routing()
+	r := Routing()
 	log.Fatal(http.ListenAndServe("localhost:8000", r))
+}
+
+func Routing() http.Handler {
+	r := myrouter.NewMyRouterWithRoutes(
+		zo.Routes,
+		user.Routes)
+	return r
 }

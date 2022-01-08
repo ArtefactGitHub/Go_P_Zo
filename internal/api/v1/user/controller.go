@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
-	"github.com/julienschmidt/httprouter"
+	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
 
 type userController struct {
@@ -18,7 +18,7 @@ type userController struct {
 const resourceId = "user_id"
 
 // リソースを取得
-func (c *userController) getAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *userController) getAll(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// リソース群の取得
 	datas, err := c.s.GetAll(r.Context())
 	if err != nil {
@@ -32,10 +32,10 @@ func (c *userController) getAll(w http.ResponseWriter, r *http.Request, ps httpr
 	myhttp.WriteSuccess(w, res, http.StatusOK)
 }
 
-func (c *userController) get(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *userController) get(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// 指定リソースの取得
 	// 末尾のid指定を取得
-	id, err := strconv.Atoi(ps.ByName(resourceId))
+	id, err := strconv.Atoi(ps.Get(resourceId))
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return
@@ -58,7 +58,7 @@ func (c *userController) get(w http.ResponseWriter, r *http.Request, ps httprout
 }
 
 // 指定のリソース情報で作成
-func (c *userController) post(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *userController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// リクエスト情報からモデルを生成
 	u, err := contentToModel(r)
 	if err != nil {
@@ -79,9 +79,9 @@ func (c *userController) post(w http.ResponseWriter, r *http.Request, ps httprou
 }
 
 // 指定のリソース情報で更新
-func (c *userController) update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *userController) update(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// 末尾のid指定を取得
-	_, err := strconv.Atoi(ps.ByName(resourceId))
+	_, err := strconv.Atoi(ps.Get(resourceId))
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return
@@ -108,10 +108,10 @@ func (c *userController) update(w http.ResponseWriter, r *http.Request, ps httpr
 }
 
 // 指定のリソースの削除
-func (c *userController) delete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *userController) delete(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// 指定リソースの取得
 	// 末尾のid指定を取得
-	id, err := strconv.Atoi(ps.ByName(resourceId))
+	id, err := strconv.Atoi(ps.Get(resourceId))
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
 		return
