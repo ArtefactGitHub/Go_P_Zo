@@ -10,9 +10,9 @@ import (
 var uc userController = userController{}
 
 var Routes map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap) = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
-	{Path: "/api/v1/users", Method: "GET"}:             uc.getAll,
-	{Path: "/api/v1/users/:user_id", Method: "GET"}:    uc.get,
-	{Path: "/api/v1/users", Method: "POST"}:            uc.post,
-	{Path: "/api/v1/users/:user_id", Method: "PUT"}:    uc.update,
-	{Path: "/api/v1/users/:user_id", Method: "DELETE"}: uc.delete,
+	{Path: "/api/v1/users", Method: "GET", NeedAuth: true}:             uc.getAll,
+	{Path: "/api/v1/users/:user_id", Method: "GET", NeedAuth: true}:    uc.get,
+	{Path: "/api/v1/users", Method: "POST", NeedAuth: true}:            uc.post,
+	{Path: "/api/v1/users/:user_id", Method: "PUT", NeedAuth: true}:    uc.update,
+	{Path: "/api/v1/users/:user_id", Method: "DELETE", NeedAuth: true}: uc.delete,
 }

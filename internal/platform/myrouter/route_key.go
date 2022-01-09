@@ -1,6 +1,7 @@
 package myrouter
 
 type RouteKey struct {
-	Path   string
-	Method string
+	Path     string
+	Method   string
+	NeedAuth bool
 }
