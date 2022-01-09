@@ -1,4 +1,4 @@
-package zo_test
+package zo
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
 
@@ -23,7 +22,7 @@ func Test_service(t *testing.T) {
 
 // getAll() のテスト
 func test_s_getall(t *testing.T) {
-	s := zo.ZoService{}
+	s := ZoService{}
 	zos, err := s.GetAll(context.Background())
 	if err != nil {
 		t.Errorf("getAll() has error: %v", err)
@@ -37,7 +36,7 @@ func test_s_getall(t *testing.T) {
 
 // get() のテスト
 func test_s_get(t *testing.T) {
-	s := zo.ZoService{}
+	s := ZoService{}
 	z, err := s.Get(context.Background(), 3)
 	if err != nil {
 		t.Errorf("get() has error: %v", err)
@@ -51,10 +50,10 @@ func test_s_get(t *testing.T) {
 
 // post() のテスト
 func test_s_post(t *testing.T) {
-	s := zo.ZoService{}
+	s := ZoService{}
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
 	userId := 1
-	z := zo.NewZo(
+	z := NewZo(
 		0, ac, 555, 0, "created by test",
 		time.Now(), sql.NullTime{}, userId)
 	_, err := s.Post(context.Background(), &z)
@@ -79,7 +78,7 @@ func test_s_post(t *testing.T) {
 
 // update() のテスト
 func test_s_update(t *testing.T) {
-	s := zo.ZoService{}
+	s := ZoService{}
 	z := seeds[2]
 	z.Message = "updated by test"
 	err := s.Update(context.Background(), &z)
@@ -95,7 +94,7 @@ func test_s_update(t *testing.T) {
 
 // delete() のテスト
 func test_s_delete(t *testing.T) {
-	s := zo.ZoService{}
+	s := ZoService{}
 	z := seeds[2]
 	err := s.Delete(context.Background(), z.Id)
 	if err != nil {
