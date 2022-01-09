@@ -12,6 +12,7 @@ import (
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
+	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
 
 var route_tests = map[string]func(t *testing.T){
@@ -128,9 +129,17 @@ func test_user_route_delete(t *testing.T) {
 	}
 }
 
+var MockRoutes map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap) = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
+	{Path: "/api/v1/users", Method: "GET", NeedAuth: false}:             uc.getAll,
+	{Path: "/api/v1/users/:user_id", Method: "GET", NeedAuth: false}:    uc.get,
+	{Path: "/api/v1/users", Method: "POST", NeedAuth: false}:            uc.post,
+	{Path: "/api/v1/users/:user_id", Method: "PUT", NeedAuth: false}:    uc.update,
+	{Path: "/api/v1/users/:user_id", Method: "DELETE", NeedAuth: false}: uc.delete,
+}
+
 // テスト用のリクエストを実行
 func serveHTTP(method string, url string, body io.Reader) *httptest.ResponseRecorder {
-	router := myrouter.NewMyRouterWithRoutes(Routes)
+	router := myrouter.NewMyRouterWithRoutes(MockRoutes)
 
 	writer := httptest.NewRecorder()
 	request, _ := http.NewRequest(method, url, body)

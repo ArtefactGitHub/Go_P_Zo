@@ -3,6 +3,9 @@ package myrouter
 import (
 	"net/http"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mycontext"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 	"github.com/julienschmidt/httprouter"
 )
@@ -41,15 +44,16 @@ func (mr *router) SetRoutes(routes map[RouteKey]func(
 	addRoutes := getNewRoutes(mr.routes, routes)
 
 	for key, handlerFunc := range addRoutes {
+		needAuth := key.NeedAuth
 		switch key.Method {
 		case http.MethodGet:
-			mr.r.GET(key.Path, createHandle(handlerFunc))
+			mr.r.GET(key.Path, createHandle(handlerFunc, needAuth))
 		case http.MethodPost:
-			mr.r.POST(key.Path, createHandle(handlerFunc))
+			mr.r.POST(key.Path, createHandle(handlerFunc, needAuth))
 		case http.MethodPut, http.MethodPatch:
-			mr.r.PUT(key.Path, createHandle(handlerFunc))
+			mr.r.PUT(key.Path, createHandle(handlerFunc, needAuth))
 		case http.MethodDelete:
-			mr.r.DELETE(key.Path, createHandle(handlerFunc))
+			mr.r.DELETE(key.Path, createHandle(handlerFunc, needAuth))
 		}
 	}
 
@@ -59,9 +63,19 @@ func (mr *router) SetRoutes(routes map[RouteKey]func(
 func createHandle(f func(
 	w http.ResponseWriter,
 	req *http.Request,
-	params common.QueryMap)) httprouter.Handle {
+	params common.QueryMap),
+	needAuth bool) httprouter.Handle {
 
 	return func(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
+		// StatusUnauthorized
+		if needAuth {
+			isSuccess, err := mycontext.FromContextBool(req.Context(), mycontext.AuthorizedKey)
+			if err != nil || !isSuccess {
+				myhttp.WriteError(w, myerror.NewError(nil, "token error"), http.StatusUnauthorized, "")
+				return
+			}
+		}
+
 		zoParams := common.QueryMap{}
 		for _, p := range params {
 			if _, ok := zoParams[p.Key]; !ok {
