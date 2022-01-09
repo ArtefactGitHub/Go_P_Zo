@@ -1,10 +1,9 @@
-package user_test
+package user
 
 import (
 	"context"
 	"testing"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
@@ -22,7 +21,7 @@ func Test_repository(t *testing.T) {
 
 // FindAll()のテスト
 func test_user_rep_findall(t *testing.T) {
-	r := user.UserRepository{}
+	r := UserRepository{}
 	users, err := r.FindAll(context.Background())
 	if err != nil {
 		t.Errorf("FindAll() has error: %v", err)
@@ -36,7 +35,7 @@ func test_user_rep_findall(t *testing.T) {
 
 // Find()のテスト
 func test_user_rep_find(t *testing.T) {
-	r := user.UserRepository{}
+	r := UserRepository{}
 	u, err := r.Find(context.Background(), 1)
 	if err != nil {
 		t.Errorf("Find() has error: %v", err)
@@ -53,7 +52,7 @@ func test_user_rep_find(t *testing.T) {
 
 // Create()のテスト
 func test_user_rep_create(t *testing.T) {
-	r := user.UserRepository{}
+	r := UserRepository{}
 	u := seeds[0]
 	u.GivenName = "created by test"
 	id, err := r.Create(context.Background(), &u)
@@ -91,7 +90,7 @@ func test_user_rep_create(t *testing.T) {
 
 // Update()のテスト
 func test_user_rep_update(t *testing.T) {
-	r := user.UserRepository{}
+	r := UserRepository{}
 	u := seeds[0]
 	u.GivenName = "太郎更新"
 	err := r.Update(context.Background(), &u)
@@ -119,7 +118,7 @@ func test_user_rep_update(t *testing.T) {
 
 // Delete()のテスト
 func test_user_rep_delete(t *testing.T) {
-	r := user.UserRepository{}
+	r := UserRepository{}
 	u := seeds[0]
 	err := r.Delete(context.Background(), u.Id)
 	if err != nil {

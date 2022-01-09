@@ -1,5 +1,5 @@
-github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user v0.0.0-20211226064812-51c406b24abe/go.mod h1:J3Sm9AKv3rZN8MfZUoeP1wR26k+krpmCM52a3e2Fa9s=
-github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo v0.0.0-20211226064812-51c406b24abe/go.mod h1:fGkaFbm3pu+oZd2ZlSUlPwOQO0G3h4X6gvESUbzRlsM=
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

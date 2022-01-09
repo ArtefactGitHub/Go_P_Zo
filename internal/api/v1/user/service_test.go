@@ -1,4 +1,4 @@
-package user_test
+package user
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 )
 
@@ -23,7 +22,7 @@ func Test_service(t *testing.T) {
 
 // GetAll() のテスト
 func test_user_s_getall(t *testing.T) {
-	s := user.UserService{}
+	s := UserService{}
 	users, err := s.GetAll(context.Background())
 	if err != nil {
 		t.Errorf("GetAll() has error: %v", err)
@@ -37,7 +36,7 @@ func test_user_s_getall(t *testing.T) {
 
 // Get() のテスト
 func test_user_s_get(t *testing.T) {
-	s := user.UserService{}
+	s := UserService{}
 	u, err := s.Get(context.Background(), 3)
 	if err != nil {
 		t.Errorf("get() has error: %v", err)
@@ -51,8 +50,8 @@ func test_user_s_get(t *testing.T) {
 
 // Post() のテスト
 func test_user_s_post(t *testing.T) {
-	s := user.UserService{}
-	u := user.NewUser(1, "太郎更新", "山田", "taro@gmail.com", time.Now(), sql.NullTime{})
+	s := UserService{}
+	u := NewUser(1, "太郎更新", "山田", "taro@gmail.com", time.Now(), sql.NullTime{})
 	_, err := s.Post(context.Background(), &u)
 	if err != nil {
 		t.Errorf("Post() has error: %v", err)
@@ -74,7 +73,7 @@ func test_user_s_post(t *testing.T) {
 
 // Update() のテスト
 func test_user_s_update(t *testing.T) {
-	s := user.UserService{}
+	s := UserService{}
 	u := seeds[2]
 	u.GivenName = "updated by test"
 	err := s.Update(context.Background(), &u)
@@ -90,7 +89,7 @@ func test_user_s_update(t *testing.T) {
 
 // Delete() のテスト
 func test_user_s_delete(t *testing.T) {
-	s := user.UserService{}
+	s := UserService{}
 	u := seeds[2]
 	err := s.Delete(context.Background(), u.Id)
 	if err != nil {
