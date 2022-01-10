@@ -37,5 +37,5 @@ func WriteError(w http.ResponseWriter, err error, statusCode int, description st
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(statusCode)
 	w.Write(result)
-	log.Println(err)
+	log.Printf("WriteError() %v", err)
 }

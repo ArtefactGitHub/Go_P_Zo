@@ -15,21 +15,36 @@ const address = "localhost:8000"
 
 func main() {
 	// 設定ファイルの取得
-	config, err := config.LoadConfig("../configs/config.yml")
+	cfg, err := config.LoadConfig("../configs/config.yml")
+	config.Cfg = cfg
 	if err != nil {
 		panic(err)
 	}
 
-	err = mydb.Init(config)
+	err = mydb.Init(cfg)
 	if err != nil {
 		panic(err)
 	}
 	defer mydb.Finalize()
 
-	handler := middleware.CreateHandler(
-		middleware.NewJwtMiddleware(),
-		middleware.NewRouterMiddleware(),
-	)
+	handler, err := CreateHandler(cfg)
+	if err != nil {
+		panic(err)
+	}
+
 	log.Printf("running on %s", address)
 	log.Fatal(http.ListenAndServe(address, handler))
+}
+
+func CreateHandler(config *config.Config) (http.Handler, error) {
+	jwt, err := middleware.NewJwtMiddleware(config)
+	if err != nil {
+		return nil, err
+	}
+
+	handler := middleware.CreateHandler(
+		jwt,
+		middleware.NewRouterMiddleware(),
+	)
+	return handler, nil
 }
