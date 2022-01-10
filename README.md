@@ -16,6 +16,7 @@ The link below is a reference for the project layout design.
 ```
 export Go_P_Zo_DB_USER=XXXX
 export Go_P_Zo_DB_PASSWORD=XXXX
+export Go_P_Zo_AUTH_SIGNKEY=XXXX
 ```
 
 <br>
