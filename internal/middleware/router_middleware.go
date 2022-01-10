@@ -5,6 +5,7 @@ import (
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
 )
@@ -16,6 +17,7 @@ type RouterMiddleware struct {
 
 func NewRouterMiddleware() IMiddleware {
 	return &RouterMiddleware{r: myrouter.NewMyRouterWithRoutes(
+		auth.Routes,
 		zo.Routes,
 		user.Routes)}
 }

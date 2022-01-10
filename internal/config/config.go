@@ -16,7 +16,16 @@ type Config struct {
 	Protocol  string `yaml:"protocol"`
 	Address   string `yaml:"address"`
 	DataBase  string `yaml:"database"`
+
+	Auth ConfigAuth `yaml:"auth"` // 環境変数から取得
 }
+
+type ConfigAuth struct {
+	SignKey         string `yaml:"signkey"`          // 環境変数から取得
+	TokenExpiration int    `yaml:"token_expiration"` // トークン有効期限（秒）
+}
+
+var Cfg *Config
 
 // 設定ファイルを読み込む
 // 秘匿情報は環境変数から読み込みます
