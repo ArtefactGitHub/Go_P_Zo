@@ -14,7 +14,7 @@ func (e *myError) Error() string {
 func NewError(err error, desc string) error {
 	switch {
 	case err == nil:
-		return &myError{Message: desc, Origin: nil}
+		return nil
 	case desc == "":
 		return &myError{Message: err.Error(), Origin: err}
 	default:

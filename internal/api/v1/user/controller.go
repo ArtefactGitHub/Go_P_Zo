@@ -29,7 +29,7 @@ func (c *userController) getAll(w http.ResponseWriter, r *http.Request, params c
 	res := GetAllResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Users:        datas}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 func (c *userController) get(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
@@ -54,7 +54,7 @@ func (c *userController) get(w http.ResponseWriter, r *http.Request, ps common.Q
 	res := GetResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		User:         model}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 // 指定のリソース情報で作成
@@ -104,7 +104,7 @@ func (c *userController) update(w http.ResponseWriter, r *http.Request, ps commo
 	res := PutResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		User:         u}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 // 指定のリソースの削除
@@ -124,7 +124,7 @@ func (c *userController) delete(w http.ResponseWriter, r *http.Request, ps commo
 	}
 
 	res := DeleteResponse{ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil}}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 // リクエスト情報からモデルの生成

@@ -4,6 +4,8 @@ go 1.17
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/config => ../../../config
 
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb => ../../../platform/mydb
+
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mycontext => ../../../platform/mycontext
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp => ../../../platform/myhttp
@@ -19,6 +21,7 @@ replace github.com/ArtefactGitHub/Go_P_Zo/pkg/common => ../../../../pkg/common
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/config v0.0.0-00010101000000-000000000000
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth v0.0.0-00010101000000-000000000000
+	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb v0.0.0-00010101000000-000000000000
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp v0.0.0-00010101000000-000000000000
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter v0.0.0-00010101000000-000000000000
 	github.com/ArtefactGitHub/Go_P_Zo/pkg/common v0.0.0-00010101000000-000000000000

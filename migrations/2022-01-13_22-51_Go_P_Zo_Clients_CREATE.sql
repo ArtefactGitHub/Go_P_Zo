@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Ace SQL dump
-# バージョン 20019
+# バージョン 20021
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # ホスト: localhost (MySQL 8.0.12)
 # データベース: Go_P_Zo
-# 生成時間: 2021-12-24 13:48:57 +0000
+# 生成時間: 2022-01-13 13:51:42 +0000
 # ************************************************************
 
 
@@ -20,22 +20,19 @@ SET NAMES utf8mb4;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# テーブルのダンプ Users
+# テーブルのダンプ Clients
 # ------------------------------------------------------------
-USE Go_P_Zo;
 
-DROP TABLE IF EXISTS `Users`;
+DROP TABLE IF EXISTS `Clients`;
 
-CREATE TABLE `Users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Userの一意の識別子',
-  `given_name` varchar(20) NOT NULL COMMENT '名前',
-  `family_name` varchar(20) NOT NULL COMMENT '苗字',
-  `email` varchar(100) NOT NULL COMMENT 'メールアドレス',
-  `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'パスワード',
+CREATE TABLE `Clients` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'クライアント識別子',
+  `secret` varchar(400) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'シークレット',
   `createdAt` datetime NOT NULL COMMENT 'レコード作成日',
   `updatedAt` datetime DEFAULT NULL COMMENT 'レコード更新日',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 

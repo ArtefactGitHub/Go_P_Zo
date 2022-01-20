@@ -5,8 +5,12 @@ import (
 )
 
 type PostResponse struct {
-	myhttp.ResponseBase
-	AccessToken AccessToken `json:"access_token"`
+	*myhttp.ResponseBase
+	AccessToken *AccessToken `json:"access_token"`
+}
+
+func NewPostResponse(res *myhttp.ResponseBase, token *AccessToken) *PostResponse {
+	return &PostResponse{ResponseBase: res, AccessToken: token}
 }
 
 type AccessToken struct {

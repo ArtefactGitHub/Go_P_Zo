@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
 
 type UserService struct {
@@ -27,6 +29,8 @@ func (s *UserService) Get(ctx context.Context, id int) (*User, error) {
 }
 
 func (s *UserService) Post(ctx context.Context, u *User) (int, error) {
+	u.CreatedAt = time.Now()
+	u.UpdatedAt = sql.NullTime{}
 	result, err := s.Ur.Create(ctx, u)
 	if err != nil {
 		return -1, err
@@ -35,6 +39,7 @@ func (s *UserService) Post(ctx context.Context, u *User) (int, error) {
 }
 
 func (s *UserService) Update(ctx context.Context, u *User) error {
+	u.UpdatedAt = sql.NullTime{Time: time.Now(), Valid: true}
 	err := s.Ur.Update(ctx, u)
 	if err != nil {
 		return err

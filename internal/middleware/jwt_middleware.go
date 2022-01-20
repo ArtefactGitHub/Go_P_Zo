@@ -3,8 +3,10 @@ package middleware
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 
@@ -28,7 +30,6 @@ func NewJwtMiddleware(config *config.Config) (IMiddleware, error) {
 	if config.Auth.SignKey == "" {
 		return nil, errors.New("config.SignKey not found")
 	} else {
-		// authtest(config)
 		return &JwtMiddleware{authKey: config.Auth.SignKey}, nil
 	}
 }
@@ -40,30 +41,52 @@ func (m *JwtMiddleware) SetNext(next IMiddleware) {
 func (m *JwtMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 	tokenHeader := req.Header.Get(AuthTokenHeaderName)
+
 	if tokenHeader != "" {
+		log.Printf("tokenHeader: %s", tokenHeader)
+
 		tokenString, err := getExtractedToken(tokenHeader)
+		log.Printf("tokenString: %s", tokenHeader)
 		if err != nil {
-			myhttp.WriteError(w, err, http.StatusBadRequest, "")
+			myhttp.WriteError(w, err, http.StatusUnauthorized, "")
 			return
 		}
 
-		token, err := validateToken(tokenString, m.authKey)
+		token, err := parseToken(tokenString, m.authKey)
+		log.Printf("token: %v", token)
 		if err != nil {
-			myhttp.WriteError(w, err, http.StatusBadRequest, "parse token failure")
+			myhttp.WriteError(w, err, http.StatusUnauthorized, "parse token failure")
 			return
 		}
 
-		if _, ok := token.Claims.(*myauth.AuthClaims); !ok {
-			// set value to context
-			ctx = mycontext.NewContext(ctx, mycontext.AuthorizedKey, true)
-		} else {
-			myhttp.WriteError(w, errors.New("token.Claims is invalid"), http.StatusBadRequest, "")
+		if _, err := m.verifyToken(token); err != nil {
+			myhttp.WriteError(w, err, http.StatusUnauthorized, "verify token failure")
 			return
 		}
+
+		// set value to context
+		ctx = mycontext.NewContext(ctx, mycontext.AuthorizedKey, true)
 	}
 
 	if m.next != nil {
 		m.next.ServeHTTP(w, req.WithContext(ctx))
+	}
+}
+
+func (m *JwtMiddleware) verifyToken(token *jwt.Token) (*myauth.AuthClaims, error) {
+	if claims, ok := token.Claims.(*myauth.AuthClaims); ok {
+		log.Printf("claims: %v", claims)
+		if claims.Issuer != "zo.auth.service" {
+			return nil, errors.New("invalid issuer")
+		}
+		now := time.Now().Unix()
+		if claims.ExpiresAt < now {
+			return nil, errors.New("token expired")
+		}
+
+		return claims, nil
+	} else {
+		return nil, errors.New("invalid token")
 	}
 }
 
@@ -76,10 +99,10 @@ func getExtractedToken(tokenHeader string) (string, error) {
 	return "", errors.New("invalid token")
 }
 
-func validateToken(tokenString string, authKey string) (*jwt.Token, error) {
+func parseToken(tokenString string, authKey string) (*jwt.Token, error) {
 	// Parse the token
 	// https://pkg.go.dev/github.com/golang-jwt/jwt/v4#Parse
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &myauth.AuthClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(authKey), nil
 	})
 

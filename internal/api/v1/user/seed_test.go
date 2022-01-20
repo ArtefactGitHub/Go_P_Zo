@@ -10,9 +10,9 @@ import (
 )
 
 var seeds []User = []User{
-	NewUser(1, "太郎", "山田", "taro@gmail.com", time.Now(), sql.NullTime{}),
-	NewUser(2, "花子", "佐藤", "hanako@gmail.com", time.Now(), sql.NullTime{}),
-	NewUser(3, "John", "Doe", "john@gmail.com", time.Now(), sql.NullTime{}),
+	NewUser(1, "太郎", "山田", "taro@gmail.com", "password", time.Now(), sql.NullTime{}),
+	NewUser(2, "花子", "佐藤", "hanako@gmail.com", "password", time.Now(), sql.NullTime{}),
+	NewUser(3, "John", "Doe", "john@gmail.com", "password", time.Now(), sql.NullTime{}),
 }
 
 func test_seed(ctx context.Context) {
@@ -20,12 +20,13 @@ func test_seed(ctx context.Context) {
 		for _, u := range seeds {
 			_, err := mydb.Db.ExecContext(
 				ctx,
-				`INSERT INTO users(id, given_name, family_name, email, createdAt, updatedAt)
-									values(?, ?, ?, ?, ?, ?)`,
+				`INSERT INTO users(id, given_name, family_name, email, password, createdAt, updatedAt)
+									values(?, ?, ?, ?, ?, ?, ?)`,
 				nil,
 				u.GivenName,
 				u.FamilyName,
 				u.Email,
+				u.Password,
 				u.CreatedAt,
 				u.UpdatedAt)
 			if err != nil {
