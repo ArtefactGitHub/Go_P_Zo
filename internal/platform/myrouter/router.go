@@ -1,6 +1,8 @@
 package myrouter
 
 import (
+	"errors"
+	"log"
 	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mycontext"
@@ -67,23 +69,26 @@ func createHandle(f func(
 	needAuth bool) httprouter.Handle {
 
 	return func(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
+		log.Printf("[handle]req: %v", req)
+		log.Printf("[handle]params: %v", params)
+
 		// StatusUnauthorized
 		if needAuth {
 			isSuccess, err := mycontext.FromContextBool(req.Context(), mycontext.AuthorizedKey)
 			if err != nil || !isSuccess {
-				myhttp.WriteError(w, myerror.NewError(nil, "token error"), http.StatusUnauthorized, "")
+				myhttp.WriteError(w, myerror.NewError(errors.New("access token not found"), ""), http.StatusUnauthorized, "Unauthorized")
 				return
 			}
 		}
 
-		zoParams := common.QueryMap{}
+		queryMap := common.QueryMap{}
 		for _, p := range params {
-			if _, ok := zoParams[p.Key]; !ok {
-				zoParams[p.Key] = p.Value
+			if _, ok := queryMap[p.Key]; !ok {
+				queryMap[p.Key] = p.Value
 			}
 		}
 
-		f(w, req, zoParams)
+		f(w, req, queryMap)
 	}
 }
 
