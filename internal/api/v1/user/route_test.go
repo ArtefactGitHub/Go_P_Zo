@@ -68,7 +68,7 @@ func test_user_route_get(t *testing.T) {
 
 // [POST] /api/v1/users のルーティングのテスト
 func test_user_route_post(t *testing.T) {
-	u := NewUser(1, "Bob", "Michael", "bob@gmail.com", time.Now(), sql.NullTime{})
+	u := NewUser(1, "Bob", "Michael", "bob@gmail.com", "password", time.Now(), sql.NullTime{})
 	j, _ := json.MarshalIndent(u, "", "\t")
 
 	writer := serveHTTP("POST", "/api/v1/users", bytes.NewReader(j))

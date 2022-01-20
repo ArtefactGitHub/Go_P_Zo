@@ -51,7 +51,7 @@ func test_user_s_get(t *testing.T) {
 // Post() のテスト
 func test_user_s_post(t *testing.T) {
 	s := UserService{}
-	u := NewUser(1, "太郎更新", "山田", "taro@gmail.com", time.Now(), sql.NullTime{})
+	u := NewUser(1, "太郎更新", "山田", "taro@gmail.com", "password", time.Now(), sql.NullTime{})
 	_, err := s.Post(context.Background(), &u)
 	if err != nil {
 		t.Errorf("Post() has error: %v", err)

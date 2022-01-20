@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 )
 
@@ -25,6 +27,7 @@ func (r *UserRepository) FindAll(ctx context.Context) ([]User, error) {
 			&u.GivenName,
 			&u.FamilyName,
 			&u.Email,
+			&u.Password,
 			&u.CreatedAt,
 			&u.UpdatedAt)
 		if err != nil {
@@ -47,6 +50,7 @@ func (r *UserRepository) Find(ctx context.Context, id int) (*User, error) {
 		&u.GivenName,
 		&u.FamilyName,
 		&u.Email,
+		&u.Password,
 		&u.CreatedAt,
 		&u.UpdatedAt)
 	if err == sql.ErrNoRows {
@@ -59,13 +63,20 @@ func (r *UserRepository) Find(ctx context.Context, id int) (*User, error) {
 }
 
 func (r *UserRepository) Create(ctx context.Context, u *User) (int, error) {
+	password := []byte(u.Password)
+	hashed, err := bcrypt.GenerateFromPassword(password, 12)
+	if err != nil {
+		return -1, err
+	}
+
 	result, err := mydb.Db.ExecContext(ctx, `
-			INSERT INTO users(id, given_name, family_name, email, createdAt, updatedAt)
-			values(?, ?, ?, ?, ?, ?)`,
+			INSERT INTO users(id, given_name, family_name, email, password, createdAt, updatedAt)
+			values(?, ?, ?, ?, ?, ?, ?)`,
 		nil,
 		&u.GivenName,
 		&u.FamilyName,
 		&u.Email,
+		&hashed,
 		&u.CreatedAt,
 		&u.UpdatedAt)
 	if err != nil {
@@ -82,13 +93,20 @@ func (r *UserRepository) Create(ctx context.Context, u *User) (int, error) {
 }
 
 func (r *UserRepository) CreateTx(ctx context.Context, tx *sql.Tx, u *User) (int, error) {
+	password := []byte(u.Password)
+	hashed, err := bcrypt.GenerateFromPassword(password, 12)
+	if err != nil {
+		return -1, err
+	}
+
 	result, err := tx.ExecContext(ctx, `
-			INSERT INTO users(id, given_name, family_name, email, createdAt, updatedAt)
+			INSERT INTO users(id, given_name, family_name, email, password, createdAt, updatedAt)
 			values(?, ?, ?, ?, ?, ?)`,
 		nil,
 		&u.GivenName,
 		&u.FamilyName,
 		&u.Email,
+		&hashed,
 		&u.CreatedAt,
 		&u.UpdatedAt)
 	if err != nil {

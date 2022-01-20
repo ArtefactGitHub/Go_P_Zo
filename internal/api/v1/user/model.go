@@ -11,6 +11,7 @@ type User struct {
 	GivenName  string       `json:"given_name"`
 	FamilyName string       `json:"family_name"`
 	Email      string       `json:"email"`
+	Password   string       `json:"password"`
 	CreatedAt  time.Time    `json:"createdat"`
 	UpdatedAt  sql.NullTime `json:"updatedat"`
 }
@@ -20,6 +21,7 @@ func NewUser(
 	givenName string,
 	familyName string,
 	email string,
+	password string,
 	createdAt time.Time,
 	updatedAt sql.NullTime,
 ) User {
@@ -28,6 +30,7 @@ func NewUser(
 		GivenName:  givenName,
 		FamilyName: familyName,
 		Email:      email,
+		Password:   password,
 		CreatedAt:  createdAt,
 		UpdatedAt:  updatedAt}
 }

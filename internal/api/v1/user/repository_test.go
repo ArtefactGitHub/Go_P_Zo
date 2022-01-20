@@ -68,6 +68,7 @@ func test_user_rep_create(t *testing.T) {
 		&test.TrashScanner{},
 		&test.TrashScanner{},
 		&test.TrashScanner{},
+		&test.TrashScanner{},
 		&test.TrashScanner{})
 	if err != nil {
 		t.Fatalf("Create() has error: %v", err)
@@ -102,6 +103,7 @@ func test_user_rep_update(t *testing.T) {
 	err = mydb.Db.QueryRow("SELECT * FROM users WHERE id = ?", u.Id).Scan(
 		&test.TrashScanner{},
 		&givenName,
+		&test.TrashScanner{},
 		&test.TrashScanner{},
 		&test.TrashScanner{},
 		&test.TrashScanner{},
