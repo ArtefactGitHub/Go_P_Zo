@@ -24,6 +24,7 @@ require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter v0.0.0-00010101000000-000000000000
 	github.com/ArtefactGitHub/Go_P_Zo/internal/test v0.0.0-00010101000000-000000000000
 	github.com/ArtefactGitHub/Go_P_Zo/pkg/common v0.0.0-00010101000000-000000000000
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 )
 
 require (
