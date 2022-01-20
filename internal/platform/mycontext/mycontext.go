@@ -2,7 +2,7 @@ package mycontext
 
 import (
 	"context"
-	"errors"
+	"fmt"
 )
 
 type contextKey string
@@ -17,7 +17,7 @@ func FromContextBool(ctx context.Context, key interface{}) (bool, error) {
 	v := ctx.Value(key)
 	value, ok := v.(bool)
 	if !ok {
-		return false, errors.New("value not found")
+		return false, fmt.Errorf("%s not found", key)
 	}
 
 	return value, nil
