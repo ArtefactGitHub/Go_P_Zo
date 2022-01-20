@@ -31,7 +31,7 @@ func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, params com
 	res := GetAllResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Zos:          datas}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 func (c *zoController) get(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
@@ -56,7 +56,7 @@ func (c *zoController) get(w http.ResponseWriter, r *http.Request, params common
 	res := GetResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Zo:           model}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 // 指定のリソース情報で作成
@@ -115,7 +115,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, params com
 	res := PutResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Zo:           &u}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 // 指定のリソースの削除
@@ -135,7 +135,7 @@ func (c *zoController) delete(w http.ResponseWriter, r *http.Request, params com
 	}
 
 	res := DeleteResponse{ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil}}
-	myhttp.WriteSuccess(w, res, http.StatusOK)
+	myhttp.Write(w, res, http.StatusOK)
 }
 
 // リクエスト情報からモデルの生成
