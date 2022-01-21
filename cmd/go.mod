@@ -13,6 +13,7 @@ require (
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth v0.0.0-00010101000000-000000000000 // indirect
+	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session v0.0.0-00010101000000-000000000000 // indirect
 	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user v0.0.0-20220109012703-3851fd0a803f // indirect
 	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo v0.0.0-20220109012703-3851fd0a803f // indirect
 	github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth v0.0.0-00010101000000-000000000000 // indirect
@@ -42,6 +43,8 @@ replace github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter => ../inter
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/middleware => ../internal/middleware
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth => ../internal/api/v1/auth
+
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session => ../internal/api/v1/session
 
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo => ../internal/api/v1/zo
 
