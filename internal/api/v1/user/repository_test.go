@@ -55,6 +55,7 @@ func test_user_rep_create(t *testing.T) {
 	r := UserRepository{}
 	u := seeds[0]
 	u.GivenName = "created by test"
+	u.Email = "createdbytest@com"
 	id, err := r.Create(context.Background(), &u)
 	if err != nil {
 		t.Fatalf("Create() has error: %v", err)
@@ -75,7 +76,7 @@ func test_user_rep_create(t *testing.T) {
 	}
 
 	if givenName != want {
-		t.Errorf("u.Message = %s, want %s", u.GivenName, givenName)
+		t.Errorf("u.GivenName = %s, want %s", u.GivenName, givenName)
 	}
 
 	var count int
