@@ -3,7 +3,6 @@ package session
 import (
 	"context"
 	"database/sql"
-	"log"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"golang.org/x/crypto/bcrypt"
@@ -32,6 +31,6 @@ func (r *SessionRepository) Find(ctx context.Context, identifier string, passwor
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("fff  %v", result)
+
 	return result, nil
 }
