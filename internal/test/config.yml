@@ -6,3 +6,7 @@ password: ${Go_P_Zo_DB_PASSWORD}
 protocol: tcp
 address: 127.0.0.1:3306
 database: Go_P_Zo_Test?parseTime=true
+
+auth:
+  token_expiration: 1200
+  signkey: ${Go_P_Zo_AUTH_SIGNKEY}

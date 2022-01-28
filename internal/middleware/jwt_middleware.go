@@ -27,7 +27,9 @@ type JwtMiddleware struct {
 }
 
 func NewJwtMiddleware(config *config.Config) (IMiddleware, error) {
-	if config.Auth.SignKey == "" {
+	if config == nil {
+		return nil, errors.New("config not found")
+	} else if config.Auth.SignKey == "" {
 		return nil, errors.New("config.SignKey not found")
 	} else {
 		return &JwtMiddleware{authKey: config.Auth.SignKey}, nil

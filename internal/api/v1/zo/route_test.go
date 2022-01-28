@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/middleware"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
@@ -28,7 +29,10 @@ func Test_route(t *testing.T) {
 
 // [GET] /api/v1/zos のルーティングのテスト
 func test_route_getall(t *testing.T) {
-	writer := serveHTTP("GET", "/api/v1/zos", nil)
+	writer, err := serveHTTP("GET", "/api/v1/zos", nil)
+	if err != nil {
+		t.Fatalf("serveHTTP failuer. %v", err)
+	}
 
 	want := http.StatusOK
 	if writer.Code != want {
@@ -48,7 +52,10 @@ func test_route_getall(t *testing.T) {
 
 // [GET] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_get(t *testing.T) {
-	writer := serveHTTP("GET", "/api/v1/zos/1", nil)
+	writer, err := serveHTTP("GET", "/api/v1/zos/1", nil)
+	if err != nil {
+		t.Fatalf("serveHTTP failuer. %v", err)
+	}
 
 	want := http.StatusOK
 	if writer.Code != want {
@@ -75,7 +82,10 @@ func test_route_post(t *testing.T) {
 		time.Now(), sql.NullTime{}, userId)
 	j, _ := json.MarshalIndent(z, "", "\t")
 
-	writer := serveHTTP("POST", "/api/v1/zos", bytes.NewReader(j))
+	writer, err := serveHTTP("POST", "/api/v1/zos", bytes.NewReader(j))
+	if err != nil {
+		t.Fatalf("serveHTTP failuer. %v", err)
+	}
 
 	want := http.StatusCreated
 	if writer.Code != want {
@@ -99,7 +109,10 @@ func test_route_update(t *testing.T) {
 	z.Message = "updated by test_route_update"
 	j, _ := json.MarshalIndent(z, "", "\t")
 
-	writer := serveHTTP("PUT", "/api/v1/zos/1", bytes.NewReader(j))
+	writer, err := serveHTTP("PUT", "/api/v1/zos/1", bytes.NewReader(j))
+	if err != nil {
+		t.Fatalf("serveHTTP failuer. %v", err)
+	}
 
 	want := http.StatusOK
 	if writer.Code != want {
@@ -119,7 +132,10 @@ func test_route_update(t *testing.T) {
 
 // [DELETE] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_delete(t *testing.T) {
-	writer := serveHTTP("DELETE", "/api/v1/zos/1", nil)
+	writer, err := serveHTTP("DELETE", "/api/v1/zos/1", nil)
+	if err != nil {
+		t.Fatalf("serveHTTP failuer. %v", err)
+	}
 
 	want := http.StatusOK
 	if writer.Code != want {
@@ -142,11 +158,23 @@ var MockRoutes map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request
 }
 
 // テスト用のリクエストを実行
-func serveHTTP(method string, url string, body io.Reader) *httptest.ResponseRecorder {
-	router := myrouter.NewMyRouterWithRoutes(MockRoutes)
-
+func serveHTTP(method string, url string, body io.Reader) (*httptest.ResponseRecorder, error) {
 	writer := httptest.NewRecorder()
 	request, _ := http.NewRequest(method, url, body)
-	router.ServeHTTP(writer, request)
-	return writer
+
+	config, _ := test.LoadConfig()
+	jwt, err := middleware.NewJwtMiddleware(config)
+	if err != nil {
+		return nil, err
+	}
+
+	handler := middleware.CreateHandler(
+		jwt,
+		middleware.NewRouterMiddleware(
+			MockRoutes,
+		),
+	)
+
+	handler.ServeHTTP(writer, request)
+	return writer, nil
 }
