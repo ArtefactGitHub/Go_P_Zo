@@ -51,7 +51,7 @@ func test_user_s_get(t *testing.T) {
 // Post() のテスト
 func test_user_s_post(t *testing.T) {
 	s := UserService{}
-	u := NewUser(1, "太郎更新", "山田", "taro@gmail.com", "password", time.Now(), sql.NullTime{})
+	u := NewUser(1, "太郎更新", "山田", "createbytest@com", "password", time.Now(), sql.NullTime{})
 	_, err := s.Post(context.Background(), &u)
 	if err != nil {
 		t.Errorf("Post() has error: %v", err)
@@ -61,7 +61,7 @@ func test_user_s_post(t *testing.T) {
 		t.Errorf("GivenName = %s, want %s", u.GivenName, "太郎更新")
 	}
 
-	users, err := s.Ur.FindAll(context.Background())
+	users, err := s.r.FindAll(context.Background())
 	if err != nil {
 		t.Errorf("Post() has error: %v", err)
 	}
@@ -96,7 +96,7 @@ func test_user_s_delete(t *testing.T) {
 		t.Errorf("Delete() has error: %v", err)
 	}
 
-	users, err := s.Ur.FindAll(context.Background())
+	users, err := s.r.FindAll(context.Background())
 	if err != nil {
 		t.Errorf("Delete() has error: %v", err)
 	}

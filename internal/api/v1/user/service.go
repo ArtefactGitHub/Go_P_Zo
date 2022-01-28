@@ -7,11 +7,11 @@ import (
 )
 
 type UserService struct {
-	Ur UserRepository
+	r UserRepository
 }
 
 func (s *UserService) GetAll(ctx context.Context) ([]User, error) {
-	result, err := s.Ur.FindAll(ctx)
+	result, err := s.r.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +20,7 @@ func (s *UserService) GetAll(ctx context.Context) ([]User, error) {
 }
 
 func (s *UserService) Get(ctx context.Context, id int) (*User, error) {
-	result, err := s.Ur.Find(ctx, id)
+	result, err := s.r.Find(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (s *UserService) Get(ctx context.Context, id int) (*User, error) {
 func (s *UserService) Post(ctx context.Context, u *User) (int, error) {
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = sql.NullTime{}
-	result, err := s.Ur.Create(ctx, u)
+	result, err := s.r.Create(ctx, u)
 	if err != nil {
 		return -1, err
 	}
@@ -40,7 +40,7 @@ func (s *UserService) Post(ctx context.Context, u *User) (int, error) {
 
 func (s *UserService) Update(ctx context.Context, u *User) error {
 	u.UpdatedAt = sql.NullTime{Time: time.Now(), Valid: true}
-	err := s.Ur.Update(ctx, u)
+	err := s.r.Update(ctx, u)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (s *UserService) Update(ctx context.Context, u *User) error {
 }
 
 func (s *UserService) Delete(ctx context.Context, id int) error {
-	err := s.Ur.Delete(ctx, id)
+	err := s.r.Delete(ctx, id)
 	if err != nil {
 		return err
 	}

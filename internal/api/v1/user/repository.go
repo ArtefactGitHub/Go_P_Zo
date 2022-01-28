@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -62,7 +63,50 @@ func (r *UserRepository) Find(ctx context.Context, id int) (*User, error) {
 	return &u, nil
 }
 
+func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*User, error) {
+	u := User{}
+	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM users WHERE email = ?", email).Scan(
+		&u.Id,
+		&u.GivenName,
+		&u.FamilyName,
+		&u.Email,
+		&u.Password,
+		&u.CreatedAt,
+		&u.UpdatedAt)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
+func (r *UserRepository) FindByEmailTx(ctx context.Context, tx *sql.Tx, email string) (*User, error) {
+	u := User{}
+	err := tx.QueryRowContext(ctx, "SELECT * FROM users WHERE email = ?", email).Scan(
+		&u.Id,
+		&u.GivenName,
+		&u.FamilyName,
+		&u.Email,
+		&u.Password,
+		&u.CreatedAt,
+		&u.UpdatedAt)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
 func (r *UserRepository) Create(ctx context.Context, u *User) (int, error) {
+	err := r.checkNotExist(ctx, nil, u)
+	if err != nil {
+		return -1, err
+	}
+
 	password := []byte(u.Password)
 	hashed, err := bcrypt.GenerateFromPassword(password, 12)
 	if err != nil {
@@ -93,6 +137,11 @@ func (r *UserRepository) Create(ctx context.Context, u *User) (int, error) {
 }
 
 func (r *UserRepository) CreateTx(ctx context.Context, tx *sql.Tx, u *User) (int, error) {
+	err := r.checkNotExist(ctx, tx, u)
+	if err != nil {
+		return -1, err
+	}
+
 	password := []byte(u.Password)
 	hashed, err := bcrypt.GenerateFromPassword(password, 12)
 	if err != nil {
@@ -149,6 +198,24 @@ func (r *UserRepository) Delete(ctx context.Context, id int) error {
 		id)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (r *UserRepository) checkNotExist(ctx context.Context, tx *sql.Tx, u *User) error {
+	var exist *User
+	var err error
+	if tx == nil {
+		exist, err = r.FindByEmail(ctx, u.Email)
+	} else {
+		exist, err = r.FindByEmailTx(ctx, tx, u.Email)
+	}
+
+	if err != nil {
+		return err
+	} else if exist != nil {
+		return fmt.Errorf("email address has already been registered: %s", u.Email)
 	}
 
 	return nil
