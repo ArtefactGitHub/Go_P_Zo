@@ -4,11 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
-
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
+	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
 
 type RouterMiddleware struct {
@@ -16,12 +12,9 @@ type RouterMiddleware struct {
 	next IMiddleware
 }
 
-func NewRouterMiddleware() IMiddleware {
+func NewRouterMiddleware(routes ...map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap)) IMiddleware {
 	return &RouterMiddleware{r: myrouter.NewMyRouterWithRoutes(
-		auth.Routes,
-		session.Routes,
-		zo.Routes,
-		user.Routes)}
+		routes...)}
 }
 
 func (m *RouterMiddleware) SetNext(next IMiddleware) {
