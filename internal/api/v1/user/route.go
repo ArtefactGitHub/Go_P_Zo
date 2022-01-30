@@ -11,10 +11,10 @@ var uc userController = userController{}
 var utc userTokenController = userTokenController{}
 
 var Routes map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap) = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
-	{Path: "/api/v1/users", Method: "GET", NeedAuth: true}:                   uc.getAll,
-	{Path: "/api/v1/users/:user_id", Method: "GET", NeedAuth: true}:          uc.get,
-	{Path: "/api/v1/users", Method: "POST", NeedAuth: true}:                  uc.post,
-	{Path: "/api/v1/users/:user_id", Method: "PUT", NeedAuth: true}:          uc.update,
-	{Path: "/api/v1/users/:user_id", Method: "DELETE", NeedAuth: true}:       uc.delete,
-	{Path: "/api/v1/users/:user_id/tokens", Method: "POST", NeedAuth: false}: utc.post,
+	{Path: "/api/v1/users", Method: "GET", NeedAuth: true}:             uc.getAll,
+	{Path: "/api/v1/users/:user_id", Method: "GET", NeedAuth: true}:    uc.get,
+	{Path: "/api/v1/users", Method: "POST", NeedAuth: true}:            uc.post,
+	{Path: "/api/v1/users/:user_id", Method: "PUT", NeedAuth: true}:    uc.update,
+	{Path: "/api/v1/users/:user_id", Method: "DELETE", NeedAuth: true}: uc.delete,
+	{Path: "/api/v1/usertokens", Method: "POST", NeedAuth: false}:      utc.post,
 }

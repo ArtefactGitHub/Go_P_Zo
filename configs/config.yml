@@ -9,4 +9,5 @@ database: Go_P_Zo?parseTime=true
 
 auth:
   token_expiration: 1200
+  usertoken_expiration: 1200
   signkey: ${Go_P_Zo_AUTH_SIGNKEY}

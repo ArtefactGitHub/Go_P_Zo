@@ -35,8 +35,9 @@ func LoadConfig() (*config.Config, error) {
 	// 設定ファイルの取得
 	_, pwd, _, _ := runtime.Caller(0)
 	path := fmt.Sprintf("%s/config.yml", filepath.Dir(pwd))
-	config, err := config.LoadConfig(path)
-	return config, err
+	cfg, err := config.LoadConfig(path)
+	config.Cfg = cfg
+	return cfg, err
 }
 
 func beforeAll(before func(), seed func(context.Context)) {

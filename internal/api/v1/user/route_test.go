@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -27,12 +26,12 @@ var (
 		"test_usertoken_route_post": test_usertoken_route_post}
 
 	mockRoutes map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap) = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
-		{Path: "/api/v1/users", Method: "GET", NeedAuth: false}:                  uc.getAll,
-		{Path: "/api/v1/users/:user_id", Method: "GET", NeedAuth: false}:         uc.get,
-		{Path: "/api/v1/users", Method: "POST", NeedAuth: false}:                 uc.post,
-		{Path: "/api/v1/users/:user_id", Method: "PUT", NeedAuth: false}:         uc.update,
-		{Path: "/api/v1/users/:user_id", Method: "DELETE", NeedAuth: false}:      uc.delete,
-		{Path: "/api/v1/users/:user_id/tokens", Method: "POST", NeedAuth: false}: utc.post,
+		{Path: "/api/v1/users", Method: "GET", NeedAuth: false}:             uc.getAll,
+		{Path: "/api/v1/users/:user_id", Method: "GET", NeedAuth: false}:    uc.get,
+		{Path: "/api/v1/users", Method: "POST", NeedAuth: false}:            uc.post,
+		{Path: "/api/v1/users/:user_id", Method: "PUT", NeedAuth: false}:    uc.update,
+		{Path: "/api/v1/users/:user_id", Method: "DELETE", NeedAuth: false}: uc.delete,
+		{Path: "/api/v1/usertokens", Method: "POST", NeedAuth: false}:       utc.post,
 	}
 
 	postUser = NewUser(0, "Bob", "Michael", "bob@gmail.com", "password", time.Now(), sql.NullTime{})
@@ -159,15 +158,14 @@ func test_user_route_delete(t *testing.T) {
 	}
 }
 
-// [POST] /api/v1/users/:user_id/tokens のルーティングのテスト
+// [POST] /api/v1/usertokens のルーティングのテスト
 func test_usertoken_route_post(t *testing.T) {
 	test_user_route_post(t)
 
 	m := NewUserTokenRequest(postUser.Email, postUser.Password)
 	j, _ := json.MarshalIndent(m, "", "\t")
 
-	userId := len(seedUsers) + 1
-	writer, err := serveHTTP("POST", fmt.Sprintf("/api/v1/users/%d/tokens", userId), bytes.NewReader(j))
+	writer, err := serveHTTP("POST", "/api/v1/usertokens", bytes.NewReader(j))
 	if err != nil {
 		t.Fatalf("serveHTTP failuer. %v", err)
 	}

@@ -140,18 +140,11 @@ func (c *userController) contentToModel(r *http.Request) (*User, error) {
 }
 
 type userTokenController struct {
-	s UserTokenService
+	s userTokenService
 }
 
 // 指定のリソース情報で作成
 func (c *userTokenController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
-	// userId指定を取得
-	userId, err := strconv.Atoi(ps.Get(resourceId))
-	if err != nil {
-		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
-		return
-	}
-
 	// 指定リソースの取得
 	m, err := c.contentToModel(r)
 	if err != nil {
@@ -159,7 +152,7 @@ func (c *userTokenController) post(w http.ResponseWriter, r *http.Request, ps co
 		return
 	}
 
-	result, err := c.s.Post(r.Context(), userId, m)
+	result, err := c.s.Post(r.Context(), m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
