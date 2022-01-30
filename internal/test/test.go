@@ -74,11 +74,19 @@ func testInit(t *testing.T) func() {
 }
 
 func truncateAll(ctx context.Context) {
-	_, err := mydb.Db.Exec("TRUNCATE zos")
+	_, err := mydb.Db.Exec("TRUNCATE Zos")
 	if err != nil {
 		Failuer(err)
 	}
-	_, err = mydb.Db.Exec("TRUNCATE users")
+	_, err = mydb.Db.Exec("TRUNCATE Users")
+	if err != nil {
+		Failuer(err)
+	}
+	_, err = mydb.Db.Exec("TRUNCATE Clients")
+	if err != nil {
+		Failuer(err)
+	}
+	_, err = mydb.Db.Exec("TRUNCATE UserTokens")
 	if err != nil {
 		Failuer(err)
 	}

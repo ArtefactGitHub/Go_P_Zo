@@ -60,7 +60,7 @@ func (c *userController) get(w http.ResponseWriter, r *http.Request, ps common.Q
 // 指定のリソース情報で作成
 func (c *userController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// リクエスト情報からモデルを生成
-	u, err := contentToModel(r)
+	u, err := c.contentToModel(r)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -88,7 +88,7 @@ func (c *userController) update(w http.ResponseWriter, r *http.Request, ps commo
 	}
 
 	// リクエスト情報からモデルを生成
-	u, err := contentToModel(r)
+	u, err := c.contentToModel(r)
 	log.Printf("contentToModel: %v", u)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
@@ -128,10 +128,54 @@ func (c *userController) delete(w http.ResponseWriter, r *http.Request, ps commo
 }
 
 // リクエスト情報からモデルの生成
-func contentToModel(r *http.Request) (*User, error) {
+func (c *userController) contentToModel(r *http.Request) (*User, error) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var result User
+	err := json.Unmarshal(body, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+type userTokenController struct {
+	s UserTokenService
+}
+
+// 指定のリソース情報で作成
+func (c *userTokenController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
+	// userId指定を取得
+	userId, err := strconv.Atoi(ps.Get(resourceId))
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
+		return
+	}
+
+	// 指定リソースの取得
+	m, err := c.contentToModel(r)
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	result, err := c.s.Post(r.Context(), userId, m)
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	res := PostUserTokenResponse{
+		ResponseBase: &myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
+		UserToken:    result}
+	myhttp.Write(w, res, http.StatusCreated)
+}
+
+// リクエスト情報からモデルの生成
+func (c *userTokenController) contentToModel(r *http.Request) (*UserTokenRequest, error) {
+	body := make([]byte, r.ContentLength)
+	r.Body.Read(body)
+	var result UserTokenRequest
 	err := json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
