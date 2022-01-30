@@ -45,9 +45,14 @@ func CreateHandler(config *config.Config) (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
+	header, err := middleware.NewHeaderMiddleware()
+	if err != nil {
+		return nil, err
+	}
 
 	handler := middleware.CreateHandler(
 		jwt,
+		header,
 		middleware.NewRouterMiddleware(
 			client.Routes,
 			session.Routes,
