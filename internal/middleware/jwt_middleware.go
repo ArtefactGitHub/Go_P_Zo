@@ -47,14 +47,14 @@ func (m *JwtMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if tokenHeader != "" {
 		log.Printf("tokenHeader: %s", tokenHeader)
 
-		tokenString, err := getExtractedToken(tokenHeader)
+		tokenString, err := getExtractedJwtToken(tokenHeader)
 		log.Printf("tokenString: %s", tokenHeader)
 		if err != nil {
 			myhttp.WriteError(w, err, http.StatusUnauthorized, "")
 			return
 		}
 
-		token, err := parseToken(tokenString, m.authKey)
+		token, err := parseJwtToken(tokenString, m.authKey)
 		log.Printf("token: %v", token)
 		if err != nil {
 			myhttp.WriteError(w, err, http.StatusUnauthorized, "parse token failure")
@@ -92,7 +92,7 @@ func (m *JwtMiddleware) verifyToken(token *jwt.Token) (*myauth.AuthClaims, error
 	}
 }
 
-func getExtractedToken(tokenHeader string) (string, error) {
+func getExtractedJwtToken(tokenHeader string) (string, error) {
 	extractedToken := strings.Split(tokenHeader, AuthTokenSplit)
 	if len(extractedToken) == 2 {
 		return strings.TrimSpace(extractedToken[1]), nil
@@ -101,8 +101,8 @@ func getExtractedToken(tokenHeader string) (string, error) {
 	return "", errors.New("invalid token")
 }
 
-func parseToken(tokenString string, authKey string) (*jwt.Token, error) {
-	// Parse the token
+func parseJwtToken(tokenString string, authKey string) (*jwt.Token, error) {
+	// parse the jwt.Token
 	// https://pkg.go.dev/github.com/golang-jwt/jwt/v4#Parse
 	token, err := jwt.ParseWithClaims(tokenString, &myauth.AuthClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(authKey), nil

@@ -9,11 +9,12 @@ import (
 )
 
 var r_tests = map[string]func(t *testing.T){
-	"test_user_rep_findall": test_user_rep_findall,
-	"test_user_rep_find":    test_user_rep_find,
-	"test_user_rep_create":  test_user_rep_create,
-	"test_user_rep_update":  test_user_rep_update,
-	"test_user_rep_delete":  test_user_rep_delete}
+	"test_user_rep_findall":     test_user_rep_findall,
+	"test_user_rep_find":        test_user_rep_find,
+	"test_user_rep_create":      test_user_rep_create,
+	"test_user_rep_update":      test_user_rep_update,
+	"test_user_rep_delete":      test_user_rep_delete,
+	"test_userToken_rep_create": test_userToken_rep_create}
 
 func Test_repository(t *testing.T) {
 	test.Run(t, r_tests, nil, nil, test_seed)
@@ -53,7 +54,7 @@ func test_user_rep_find(t *testing.T) {
 // Create()のテスト
 func test_user_rep_create(t *testing.T) {
 	r := UserRepository{}
-	u := seeds[0]
+	u := seedUsers[0]
 	u.GivenName = "created by test"
 	u.Email = "createdbytest@com"
 	id, err := r.Create(context.Background(), &u)
@@ -76,7 +77,7 @@ func test_user_rep_create(t *testing.T) {
 	}
 
 	if givenName != want {
-		t.Errorf("u.GivenName = %s, want %s", u.GivenName, givenName)
+		t.Errorf("givenName = %s, want %s", givenName, want)
 	}
 
 	var count int
@@ -85,15 +86,15 @@ func test_user_rep_create(t *testing.T) {
 		t.Fatalf("Create() has error: %v", err)
 	}
 
-	if count != cap(seeds)+1 {
-		t.Errorf("count = %d, want %d", count, cap(seeds)+1)
+	if count != len(seedUsers)+1 {
+		t.Errorf("count = %d, want %d", count, len(seedUsers)+1)
 	}
 }
 
 // Update()のテスト
 func test_user_rep_update(t *testing.T) {
 	r := UserRepository{}
-	u := seeds[0]
+	u := seedUsers[0]
 	u.GivenName = "太郎更新"
 	err := r.Update(context.Background(), &u)
 	if err != nil {
@@ -122,7 +123,7 @@ func test_user_rep_update(t *testing.T) {
 // Delete()のテスト
 func test_user_rep_delete(t *testing.T) {
 	r := UserRepository{}
-	u := seeds[0]
+	u := seedUsers[0]
 	err := r.Delete(context.Background(), u.Id)
 	if err != nil {
 		t.Fatalf("Delete() has error: %v", err)
@@ -137,5 +138,43 @@ func test_user_rep_delete(t *testing.T) {
 
 	if count != want {
 		t.Errorf("count = %d, want %d", count, want)
+	}
+}
+
+// Create()のテスト
+func test_userToken_rep_create(t *testing.T) {
+	r := UserTokenRepository{}
+	ut := seedUserTokens[0]
+	ut.Token = "created by test"
+	id, err := r.Create(context.Background(), &ut)
+	if err != nil {
+		t.Fatalf("Create() has error: %v", err)
+	}
+
+	want := "created by test"
+	var token string
+	err = mydb.Db.QueryRow("SELECT * FROM UserTokens WHERE id = ?", id).Scan(
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&token,
+		&test.TrashScanner{},
+		&test.TrashScanner{},
+		&test.TrashScanner{})
+	if err != nil {
+		t.Fatalf("Create() has error: %v", err)
+	}
+
+	if token != want {
+		t.Errorf("token = %s, want %s", token, want)
+	}
+
+	var count int
+	err = mydb.Db.QueryRow("SELECT COUNT(*) FROM UserTokens").Scan(&count)
+	if err != nil {
+		t.Fatalf("Create() has error: %v", err)
+	}
+
+	if count != len(seedUserTokens)+1 {
+		t.Errorf("count = %d, want %d", count, len(seedUsers)+1)
 	}
 }

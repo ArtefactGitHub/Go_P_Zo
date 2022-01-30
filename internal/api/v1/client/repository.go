@@ -1,4 +1,4 @@
-package auth
+package client
 
 import (
 	"context"
@@ -7,10 +7,10 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 )
 
-type AuthRepository struct {
+type clientRepository struct {
 }
 
-func (r *AuthRepository) Find(ctx context.Context, id int, secret string) (*Client, error) {
+func (r *clientRepository) Find(ctx context.Context, id int, secret string) (*Client, error) {
 	m := Client{}
 	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM Clients WHERE id = ? AND secret = ?",
 		id, secret).

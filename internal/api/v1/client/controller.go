@@ -1,24 +1,20 @@
-package auth
+package client
 
 import (
 	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
-	"time"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
-	"github.com/golang-jwt/jwt"
 )
 
-type authController struct {
-	s AuthService
+type clientController struct {
+	s clientService
 }
 
-func (c *authController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
+func (c *clientController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// リクエスト情報からモデルを生成
 	m, err := c.contentToModel(r)
 	log.Printf("contentToModel: %v", m)
@@ -37,7 +33,7 @@ func (c *authController) post(w http.ResponseWriter, r *http.Request, ps common.
 		return
 	}
 
-	token, err := createAccessToken()
+	token, err := c.s.createAccessToken()
 	if err != nil {
 		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(err, http.StatusInternalServerError, ""), nil), http.StatusInternalServerError)
 		return
@@ -47,7 +43,7 @@ func (c *authController) post(w http.ResponseWriter, r *http.Request, ps common.
 }
 
 // リクエスト情報からモデルの生成
-func (c *authController) contentToModel(r *http.Request) (*Client, error) {
+func (c *clientController) contentToModel(r *http.Request) (*Client, error) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var result Client
@@ -56,24 +52,4 @@ func (c *authController) contentToModel(r *http.Request) (*Client, error) {
 		return nil, err
 	}
 	return &result, nil
-}
-
-func createAccessToken() (*AccessToken, error) {
-	claims := myauth.AuthClaims{StandardClaims: &jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.TokenExpiration)).Unix(),
-		Issuer:    "zo.auth.service",
-	},
-		TokenType: "access",
-	}
-
-	// https://pkg.go.dev/github.com/golang-jwt/jwt#NewWithClaims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	jwt, err := token.SignedString([]byte(config.Cfg.Auth.SignKey))
-	log.Printf("signed: %v", jwt)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &AccessToken{Jwt: jwt, ExpiresAt: claims.ExpiresAt}, nil
 }

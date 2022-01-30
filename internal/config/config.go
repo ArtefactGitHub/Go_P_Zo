@@ -21,8 +21,9 @@ type Config struct {
 }
 
 type ConfigAuth struct {
-	SignKey         string `yaml:"signkey"`          // 環境変数から取得
-	TokenExpiration int    `yaml:"token_expiration"` // トークン有効期限（秒）
+	SignKey             string `yaml:"signkey"`              // 環境変数から取得
+	TokenExpiration     int    `yaml:"token_expiration"`     // アクセストークン有効期限（秒）
+	UserTokenExpiration int    `yaml:"usertoken_expiration"` // ユーザートークン有効期限（秒）
 }
 
 var Cfg *Config

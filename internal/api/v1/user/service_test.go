@@ -65,16 +65,16 @@ func test_user_s_post(t *testing.T) {
 	if err != nil {
 		t.Errorf("Post() has error: %v", err)
 	}
-	want := cap(seeds) + 1
-	if cap(users) != want {
-		t.Errorf("cap(users) = %d, want %d", cap(users), want)
+	want := len(seedUsers) + 1
+	if len(users) != want {
+		t.Errorf("len(users) = %d, want %d", len(users), want)
 	}
 }
 
 // Update() のテスト
 func test_user_s_update(t *testing.T) {
 	s := UserService{}
-	u := seeds[2]
+	u := seedUsers[2]
 	u.GivenName = "updated by test"
 	err := s.Update(context.Background(), &u)
 	if err != nil {
@@ -90,7 +90,7 @@ func test_user_s_update(t *testing.T) {
 // Delete() のテスト
 func test_user_s_delete(t *testing.T) {
 	s := UserService{}
-	u := seeds[2]
+	u := seedUsers[2]
 	err := s.Delete(context.Background(), u.Id)
 	if err != nil {
 		t.Errorf("Delete() has error: %v", err)
@@ -100,8 +100,8 @@ func test_user_s_delete(t *testing.T) {
 	if err != nil {
 		t.Errorf("Delete() has error: %v", err)
 	}
-	want := cap(seeds) - 1
-	if cap(users) != want {
-		t.Errorf("cap(users) = %d, want %d", cap(users), want)
+	want := len(seedUsers) - 1
+	if len(users) != want {
+		t.Errorf("len(users) = %d, want %d", len(users), want)
 	}
 }
