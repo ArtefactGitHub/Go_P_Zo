@@ -1,4 +1,4 @@
-package auth
+package client
 
 import (
 	"encoding/json"
@@ -14,11 +14,11 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-type authController struct {
-	s AuthService
+type clientController struct {
+	s clientService
 }
 
-func (c *authController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
+func (c *clientController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// リクエスト情報からモデルを生成
 	m, err := c.contentToModel(r)
 	log.Printf("contentToModel: %v", m)
@@ -47,7 +47,7 @@ func (c *authController) post(w http.ResponseWriter, r *http.Request, ps common.
 }
 
 // リクエスト情報からモデルの生成
-func (c *authController) contentToModel(r *http.Request) (*Client, error) {
+func (c *clientController) contentToModel(r *http.Request) (*Client, error) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var result Client

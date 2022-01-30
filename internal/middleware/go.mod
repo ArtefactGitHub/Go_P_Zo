@@ -18,7 +18,7 @@ replace github.com/ArtefactGitHub/Go_P_Zo/internal/test => ../../internal/test
 
 replace github.com/ArtefactGitHub/Go_P_Zo/pkg/common => ../../pkg/common
 
-replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth => ../../internal/api/v1/auth
+replace github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client => ../../internal/api/v1/client
 
 require (
 	github.com/ArtefactGitHub/Go_P_Zo/internal/config v0.0.0-20220108142333-59a19c0068a6

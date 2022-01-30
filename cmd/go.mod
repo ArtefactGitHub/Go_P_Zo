@@ -5,7 +5,7 @@ go 1.17
 replace github.com/ArtefactGitHub/Go_P_Zo/internal/config => ../internal/config
 
 require (
-	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth v0.0.0-20220128073915-f9fbcaf60eb4
+	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client v0.0.0-20220128073915-f9fbcaf60eb4
 	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session v0.0.0-20220128073915-f9fbcaf60eb4
 	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user v0.0.0-20220128073915-f9fbcaf60eb4
 	github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo v0.0.0-20220128073915-f9fbcaf60eb4

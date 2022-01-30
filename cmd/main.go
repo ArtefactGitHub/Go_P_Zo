@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
@@ -49,7 +49,7 @@ func CreateHandler(config *config.Config) (http.Handler, error) {
 	handler := middleware.CreateHandler(
 		jwt,
 		middleware.NewRouterMiddleware(
-			auth.Routes,
+			client.Routes,
 			session.Routes,
 			zo.Routes,
 			user.Routes,

@@ -1,5 +1,5 @@
-github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth v0.0.0-20220128073915-f9fbcaf60eb4 h1:jNIHvasUiuFCLLA2U/CJMvXNWG+cJ1u6OcN6rygb86Q=
-github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth v0.0.0-20220128073915-f9fbcaf60eb4/go.mod h1:dbzucKp9I0Gqe2vIM3c6da6/gXsOcO2w8StNIPW3v/A=
+github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client v0.0.0-20220128073915-f9fbcaf60eb4 h1:jNIHvasUiuFCLLA2U/CJMvXNWG+cJ1u6OcN6rygb86Q=
+github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client v0.0.0-20220128073915-f9fbcaf60eb4/go.mod h1:dbzucKp9I0Gqe2vIM3c6da6/gXsOcO2w8StNIPW3v/A=
 github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session v0.0.0-20220128073915-f9fbcaf60eb4 h1:IjrlH+Kqt6G5hCtzMrfB4+mntAEC5TuioDvHDCmu5t8=
 github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session v0.0.0-20220128073915-f9fbcaf60eb4/go.mod h1:9Y2wLQgdE1tSSyHvH1LxEO1uSKmUvxXnKoD6F6TIXJA=
 github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user v0.0.0-20220128073915-f9fbcaf60eb4 h1:ks8KWIczykoDIMaAgUhSwW0zFvhOdkzJ+2eTrNG6dM4=
