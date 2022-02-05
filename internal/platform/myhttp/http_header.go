@@ -1,7 +1,8 @@
 package myhttp
 
 const (
-	UserTokenName = "X-Go_P_Zo_UserToken"
+	UserTokenHeaderName = "X-Go_P_Zo_UserToken"
+	AuthTokenHeaderName = "Authorization"
 )
 
 type Header struct {

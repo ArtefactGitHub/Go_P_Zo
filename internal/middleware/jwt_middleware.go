@@ -17,8 +17,7 @@ import (
 )
 
 const (
-	AuthTokenHeaderName = "Authorization"
-	AuthTokenSplit      = "Bearer "
+	AuthTokenSplit = "Bearer "
 )
 
 type JwtMiddleware struct {
@@ -42,7 +41,7 @@ func (m *JwtMiddleware) SetNext(next IMiddleware) {
 
 func (m *JwtMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
-	tokenHeader := req.Header.Get(AuthTokenHeaderName)
+	tokenHeader := req.Header.Get(myhttp.AuthTokenHeaderName)
 
 	if tokenHeader != "" {
 		log.Printf("tokenHeader: %s", tokenHeader)
