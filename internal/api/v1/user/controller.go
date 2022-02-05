@@ -41,11 +41,11 @@ func (c *userController) get(w http.ResponseWriter, r *http.Request, ps common.Q
 		return
 	}
 
-	model, err := c.s.Get(r.Context(), id)
+	m, err := c.s.Get(r.Context(), id)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
-	} else if model == nil {
+	} else if m == nil {
 		myhttp.WriteError(w, fmt.Errorf("resource not found: id = %d", id),
 			http.StatusNotFound, "")
 		return
@@ -53,20 +53,20 @@ func (c *userController) get(w http.ResponseWriter, r *http.Request, ps common.Q
 
 	res := GetResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
-		User:         model}
+		User:         NewResponseUser(m.Id, m.GivenName, m.FamilyName, m.Email)}
 	myhttp.Write(w, res, http.StatusOK)
 }
 
 // 指定のリソース情報で作成
 func (c *userController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// リクエスト情報からモデルを生成
-	u, err := c.contentToModel(r)
+	m, err := c.contentToModel(r)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
-	id, err := c.s.Post(r.Context(), u)
+	id, err := c.s.Post(r.Context(), m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -74,7 +74,7 @@ func (c *userController) post(w http.ResponseWriter, r *http.Request, ps common.
 
 	res := PostResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
-		User:         u}
+		User:         NewResponseUser(m.Id, m.GivenName, m.FamilyName, m.Email)}
 	myhttp.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
 }
 
@@ -88,14 +88,14 @@ func (c *userController) update(w http.ResponseWriter, r *http.Request, ps commo
 	}
 
 	// リクエスト情報からモデルを生成
-	u, err := c.contentToModel(r)
-	log.Printf("contentToModel: %v", u)
+	m, err := c.contentToModel(r)
+	log.Printf("contentToModel: %v", m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
-	err = c.s.Update(r.Context(), u)
+	err = c.s.Update(r.Context(), m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -103,7 +103,7 @@ func (c *userController) update(w http.ResponseWriter, r *http.Request, ps commo
 
 	res := PutResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
-		User:         u}
+		User:         NewResponseUser(m.Id, m.GivenName, m.FamilyName, m.Email)}
 	myhttp.Write(w, res, http.StatusOK)
 }
 
