@@ -2,8 +2,10 @@ package zo
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +13,8 @@ import (
 	"time"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/middleware"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mycontext"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myrouter"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/test"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
@@ -29,7 +33,8 @@ func Test_route(t *testing.T) {
 
 // [GET] /api/v1/zos のルーティングのテスト
 func test_route_getall(t *testing.T) {
-	writer, err := serveHTTP("GET", "/api/v1/zos", nil)
+	userId := userId_1
+	writer, err := serveHTTP("GET", "/api/v1/zos", nil, userId)
 	if err != nil {
 		t.Fatalf("serveHTTP failuer. %v", err)
 	}
@@ -45,14 +50,21 @@ func test_route_getall(t *testing.T) {
 		t.Fatalf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
 	}
 
-	if len(res.Zos) != len(seeds) {
+	var wantLen int
+	for _, m := range seeds {
+		if m.UserId == userId {
+			wantLen++
+		}
+	}
+	if len(res.Zos) != wantLen {
 		t.Errorf("Invalid Zos length. len() = %v, want %d", len(res.Zos), len(seeds))
 	}
 }
 
 // [GET] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_get(t *testing.T) {
-	writer, err := serveHTTP("GET", "/api/v1/zos/1", nil)
+	userId := userId_1
+	writer, err := serveHTTP("GET", fmt.Sprintf("/api/v1/zos/%d", userId), nil, userId)
 	if err != nil {
 		t.Fatalf("serveHTTP failuer. %v", err)
 	}
@@ -76,13 +88,13 @@ func test_route_get(t *testing.T) {
 // [POST] /api/v1/zos のルーティングのテスト
 func test_route_post(t *testing.T) {
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
-	userId := 1
+	userId := userId_1
 	z := NewZo(
 		0, ac, 555, 0, "created by test_route_post",
 		time.Now(), sql.NullTime{}, userId)
 	j, _ := json.MarshalIndent(z, "", "\t")
 
-	writer, err := serveHTTP("POST", "/api/v1/zos", bytes.NewReader(j))
+	writer, err := serveHTTP("POST", "/api/v1/zos", bytes.NewReader(j), userId)
 	if err != nil {
 		t.Fatalf("serveHTTP failuer. %v", err)
 	}
@@ -105,11 +117,12 @@ func test_route_post(t *testing.T) {
 
 // [UPDATE] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_update(t *testing.T) {
+	userId := userId_1
 	z := seeds[2]
 	z.Message = "updated by test_route_update"
 	j, _ := json.MarshalIndent(z, "", "\t")
 
-	writer, err := serveHTTP("PUT", "/api/v1/zos/1", bytes.NewReader(j))
+	writer, err := serveHTTP("PUT", fmt.Sprintf("/api/v1/zos/%d", userId), bytes.NewReader(j), userId)
 	if err != nil {
 		t.Fatalf("serveHTTP failuer. %v", err)
 	}
@@ -132,7 +145,8 @@ func test_route_update(t *testing.T) {
 
 // [DELETE] /api/v1/zos/:zo_id のルーティングのテスト
 func test_route_delete(t *testing.T) {
-	writer, err := serveHTTP("DELETE", "/api/v1/zos/1", nil)
+	userId := userId_1
+	writer, err := serveHTTP("DELETE", fmt.Sprintf("/api/v1/zos/%d", userId), nil, userId)
 	if err != nil {
 		t.Fatalf("serveHTTP failuer. %v", err)
 	}
@@ -158,9 +172,16 @@ var MockRoutes map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request
 }
 
 // テスト用のリクエストを実行
-func serveHTTP(method string, url string, body io.Reader) (*httptest.ResponseRecorder, error) {
+func serveHTTP(method string, url string, body io.Reader, userId int) (*httptest.ResponseRecorder, error) {
 	writer := httptest.NewRecorder()
-	request, _ := http.NewRequest(method, url, body)
+
+	// ユーザートークンをヘッダーへセットしておく
+	userToken, err := myauth.CreateUserTokenJwt(userId, time.Now().AddDate(0, 0, 1))
+	if err != nil {
+		return nil, err
+	}
+	ctx := mycontext.NewContext(context.Background(), mycontext.UserTokenKey, userToken)
+	request, _ := http.NewRequestWithContext(ctx, method, url, body)
 
 	config, _ := test.LoadConfig()
 	jwt, err := middleware.NewJwtMiddleware(config)
