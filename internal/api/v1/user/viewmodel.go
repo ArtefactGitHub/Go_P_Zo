@@ -1,6 +1,8 @@
 package user
 
 import (
+	"fmt"
+
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 )
 
@@ -21,6 +23,10 @@ func NewResponseUsers(users []User) []responseUser {
 		result = append(result, responseUser{Id: u.Id, GivenName: u.GivenName, FamilyName: u.FamilyName, Email: u.Email})
 	}
 	return result
+}
+
+func (u *responseUser) FullName() string {
+	return fmt.Sprintf("%s %s", u.FamilyName, u.GivenName)
 }
 
 type GetAllResponse struct {
