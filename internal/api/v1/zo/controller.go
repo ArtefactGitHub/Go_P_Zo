@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mycontext"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
@@ -21,8 +23,24 @@ const resourceId = "zo_id"
 
 // リソースを取得
 func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
+	// ユーザートークンの取得
+	userToken, err := mycontext.FromContextStr(r.Context(), mycontext.UserTokenKey)
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+		return
+	}
+	log.Print(userToken)
+
+	// ユーザートークンからユーザーIDの取得
+	claims, err := myauth.CreateUserTokenClaims(userToken)
+	if err != nil {
+		log.Println(err.Error())
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+	}
+	userId := claims.UserId
+
 	// リソース群の取得
-	datas, err := c.zs.GetAll(r.Context())
+	datas, err := c.zs.GetAll(r.Context(), userId)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return

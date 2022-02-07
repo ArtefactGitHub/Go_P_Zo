@@ -14,21 +14,23 @@ type UserService struct {
 	r UserRepository
 }
 
-func (s *UserService) GetAll(ctx context.Context) ([]User, error) {
-	result, err := s.r.FindAll(ctx)
+func (s *UserService) GetAll(ctx context.Context) ([]responseUser, error) {
+	users, err := s.r.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
 
+	result := NewResponseUsers(users)
 	return result, nil
 }
 
-func (s *UserService) Get(ctx context.Context, id int) (*User, error) {
-	result, err := s.r.Find(ctx, id)
+func (s *UserService) Get(ctx context.Context, id int) (*responseUser, error) {
+	user, err := s.r.Find(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
+	result := NewResponseUser(user.Id, user.GivenName, user.FamilyName, user.Email)
 	return result, nil
 }
 

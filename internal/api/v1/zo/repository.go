@@ -42,6 +42,38 @@ func (r *ZoRepository) FindAll(ctx context.Context) ([]Zo, error) {
 	return result, nil
 }
 
+func (r *ZoRepository) FindAllByUserId(ctx context.Context, userId int) ([]Zo, error) {
+	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM zos WHERE user_id = ?", userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var z Zo
+	var result []Zo
+	for rows.Next() {
+		err := rows.Scan(
+			&z.Id,
+			&z.AchievementDate,
+			&z.Exp,
+			&z.CategoryId,
+			&z.Message,
+			&z.CreatedAt,
+			&z.UpdatedAt,
+			&z.UserId)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, z)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func (r *ZoRepository) Find(ctx context.Context, id int) (*Zo, error) {
 	z := Zo{}
 	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM zos WHERE id = ?", id).Scan(

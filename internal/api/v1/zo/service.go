@@ -8,8 +8,8 @@ type ZoService struct {
 	Zr ZoRepository
 }
 
-func (s *ZoService) GetAll(ctx context.Context) ([]Zo, error) {
-	result, err := s.Zr.FindAll(ctx)
+func (s *ZoService) GetAll(ctx context.Context, userId int) ([]Zo, error) {
+	result, err := s.Zr.FindAllByUserId(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
