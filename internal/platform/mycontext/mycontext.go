@@ -3,6 +3,7 @@ package mycontext
 import (
 	"context"
 	"fmt"
+	"log"
 	"runtime"
 )
 
@@ -29,7 +30,7 @@ func FromContextStr(ctx context.Context, key interface{}) (string, error) {
 	v := ctx.Value(key)
 	value, ok := v.(string)
 	if !ok {
-		fmt.Println(runtime.Caller(1))
+		log.Println(runtime.Caller(1))
 		return "", fmt.Errorf("%s header not found", key)
 	}
 

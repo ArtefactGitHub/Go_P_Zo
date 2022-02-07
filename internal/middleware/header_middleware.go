@@ -9,7 +9,7 @@ import (
 )
 
 var headerNames map[string]mycontext.ContextKey = map[string]mycontext.ContextKey{
-	myhttp.UserTokenName: mycontext.UserTokenKey,
+	myhttp.UserTokenHeaderName: mycontext.UserTokenKey,
 }
 
 type HeaderMiddleware struct {

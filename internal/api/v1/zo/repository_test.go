@@ -9,11 +9,12 @@ import (
 )
 
 var r_tests = map[string]func(t *testing.T){
-	"test_r_findall": test_r_findall,
-	"test_r_find":    test_r_find,
-	"test_r_create":  test_r_create,
-	"test_r_update":  test_r_update,
-	"test_r_delete":  test_r_delete}
+	"test_r_findall":           test_r_findall,
+	"test_r_findall_by_userid": test_r_findall_by_userid,
+	"test_r_find":              test_r_find,
+	"test_r_create":            test_r_create,
+	"test_r_update":            test_r_update,
+	"test_r_delete":            test_r_delete}
 
 func Test_repository(t *testing.T) {
 	test.Run(t, r_tests, nil, nil, test_seed)
@@ -27,7 +28,21 @@ func test_r_findall(t *testing.T) {
 		t.Errorf("findall() has error: %v", err)
 	}
 
-	want := 3
+	want := len(seeds)
+	if len(zos) != want {
+		t.Errorf("len() = %d, want %d", len(zos), want)
+	}
+}
+
+func test_r_findall_by_userid(t *testing.T) {
+	r := ZoRepository{}
+	userId := userId_2
+	zos, err := r.FindAllByUserId(context.Background(), userId)
+	if err != nil {
+		t.Errorf("FindAllByUserId() has error: %v", err)
+	}
+
+	want := 1
 	if len(zos) != want {
 		t.Errorf("len() = %d, want %d", len(zos), want)
 	}
@@ -85,8 +100,8 @@ func test_r_create(t *testing.T) {
 		t.Fatalf("create() has error: %v", err)
 	}
 
-	if count != cap(seeds)+1 {
-		t.Errorf("count = %d, want %d", count, cap(seeds)+1)
+	if count != len(seeds)+1 {
+		t.Errorf("count = %d, want %d", count, len(seeds)+1)
 	}
 }
 
@@ -129,7 +144,7 @@ func test_r_delete(t *testing.T) {
 	}
 
 	var count int
-	want := 2
+	want := len(seeds) - 1
 	err = mydb.Db.QueryRow("SELECT COUNT(*) FROM zos").Scan(&count)
 	if err != nil {
 		t.Fatalf("delete() has error: %v", err)
