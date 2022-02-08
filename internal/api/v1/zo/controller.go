@@ -1,6 +1,7 @@
 package zo
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -23,21 +24,12 @@ const resourceId = "zo_id"
 
 // リソースを取得
 func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
-	// ユーザートークンの取得
-	userToken, err := mycontext.FromContextStr(r.Context(), mycontext.UserTokenKey)
+	// ユーザーIDの取得
+	userId, err := c.getUserIdFromToken(r.Context())
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
 		return
 	}
-	log.Print(userToken)
-
-	// ユーザートークンからユーザーIDの取得
-	claims, err := myauth.CreateUserTokenClaims(userToken)
-	if err != nil {
-		log.Println(err.Error())
-		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
-	}
-	userId := claims.UserId
 
 	// リソース群の取得
 	datas, err := c.zs.GetAll(r.Context(), userId)
@@ -53,36 +45,61 @@ func (c *zoController) getAll(w http.ResponseWriter, r *http.Request, params com
 }
 
 func (c *zoController) get(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
+	// ユーザーIDの取得
+	userId, err := c.getUserIdFromToken(r.Context())
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+		return
+	}
+
 	// 指定リソースの取得
 	// 末尾のid指定を取得
 	id, err := strconv.Atoi(params.Get(resourceId))
 	if err != nil {
-		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
+		myhttp.WriteError(w, err, http.StatusBadRequest, "リソース指定が正しくありません")
 		return
 	}
 
-	model, err := c.zs.Get(r.Context(), id)
+	m, err := c.zs.Get(r.Context(), id)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
-	} else if model == nil {
-		myhttp.WriteError(w, fmt.Errorf("resource not found: id = %d", id),
-			http.StatusNotFound, "")
+	} else if m == nil {
+		myhttp.WriteError(w, fmt.Errorf("リソースが見つかりません: id = %d", id), http.StatusNotFound, "")
+		return
+	}
+
+	// 非リソース所有者の場合
+	if userId != m.UserId {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
 		return
 	}
 
 	res := GetResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
-		Zo:           model}
+		Zo:           m}
 	myhttp.Write(w, res, http.StatusOK)
 }
 
 // 指定のリソース情報で作成
 func (c *zoController) post(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
+	// ユーザーIDの取得
+	userId, err := c.getUserIdFromToken(r.Context())
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+		return
+	}
+
 	// リクエスト情報からモデルを生成
 	m, err := contentToModel(r)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	// 非リソース所有者の場合
+	if userId != m.UserId {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
 		return
 	}
 
@@ -100,10 +117,17 @@ func (c *zoController) post(w http.ResponseWriter, r *http.Request, params commo
 
 // 指定のリソース情報で更新
 func (c *zoController) update(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
+	// ユーザーIDの取得
+	userId, err := c.getUserIdFromToken(r.Context())
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+		return
+	}
+
 	// 末尾のid指定を取得
 	id, err := strconv.Atoi(params.Get(resourceId))
 	if err != nil {
-		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
+		myhttp.WriteError(w, err, http.StatusBadRequest, "リソース指定が正しくありません")
 		return
 	}
 
@@ -112,6 +136,12 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, params com
 	log.Printf("contentToModel: %v", m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	// 非リソース所有者の場合
+	if userId != m.UserId {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
 		return
 	}
 
@@ -138,11 +168,32 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, params com
 
 // 指定のリソースの削除
 func (c *zoController) delete(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
+	// ユーザーIDの取得
+	userId, err := c.getUserIdFromToken(r.Context())
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+		return
+	}
+
 	// 指定リソースの取得
 	// 末尾のid指定を取得
 	id, err := strconv.Atoi(params.Get(resourceId))
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusBadRequest, "incorrect resource specification")
+		return
+	}
+
+	// リソース所有者かチェック
+	m, err := c.zs.Get(r.Context(), id)
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	} else if m == nil {
+		myhttp.WriteError(w, fmt.Errorf("リソースが見つかりません: id = %d", id), http.StatusNotFound, "")
+		return
+	}
+	if userId != m.UserId {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
 		return
 	}
 
@@ -154,6 +205,24 @@ func (c *zoController) delete(w http.ResponseWriter, r *http.Request, params com
 
 	res := DeleteResponse{ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil}}
 	myhttp.Write(w, res, http.StatusOK)
+}
+
+func (c *zoController) getUserIdFromToken(ctx context.Context) (int, error) {
+	// ユーザートークンの取得
+	userToken, err := mycontext.FromContextStr(ctx, mycontext.UserTokenKey)
+	if err != nil {
+		return -1, err
+	}
+	log.Print(userToken)
+
+	// ユーザートークンからユーザーIDの取得
+	claims, err := myauth.CreateUserTokenClaims(userToken)
+	if err != nil {
+		log.Println(err.Error())
+		return -1, err
+	}
+
+	return claims.UserId, nil
 }
 
 // リクエスト情報からモデルの生成
