@@ -2,7 +2,6 @@ package zo
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
@@ -59,10 +58,9 @@ func test_s_post(t *testing.T) {
 	s := ZoService{}
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
 	userId := 1
-	z := NewZo(
-		0, ac, 555, 0, "created by test",
-		time.Now(), sql.NullTime{}, userId)
-	_, err := s.Post(context.Background(), &z)
+	z := NewRequestZo(
+		ac, 555, 0, "created by test")
+	_, err := s.Post(context.Background(), userId, z)
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
