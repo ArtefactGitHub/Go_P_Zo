@@ -2,6 +2,8 @@ package zo
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
 
 type ZoService struct {
@@ -26,8 +28,9 @@ func (s *ZoService) Get(ctx context.Context, id int) (*Zo, error) {
 	return result, nil
 }
 
-func (s *ZoService) Post(ctx context.Context, z *Zo) (int, error) {
-	result, err := s.Zr.Create(ctx, z)
+func (s *ZoService) Post(ctx context.Context, userId int, rz *requestZo) (int, error) {
+	zo := NewZo(0, rz.AchievementDate, rz.Exp, rz.CategoryId, rz.Message, time.Now(), sql.NullTime{}, userId)
+	result, err := s.Zr.Create(ctx, &zo)
 	if err != nil {
 		return -1, err
 	}

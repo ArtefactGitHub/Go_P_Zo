@@ -91,19 +91,14 @@ func (c *zoController) post(w http.ResponseWriter, r *http.Request, params commo
 	}
 
 	// リクエスト情報からモデルを生成
-	m, err := contentToModel(r)
+	m := &requestZo{}
+	err = contentToModel(r, m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
 	}
 
-	// 非リソース所有者の場合
-	if userId != m.UserId {
-		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
-		return
-	}
-
-	id, err := c.zs.Post(r.Context(), m)
+	id, err := c.zs.Post(r.Context(), userId, m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -111,7 +106,7 @@ func (c *zoController) post(w http.ResponseWriter, r *http.Request, params commo
 
 	res := PostResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
-		Zo:           m}
+		Zo:           NewResponseZo(id, m.AchievementDate, m.Exp, m.CategoryId, m.Message)}
 	myhttp.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
 }
 
@@ -132,7 +127,8 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, params com
 	}
 
 	// リクエスト情報からモデルを生成
-	m, err := contentToModel(r)
+	m := &Zo{}
+	err = contentToModel(r, m)
 	log.Printf("contentToModel: %v", m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
@@ -226,13 +222,12 @@ func (c *zoController) getUserIdFromToken(ctx context.Context) (int, error) {
 }
 
 // リクエスト情報からモデルの生成
-func contentToModel(r *http.Request) (*Zo, error) {
+func contentToModel(r *http.Request, model interface{}) error {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
-	var result Zo
-	err := json.Unmarshal(body, &result)
+	err := json.Unmarshal(body, model)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &result, nil
+	return nil
 }
