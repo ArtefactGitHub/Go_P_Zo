@@ -64,7 +64,8 @@ func (c *userController) get(w http.ResponseWriter, r *http.Request, ps common.Q
 // 指定のリソース情報で作成
 func (c *userController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// リクエスト情報からモデルを生成
-	m, err := c.contentToModel(r)
+	m := &User{}
+	err := contentToModel(r, m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -99,7 +100,8 @@ func (c *userController) update(w http.ResponseWriter, r *http.Request, ps commo
 	}
 
 	// リクエスト情報からモデルを生成
-	m, err := c.contentToModel(r)
+	m := &User{}
+	err = contentToModel(r, m)
 	log.Printf("contentToModel: %v", m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
@@ -138,18 +140,6 @@ func (c *userController) delete(w http.ResponseWriter, r *http.Request, ps commo
 	myhttp.Write(w, res, http.StatusOK)
 }
 
-// リクエスト情報からモデルの生成
-func (c *userController) contentToModel(r *http.Request) (*User, error) {
-	body := make([]byte, r.ContentLength)
-	r.Body.Read(body)
-	var result User
-	err := json.Unmarshal(body, &result)
-	if err != nil {
-		return nil, err
-	}
-	return &result, nil
-}
-
 // userToken
 type userTokenController struct {
 	s userTokenService
@@ -158,7 +148,8 @@ type userTokenController struct {
 // 指定のリソース情報で作成
 func (c *userTokenController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
 	// 指定リソースの取得
-	m, err := c.contentToModel(r)
+	m := &UserTokenRequest{}
+	err := contentToModel(r, m)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -174,18 +165,6 @@ func (c *userTokenController) post(w http.ResponseWriter, r *http.Request, ps co
 		ResponseBase: &myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
 		UserToken:    result}
 	myhttp.Write(w, res, http.StatusCreated)
-}
-
-// リクエスト情報からモデルの生成
-func (c *userTokenController) contentToModel(r *http.Request) (*UserTokenRequest, error) {
-	body := make([]byte, r.ContentLength)
-	r.Body.Read(body)
-	var result UserTokenRequest
-	err := json.Unmarshal(body, &result)
-	if err != nil {
-		return nil, err
-	}
-	return &result, nil
 }
 
 // userCategory
@@ -213,6 +192,17 @@ func (c *userCategoryController) getAll(w http.ResponseWriter, r *http.Request, 
 		ResponseBase: &myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
 		Categories:   datas}
 	myhttp.Write(w, res, http.StatusOK)
+}
+
+// リクエスト情報からモデルの生成
+func contentToModel(r *http.Request, model interface{}) error {
+	body := make([]byte, r.ContentLength)
+	r.Body.Read(body)
+	err := json.Unmarshal(body, model)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *userCategoryController) getUserIdFromToken(ctx context.Context) (int, error) {
