@@ -17,10 +17,10 @@ func NewResponseUser(userId int, givenName, familyName, email string) *responseU
 	return &responseUser{Id: userId, GivenName: givenName, FamilyName: familyName, Email: email}
 }
 
-func NewResponseUsers(users []User) []responseUser {
+func NewResponseUsers(models []User) []responseUser {
 	result := []responseUser{}
-	for _, u := range users {
-		result = append(result, responseUser{Id: u.Id, GivenName: u.GivenName, FamilyName: u.FamilyName, Email: u.Email})
+	for _, m := range models {
+		result = append(result, responseUser{Id: m.Id, GivenName: m.GivenName, FamilyName: m.FamilyName, Email: m.Email})
 	}
 	return result
 }
@@ -75,4 +75,35 @@ type PostUserTokenResponse struct {
 
 func NewPostUserTokenResponse(res *myhttp.ResponseBase, usertoken *UserToken) *PostUserTokenResponse {
 	return &PostUserTokenResponse{ResponseBase: res, UserToken: usertoken}
+}
+
+// UserCategory
+type responseUserCategory struct {
+	Id         int    `json:"id"`
+	Name       string `json:"name"`
+	ColorId    int    `json:"color_id"`
+	CreateType int    `json:"create_type"`
+	UserId     int    `json:"user_id"`
+}
+
+func NewResponseUserCategory(userId int, givenName, familyName, email string) *responseUser {
+	return &responseUser{Id: userId, GivenName: givenName, FamilyName: familyName, Email: email}
+}
+
+func NewResponseUserCategories(models []Category) []responseUserCategory {
+	result := []responseUserCategory{}
+	for _, m := range models {
+		result = append(result, responseUserCategory{
+			Id: m.Id, Name: m.Name, ColorId: m.ColorId, CreateType: m.CreateType, UserId: m.UserId})
+	}
+	return result
+}
+
+type GetAllUserCategoryResponse struct {
+	*myhttp.ResponseBase
+	Categories []responseUserCategory `json:"categories"`
+}
+
+func NewGetAllUserCategoryResponse(res *myhttp.ResponseBase, categories []responseUserCategory) *GetAllUserCategoryResponse {
+	return &GetAllUserCategoryResponse{ResponseBase: res, Categories: categories}
 }

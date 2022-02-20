@@ -98,3 +98,18 @@ func (s *userTokenService) createUserToken(userId int) (*UserToken, error) {
 	result := &UserToken{UserId: userId, Token: jwt, ExpiredAt: expiredAt, CreatedAt: time.Now(), UpdatedAt: sql.NullTime{}}
 	return result, nil
 }
+
+// userCategory
+type userCategoryService struct {
+	ucr userCategoryRepository
+}
+
+func (s *userCategoryService) GetAll(ctx context.Context, userId int) ([]responseUserCategory, error) {
+	models, err := s.ucr.FindAllByUserId(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	result := NewResponseUserCategories(models)
+	return result, nil
+}
