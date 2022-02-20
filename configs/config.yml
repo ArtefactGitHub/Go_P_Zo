@@ -8,6 +8,6 @@ address: 127.0.0.1:3306
 database: Go_P_Zo?parseTime=true
 
 auth:
-  token_expiration: 1200
+  token_expiration: 43200
   usertoken_expiration: 1200
   signkey: ${Go_P_Zo_AUTH_SIGNKEY}

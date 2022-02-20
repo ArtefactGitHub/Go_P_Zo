@@ -1,12 +1,15 @@
 package user
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mycontext"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
@@ -139,6 +142,7 @@ func (c *userController) contentToModel(r *http.Request) (*User, error) {
 	return &result, nil
 }
 
+// userToken
 type userTokenController struct {
 	s userTokenService
 }
@@ -174,4 +178,49 @@ func (c *userTokenController) contentToModel(r *http.Request) (*UserTokenRequest
 		return nil, err
 	}
 	return &result, nil
+}
+
+// userCategory
+type userCategoryController struct {
+	s userCategoryService
+}
+
+// リソースを取得
+func (c *userCategoryController) getAll(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
+	// ユーザーIDの取得
+	userId, err := c.getUserIdFromToken(r.Context())
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+		return
+	}
+
+	// リソース群の取得
+	datas, err := c.s.GetAll(r.Context(), userId)
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	res := GetAllUserCategoryResponse{
+		ResponseBase: &myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
+		Categories:   datas}
+	myhttp.Write(w, res, http.StatusOK)
+}
+
+func (c *userCategoryController) getUserIdFromToken(ctx context.Context) (int, error) {
+	// ユーザートークンの取得
+	userToken, err := mycontext.FromContextStr(ctx, mycontext.UserTokenKey)
+	if err != nil {
+		return -1, err
+	}
+	log.Print(userToken)
+
+	// ユーザートークンからユーザーIDの取得
+	claims, err := myauth.CreateUserTokenClaims(userToken)
+	if err != nil {
+		log.Println(err.Error())
+		return -1, err
+	}
+
+	return claims.UserId, nil
 }
