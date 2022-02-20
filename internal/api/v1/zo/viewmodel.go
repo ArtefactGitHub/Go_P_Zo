@@ -9,7 +9,7 @@ import (
 type requestZo struct {
 	AchievementDate time.Time `json:"achievementdate"`
 	Exp             int       `json:"exp"`
-	CategoryId      int       `json:"categoryid"`
+	CategoryId      int       `json:"category_id"`
 	Message         string    `json:"message"`
 }
 
@@ -31,7 +31,7 @@ type responseZo struct {
 	Id              int       `json:"id"`
 	AchievementDate time.Time `json:"achievementdate"`
 	Exp             int       `json:"exp"`
-	CategoryId      int       `json:"categoryid"`
+	CategoryId      int       `json:"category_id"`
 	Message         string    `json:"message"`
 }
 

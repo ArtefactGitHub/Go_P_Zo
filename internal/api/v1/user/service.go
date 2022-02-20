@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
@@ -75,6 +76,10 @@ func (s *userTokenService) Post(ctx context.Context, m *UserTokenRequest) (*User
 		return nil, err
 	}
 
+	if user == nil {
+		return nil, errors.New("認証情報が正しくありません。")
+	}
+
 	userToken, err := s.createUserToken(user.Id)
 	if err != nil {
 		return nil, err
@@ -101,15 +106,24 @@ func (s *userTokenService) createUserToken(userId int) (*UserToken, error) {
 
 // userCategory
 type userCategoryService struct {
-	ucr userCategoryRepository
+	r userCategoryRepository
 }
 
 func (s *userCategoryService) GetAll(ctx context.Context, userId int) ([]responseUserCategory, error) {
-	models, err := s.ucr.FindAllByUserId(ctx, userId)
+	models, err := s.r.FindAllByUserId(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
 
 	result := NewResponseUserCategories(models)
+	return result, nil
+}
+
+func (s *userCategoryService) Post(ctx context.Context, userId int, r *requestUserCategory) (int, error) {
+	m := NewUserCategory(0, 0, r.Name, r.ColorId, userId, time.Now(), sql.NullTime{})
+	result, err := s.r.Create(ctx, m)
+	if err != nil {
+		return -1, err
+	}
 	return result, nil
 }

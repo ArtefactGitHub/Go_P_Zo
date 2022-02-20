@@ -278,21 +278,21 @@ func (r *UserTokenRepository) Create(ctx context.Context, m *UserToken) (int, er
 }
 
 // userCategoryRepository
-func (r *userCategoryRepository) FindAllByUserId(ctx context.Context, userId int) ([]Category, error) {
-	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM categories WHERE user_id = ? order by id", userId)
+func (r *userCategoryRepository) FindAllByUserId(ctx context.Context, userId int) ([]UserCategory, error) {
+	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM usercategories WHERE user_id = ? order by id", userId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var m Category
-	var result []Category
+	var m UserCategory
+	var result []UserCategory
 	for rows.Next() {
 		err := rows.Scan(
 			&m.Id,
+			&m.Number,
 			&m.Name,
 			&m.ColorId,
-			&m.CreateType,
 			&m.UserId,
 			&m.CreatedAt,
 			&m.UpdatedAt)
@@ -307,4 +307,28 @@ func (r *userCategoryRepository) FindAllByUserId(ctx context.Context, userId int
 	}
 
 	return result, nil
+}
+
+func (r *userCategoryRepository) Create(ctx context.Context, m *UserCategory) (int, error) {
+	result, err := mydb.Db.ExecContext(ctx, `
+			INSERT INTO UserCategories(id, number, name, color_id, user_id, createdAt, updatedAt)
+			VALUES(?, ?, ?, ?, ?, ?, ?)`,
+		nil,
+		&m.Number,
+		&m.Name,
+		&m.ColorId,
+		&m.UserId,
+		&m.CreatedAt,
+		&m.UpdatedAt)
+	if err != nil {
+		return -1, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return -1, err
+	}
+
+	m.Id = int(id)
+	return m.Id, nil
 }

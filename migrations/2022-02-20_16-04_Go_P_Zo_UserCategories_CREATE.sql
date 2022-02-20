@@ -7,7 +7,7 @@
 #
 # ホスト: localhost (MySQL 8.0.12)
 # データベース: Go_P_Zo
-# 生成時間: 2022-02-19 08:54:18 +0000
+# 生成時間: 2022-02-20 07:04:27 +0000
 # ************************************************************
 
 
@@ -20,16 +20,16 @@ SET NAMES utf8mb4;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# テーブルのダンプ Categories
+# テーブルのダンプ UserCategories
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `Categories`;
+DROP TABLE IF EXISTS `UserCategories`;
 
-CREATE TABLE `Categories` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'カテゴリー識別子',
-  `name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'カテゴリー名',
+CREATE TABLE `UserCategories` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '識別子',
+  `number` int(11) unsigned NOT NULL COMMENT '番号（ユーザー単位の管理番号）',
+  `name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '名前',
   `color_id` int(11) unsigned NOT NULL COMMENT '色識別子',
-  `create_type` int(11) unsigned NOT NULL COMMENT '作成種別（０：システム、１：ユーザー）',
   `user_id` int(11) unsigned NOT NULL COMMENT 'ユーザー識別子',
   `createdAt` datetime NOT NULL COMMENT '作成日',
   `updatedAt` datetime DEFAULT NULL COMMENT '更新日',
