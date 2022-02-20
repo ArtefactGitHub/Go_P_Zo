@@ -79,23 +79,30 @@ func NewPostUserTokenResponse(res *myhttp.ResponseBase, usertoken *UserToken) *P
 }
 
 // UserCategory
+type requestUserCategory struct {
+	Name    string `json:"name"`
+	ColorId int    `json:"color_id"`
+	UserId  int    `json:"user_id"`
+}
+
 type responseUserCategory struct {
-	Id         int    `json:"id"`
-	Name       string `json:"name"`
-	ColorId    int    `json:"color_id"`
-	CreateType int    `json:"create_type"`
-	UserId     int    `json:"user_id"`
+	Id      int    `json:"id"`
+	Number  int    `json:"number"`
+	Name    string `json:"name"`
+	ColorId int    `json:"color_id"`
+	UserId  int    `json:"user_id"`
 }
 
-func NewResponseUserCategory(userId int, givenName, familyName, email string) *responseUser {
-	return &responseUser{Id: userId, GivenName: givenName, FamilyName: familyName, Email: email}
+func NewResponseUserCategory(id, number int, name string, colorId, userId int) *responseUserCategory {
+	return &responseUserCategory{
+		Id: id, Number: number, Name: name, ColorId: colorId, UserId: userId,
+	}
 }
 
-func NewResponseUserCategories(models []Category) []responseUserCategory {
+func NewResponseUserCategories(models []UserCategory) []responseUserCategory {
 	result := []responseUserCategory{}
 	for _, m := range models {
-		result = append(result, responseUserCategory{
-			Id: m.Id, Name: m.Name, ColorId: m.ColorId, CreateType: m.CreateType, UserId: m.UserId})
+		result = append(result, *NewResponseUserCategory(m.Id, m.Number, m.Name, m.ColorId, m.UserId))
 	}
 	return result
 }
@@ -107,4 +114,13 @@ type GetAllUserCategoryResponse struct {
 
 func NewGetAllUserCategoryResponse(res *myhttp.ResponseBase, categories []responseUserCategory) *GetAllUserCategoryResponse {
 	return &GetAllUserCategoryResponse{ResponseBase: res, Categories: categories}
+}
+
+type PostUserCategoryResponse struct {
+	*myhttp.ResponseBase
+	Category *responseUserCategory `json:"category"`
+}
+
+func NewPostUserCategoryResponse(res *myhttp.ResponseBase, category *responseUserCategory) *PostUserCategoryResponse {
+	return &PostUserCategoryResponse{ResponseBase: res, Category: category}
 }

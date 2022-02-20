@@ -194,6 +194,35 @@ func (c *userCategoryController) getAll(w http.ResponseWriter, r *http.Request, 
 	myhttp.Write(w, res, http.StatusOK)
 }
 
+// 指定のリソース情報で作成
+func (c *userCategoryController) post(w http.ResponseWriter, r *http.Request, ps common.QueryMap) {
+	// ユーザーIDの取得
+	userId, err := c.getUserIdFromToken(r.Context())
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+		return
+	}
+
+	// リクエスト情報からモデルを生成
+	m := &requestUserCategory{}
+	err = contentToModel(r, m)
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	id, err := c.s.Post(r.Context(), userId, m)
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	res := PostUserCategoryResponse{
+		ResponseBase: &myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
+		Category:     NewResponseUserCategory(id, 0, m.Name, m.ColorId, m.UserId)}
+	myhttp.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
+}
+
 // リクエスト情報からモデルの生成
 func contentToModel(r *http.Request, model interface{}) error {
 	body := make([]byte, r.ContentLength)

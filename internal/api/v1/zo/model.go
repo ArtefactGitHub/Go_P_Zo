@@ -9,7 +9,7 @@ type Zo struct {
 	Id              int          `json:"id"`
 	AchievementDate time.Time    `json:"achievementdate"`
 	Exp             int          `json:"exp"`
-	CategoryId      int          `json:"categoryid"`
+	CategoryId      int          `json:"category_id"`
 	Message         string       `json:"message"`
 	CreatedAt       time.Time    `json:"createdat"`
 	UpdatedAt       sql.NullTime `json:"updatedat"`

@@ -65,31 +65,31 @@ func NewUserToken(
 		UpdatedAt: updatedAt}
 }
 
-type Category struct {
-	Id         int          `json:"id"`
-	Name       string       `json:"name"`
-	ColorId    int          `json:"color_id"`
-	CreateType int          `json:"create_type"`
-	UserId     int          `json:"user_id"`
-	CreatedAt  time.Time    `json:"createdat"`
-	UpdatedAt  sql.NullTime `json:"updatedat"`
+type UserCategory struct {
+	Id        int          `json:"id"`
+	Number    int          `json:"number"`
+	Name      string       `json:"name"`
+	ColorId   int          `json:"color_id"`
+	UserId    int          `json:"user_id"`
+	CreatedAt time.Time    `json:"createdat"`
+	UpdatedAt sql.NullTime `json:"updatedat"`
 }
 
 func NewUserCategory(
 	id int,
+	number int,
 	name string,
 	colorId int,
-	createType int,
 	userId int,
 	createdAt time.Time,
 	updatedAt sql.NullTime,
-) *Category {
-	return &Category{
-		Id:         id,
-		Name:       name,
-		ColorId:    colorId,
-		CreateType: createType,
-		UserId:     userId,
-		CreatedAt:  createdAt,
-		UpdatedAt:  updatedAt}
+) *UserCategory {
+	return &UserCategory{
+		Id:        id,
+		Number:    number,
+		Name:      name,
+		ColorId:   colorId,
+		UserId:    userId,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt}
 }

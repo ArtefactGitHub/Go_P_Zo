@@ -19,6 +19,10 @@ var seedUserTokens []UserToken = []UserToken{
 	NewUserToken(2, 2, "token_2", time.Now().Add(1*time.Minute), time.Now(), sql.NullTime{}),
 	NewUserToken(3, 3, "token_3", time.Now().Add(1*time.Minute), time.Now(), sql.NullTime{}),
 }
+var seedUserCategories []UserCategory = []UserCategory{
+	*NewUserCategory(0, 0, "テストカテゴリー_1", 0, 1, time.Now(), sql.NullTime{}),
+	*NewUserCategory(0, 1, "テストカテゴリー_2", 0, 1, time.Now(), sql.NullTime{}),
+}
 
 func test_seed(ctx context.Context) {
 	_, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {
@@ -47,6 +51,22 @@ func test_seed(ctx context.Context) {
 				t.UserId,
 				t.Token,
 				t.ExpiredAt,
+				t.CreatedAt,
+				t.UpdatedAt)
+			if err != nil {
+				test.Failuer(err)
+			}
+		}
+		for _, t := range seedUserCategories {
+			_, err := mydb.Db.ExecContext(
+				ctx,
+				`INSERT INTO UserCategories(id, number, name, color_id, user_id, createdAt, updatedAt)
+								VALUES(?,?,?,?,?,?,?)`,
+				nil,
+				t.Number,
+				t.Name,
+				t.ColorId,
+				t.UserId,
 				t.CreatedAt,
 				t.UpdatedAt)
 			if err != nil {
