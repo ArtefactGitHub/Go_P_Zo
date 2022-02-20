@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
@@ -73,6 +74,10 @@ func (s *userTokenService) Post(ctx context.Context, m *UserTokenRequest) (*User
 	user, err := s.ur.FindByIdentifier(ctx, m.Identifier, m.Secret)
 	if err != nil {
 		return nil, err
+	}
+
+	if user == nil {
+		return nil, errors.New("認証情報が正しくありません。")
 	}
 
 	userToken, err := s.createUserToken(user.Id)
