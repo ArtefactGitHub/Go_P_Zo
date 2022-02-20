@@ -41,7 +41,8 @@ type GetResponse struct {
 
 type PostResponse struct {
 	myhttp.ResponseBase
-	User *responseUser `json:"user"`
+	User      *responseUser `json:"user"`
+	UserToken *UserToken    `json:"usertoken"`
 }
 
 type PutResponse struct {

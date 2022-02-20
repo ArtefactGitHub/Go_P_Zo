@@ -15,7 +15,8 @@ import (
 )
 
 type userController struct {
-	s UserService
+	s   UserService
+	uts userTokenService
 }
 
 const resourceId = "user_id"
@@ -75,9 +76,16 @@ func (c *userController) post(w http.ResponseWriter, r *http.Request, ps common.
 		return
 	}
 
+	resultToken, err := c.uts.Post(r.Context(), &UserTokenRequest{Identifier: m.Email, Secret: m.Password})
+	if err != nil {
+		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
+		return
+	}
+
 	res := PostResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
-		User:         NewResponseUser(m.Id, m.GivenName, m.FamilyName, m.Email)}
+		User:         NewResponseUser(m.Id, m.GivenName, m.FamilyName, m.Email),
+		UserToken:    resultToken}
 	myhttp.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
 }
 
