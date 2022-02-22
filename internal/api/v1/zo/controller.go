@@ -141,7 +141,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, params com
 		return
 	}
 
-	u := NewZo(
+	z := NewZo(
 		id,
 		m.AchievementDate,
 		m.Exp,
@@ -150,7 +150,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, params com
 		m.CreatedAt,
 		sql.NullTime{Time: time.Now(), Valid: true},
 		m.UserId)
-	err = c.zs.Update(r.Context(), &u)
+	err = c.zs.Update(r.Context(), &z)
 	if err != nil {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "")
 		return
@@ -158,7 +158,7 @@ func (c *zoController) update(w http.ResponseWriter, r *http.Request, params com
 
 	res := PutResponse{
 		ResponseBase: myhttp.ResponseBase{StatusCode: http.StatusOK, Error: nil},
-		Zo:           &u}
+		Zo:           &z}
 	myhttp.Write(w, res, http.StatusOK)
 }
 
