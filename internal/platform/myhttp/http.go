@@ -45,4 +45,5 @@ func WriteError(w http.ResponseWriter, err error, statusCode int, description st
 	w.WriteHeader(statusCode)
 	w.Write(result)
 	log.Printf("WriteError() %v", err)
+	log.Println(string(result))
 }
