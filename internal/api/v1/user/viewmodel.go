@@ -82,7 +82,6 @@ func NewPostUserTokenResponse(res *myhttp.ResponseBase, usertoken *UserToken) *P
 type requestUserCategory struct {
 	Name    string `json:"name"`
 	ColorId int    `json:"color_id"`
-	UserId  int    `json:"user_id"`
 }
 
 type responseUserCategory struct {
@@ -93,16 +92,16 @@ type responseUserCategory struct {
 	UserId  int    `json:"user_id"`
 }
 
-func NewResponseUserCategory(id, number int, name string, colorId, userId int) *responseUserCategory {
+func NewResponseUserCategory(id, number int, name string, colorId int) *responseUserCategory {
 	return &responseUserCategory{
-		Id: id, Number: number, Name: name, ColorId: colorId, UserId: userId,
+		Id: id, Number: number, Name: name, ColorId: colorId,
 	}
 }
 
 func NewResponseUserCategories(models []UserCategory) []responseUserCategory {
 	result := []responseUserCategory{}
 	for _, m := range models {
-		result = append(result, *NewResponseUserCategory(m.Id, m.Number, m.Name, m.ColorId, m.UserId))
+		result = append(result, *NewResponseUserCategory(m.Id, m.Number, m.Name, m.ColorId))
 	}
 	return result
 }

@@ -219,7 +219,7 @@ func (c *userCategoryController) post(w http.ResponseWriter, r *http.Request, ps
 
 	res := PostUserCategoryResponse{
 		ResponseBase: &myhttp.ResponseBase{StatusCode: http.StatusCreated, Error: nil},
-		Category:     NewResponseUserCategory(id, 0, m.Name, m.ColorId, m.UserId)}
+		Category:     NewResponseUserCategory(id, 0, m.Name, m.ColorId)}
 	myhttp.WriteSuccessWithLocation(w, res, http.StatusCreated, r.Host+r.URL.Path+strconv.Itoa(id))
 }
 
