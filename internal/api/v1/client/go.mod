@@ -1,4 +1,4 @@
-module github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/auth
+module github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client
 
 go 1.17
 

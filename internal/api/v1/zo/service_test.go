@@ -2,7 +2,6 @@ package zo
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
@@ -23,12 +22,18 @@ func Test_service(t *testing.T) {
 // getAll() のテスト
 func test_s_getall(t *testing.T) {
 	s := ZoService{}
-	zos, err := s.GetAll(context.Background())
+	userId := userId_1
+	zos, err := s.GetAll(context.Background(), userId)
 	if err != nil {
 		t.Errorf("getAll() has error: %v", err)
 	}
 
-	want := 3
+	var want int
+	for _, v := range seeds {
+		if v.UserId == userId {
+			want++
+		}
+	}
 	if len(zos) != want {
 		t.Errorf("len() = %d, want %d", len(zos), want)
 	}
@@ -53,10 +58,9 @@ func test_s_post(t *testing.T) {
 	s := ZoService{}
 	ac, _ := time.Parse(test.TimeLayout, "2021-12-18")
 	userId := 1
-	z := NewZo(
-		0, ac, 555, 0, "created by test",
-		time.Now(), sql.NullTime{}, userId)
-	_, err := s.Post(context.Background(), &z)
+	z := NewRequestZo(
+		ac, 555, 0, "created by test")
+	_, err := s.Post(context.Background(), userId, z)
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
@@ -70,9 +74,9 @@ func test_s_post(t *testing.T) {
 	if err != nil {
 		t.Errorf("post() has error: %v", err)
 	}
-	want = cap(seeds) + 1
-	if cap(zos) != want {
-		t.Errorf("cap(zos) = %d, want %d", cap(zos), want)
+	want = len(seeds) + 1
+	if len(zos) != want {
+		t.Errorf("len(zos) = %d, want %d", len(zos), want)
 	}
 }
 
@@ -105,8 +109,8 @@ func test_s_delete(t *testing.T) {
 	if err != nil {
 		t.Errorf("delete() has error: %v", err)
 	}
-	want := cap(seeds) - 1
-	if cap(zos) != want {
-		t.Errorf("cap(zos) = %d, want %d", cap(zos), want)
+	want := len(seeds) - 1
+	if len(zos) != want {
+		t.Errorf("len(zos) = %d, want %d", len(zos), want)
 	}
 }

@@ -11,12 +11,14 @@ import (
 
 var ac, _ = time.Parse(test.TimeLayout, "2021-12-18")
 
-const userId = 1
+const userId_1 = 1
+const userId_2 = 2
 
 var seeds []Zo = []Zo{
-	NewZo(1, ac, 100, 0, "test-1", time.Now(), sql.NullTime{}, userId),
-	NewZo(2, ac, 200, 0, "test-2", time.Now(), sql.NullTime{}, userId),
-	NewZo(3, ac, 300, 0, "test-3", time.Now(), sql.NullTime{}, userId)}
+	NewZo(1, ac, 100, 0, "test-1", time.Now(), sql.NullTime{}, userId_1),
+	NewZo(2, ac, 200, 0, "test-2", time.Now(), sql.NullTime{}, userId_1),
+	NewZo(3, ac, 300, 0, "test-3", time.Now(), sql.NullTime{}, userId_1),
+	NewZo(4, ac, 300, 0, "test-4", time.Now(), sql.NullTime{}, userId_2)}
 
 func test_seed(ctx context.Context) {
 	_, err := mydb.Tran(ctx, func(ctx context.Context, tx *sql.Tx) (interface{}, error) {

@@ -1,4 +1,4 @@
-package auth
+package client
 
 import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"

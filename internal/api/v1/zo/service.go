@@ -2,14 +2,16 @@ package zo
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
 
 type ZoService struct {
 	Zr ZoRepository
 }
 
-func (s *ZoService) GetAll(ctx context.Context) ([]Zo, error) {
-	result, err := s.Zr.FindAll(ctx)
+func (s *ZoService) GetAll(ctx context.Context, userId int) ([]Zo, error) {
+	result, err := s.Zr.FindAllByUserId(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -26,12 +28,12 @@ func (s *ZoService) Get(ctx context.Context, id int) (*Zo, error) {
 	return result, nil
 }
 
-func (s *ZoService) Post(ctx context.Context, z *Zo) (int, error) {
-	result, err := s.Zr.Create(ctx, z)
-	if err != nil {
+func (s *ZoService) Post(ctx context.Context, userId int, rz *requestZo) (int, error) {
+	if zo, err := s.newZo(rz, userId); err != nil {
 		return -1, err
+	} else {
+		return s.Zr.Create(ctx, zo)
 	}
-	return result, nil
 }
 
 func (s *ZoService) Update(ctx context.Context, z *Zo) error {
@@ -50,4 +52,12 @@ func (s *ZoService) Delete(ctx context.Context, id int) error {
 	}
 
 	return nil
+}
+
+func (s *ZoService) newZo(rz *requestZo, userId int) (*Zo, error) {
+	if err := rz.validation(); err != nil {
+		return nil, err
+	}
+	result := NewZo(0, rz.AchievementDate, rz.Exp, rz.CategoryId, rz.Message, time.Now(), sql.NullTime{}, userId)
+	return &result, nil
 }
