@@ -29,12 +29,11 @@ func (s *ZoService) Get(ctx context.Context, id int) (*Zo, error) {
 }
 
 func (s *ZoService) Post(ctx context.Context, userId int, rz *requestZo) (int, error) {
-	zo := NewZo(0, rz.AchievementDate, rz.Exp, rz.CategoryId, rz.Message, time.Now(), sql.NullTime{}, userId)
-	result, err := s.Zr.Create(ctx, &zo)
-	if err != nil {
+	if zo, err := s.newZo(rz, userId); err != nil {
 		return -1, err
+	} else {
+		return s.Zr.Create(ctx, zo)
 	}
-	return result, nil
 }
 
 func (s *ZoService) Update(ctx context.Context, z *Zo) error {
@@ -53,4 +52,12 @@ func (s *ZoService) Delete(ctx context.Context, id int) error {
 	}
 
 	return nil
+}
+
+func (s *ZoService) newZo(rz *requestZo, userId int) (*Zo, error) {
+	if err := rz.validation(); err != nil {
+		return nil, err
+	}
+	result := NewZo(0, rz.AchievementDate, rz.Exp, rz.CategoryId, rz.Message, time.Now(), sql.NullTime{}, userId)
+	return &result, nil
 }
