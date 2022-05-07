@@ -15,7 +15,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const address = "localhost:8000"
+const address = ":8000"
 
 func main() {
 	// 設定ファイルの取得
