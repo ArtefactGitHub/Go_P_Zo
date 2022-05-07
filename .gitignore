@@ -17,6 +17,14 @@
 # my settings
 main
 Go_P_Zo
+secrets/real/*
+!secrets/real/.gitkeep
+.idea
+
+.envrc
+infrastructure/secrets/real/*
+!infrastructure/secrets/real/.gitkeep
+
 
 *.code-workspace
 tmp/*
