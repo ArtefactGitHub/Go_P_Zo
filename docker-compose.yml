@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  db:
+    build:
+      context: ./infrastructure
+      dockerfile: Dockerfile
+    container_name: zo_db
+    ports:
+      - "13306:3306"
+    volumes:
+      - zo_db_volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: Go_P_Zo
+    networks:
+      - back-tier
+
+  app:
+    depends_on:
+      - db
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: zo
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/usr/src/app
+    tty: true
+    environment:
+      Go_P_Zo_DB_USER: testuser
+      Go_P_Zo_DB_PASSWORD: ${Go_P_Zo_DB_PASSWORD}
+      Go_P_Zo_DB_ADDRESS: zo_db
+      Go_P_Zo_AUTH_SIGNKEY: ${Go_P_Zo_AUTH_SIGNKEY}
+    networks:
+      - front-tier
+      - back-tier
+
+
+volumes:
+  zo_db_volume:
+
+networks:
+  # The presence of these objects is sufficient to define them
+  front-tier: {}
+  back-tier: {}
