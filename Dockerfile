@@ -2,10 +2,10 @@
 
 FROM golang:1.16-alpine
 
-ARG Go_P_Zo_DB_USER=testuser
-ARG Go_P_Zo_DB_PASSWORD
-ARG Go_P_Zo_DB_ADDRESS=127.0.0.1:13306
-ARG Go_P_Zo_AUTH_SIGNKEY
+ENV Go_P_Zo_DB_USER=testuser
+ENV Go_P_Zo_DB_PASSWORD=""
+ENV Go_P_Zo_DB_ADDRESS=localhost:13306
+ENV Go_P_Zo_AUTH_SIGNKEY=""
 
 ENV ROOT=/usr/src/app
 WORKDIR ${ROOT}
