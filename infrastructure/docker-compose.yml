@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zo_db
+    ports:
+      - "13306:3306"
+    volumes:
+      - zo_db_volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: Go_P_Zo
+volumes:
+  zo_db_volume:

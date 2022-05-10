@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  db:
+    build:
+      context: ./infrastructure
+      dockerfile: Dockerfile
+    container_name: zo_db
+#    command: mysqld --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "13306:3306"
+    volumes:
+      - zo_db_volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: Go_P_Zo
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "testuser", "-p$$MYSQL_PASSWORD" ]
+#      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+
+  migrate:
+    image: migrate/migrate
+    container_name: migrate
+    volumes:
+      - ./infrastructure/migrations:/migrations
+    command: ["-path", "/migrations", "-database",  "mysql://testuser:${MYSQL_PASSWORD}@tcp(zo_db:3306)/Go_P_Zo?multiStatements=true", "up"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    depends_on:
+      - migrate
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: zo
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/usr/src/app
+    tty: true
+    environment:
+      Go_P_Zo_DB_USER: testuser
+      Go_P_Zo_DB_PASSWORD: ${Go_P_Zo_DB_PASSWORD}
+      Go_P_Zo_DB_ADDRESS: zo_db:3306
+      Go_P_Zo_AUTH_SIGNKEY: ${Go_P_Zo_AUTH_SIGNKEY}
+
+volumes:
+  zo_db_volume:
