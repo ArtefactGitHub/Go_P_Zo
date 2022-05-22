@@ -1,9 +1,6 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
@@ -11,15 +8,21 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/middleware"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
-
 	_ "github.com/go-sql-driver/mysql"
+	"log"
+	"net/http"
+	"os"
 )
 
 const address = ":8000"
 
+var defaultRootPath = "../"
+
 func main() {
 	// 設定ファイルの取得
-	cfg, err := config.LoadConfig("../configs/config.yml")
+	rootPath := getRootPath()
+	cfg, err := config.LoadConfig(rootPath + "configs/config.yml")
+
 	config.Cfg = cfg
 	if err != nil {
 		panic(err)
@@ -31,7 +34,7 @@ func main() {
 	}
 	defer mydb.Finalize()
 
-	handler, err := CreateHandler(cfg)
+	handler, err := createHandler(cfg)
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +43,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(address, handler))
 }
 
-func CreateHandler(config *config.Config) (http.Handler, error) {
+func createHandler(config *config.Config) (http.Handler, error) {
 	jwt, err := middleware.NewJwtMiddleware(config)
 	if err != nil {
 		return nil, err
@@ -61,4 +64,13 @@ func CreateHandler(config *config.Config) (http.Handler, error) {
 		),
 	)
 	return handler, nil
+}
+
+func getRootPath() string {
+	path := os.Getenv("Go_P_Zo_ROOT_PATH")
+	if path == "" {
+		return defaultRootPath
+	}
+
+	return path
 }
