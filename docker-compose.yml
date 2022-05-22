@@ -48,6 +48,7 @@ services:
       Go_P_Zo_DB_PASSWORD: ${Go_P_Zo_DB_PASSWORD}
       Go_P_Zo_DB_ADDRESS: zo_db:3306
       Go_P_Zo_AUTH_SIGNKEY: ${Go_P_Zo_AUTH_SIGNKEY}
+      Go_P_Zo_ROOT_PATH: ${Go_P_Zo_ROOT_PATH}
 
 volumes:
   zo_db_volume:
