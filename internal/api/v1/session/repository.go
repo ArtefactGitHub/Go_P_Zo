@@ -15,7 +15,7 @@ func (r *SessionRepository) Find(ctx context.Context, identifier string, passwor
 	result := &SessionData{}
 	storePassword := ""
 	err := mydb.Db.QueryRowContext(ctx,
-		"SELECT given_name, family_name, Email, Password FROM users WHERE email = ?", identifier).
+		"SELECT given_name, family_name, Email, Password FROM Users WHERE email = ?", identifier).
 		Scan(
 			&result.GivenName,
 			&result.FamilyName,
