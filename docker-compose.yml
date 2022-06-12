@@ -39,7 +39,7 @@ services:
       dockerfile: Dockerfile
     container_name: zo
     ports:
-      - "8000:8000"
+      - "8080:8080"
     volumes:
       - ./:/usr/src/app
     tty: true
@@ -48,7 +48,8 @@ services:
       Go_P_Zo_DB_PASSWORD: ${Go_P_Zo_DB_PASSWORD}
       Go_P_Zo_DB_ADDRESS: zo_db:3306
       Go_P_Zo_AUTH_SIGNKEY: ${Go_P_Zo_AUTH_SIGNKEY}
-      Go_P_Zo_ROOT_PATH: ${Go_P_Zo_ROOT_PATH}
+      Go_P_Zo_ROOT_PATH: ./
+      HOST: ""
 
 volumes:
   zo_db_volume:

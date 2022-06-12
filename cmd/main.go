@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
@@ -14,13 +15,15 @@ import (
 	"os"
 )
 
-const address = ":8000"
-
-var defaultRootPath = "../"
+const (
+	address         = ":8080"
+	defaultRootPath = "../"
+	defaultHost     = "localhost"
+)
 
 func main() {
 	// 設定ファイルの取得
-	rootPath := getRootPath()
+	rootPath := getEnv("Go_P_Zo_ROOT_PATH", defaultRootPath)
 	cfg, err := config.LoadConfig(rootPath + "configs/config.yml")
 
 	config.Cfg = cfg
@@ -39,8 +42,9 @@ func main() {
 		panic(err)
 	}
 
-	log.Printf("running on %s", address)
-	log.Fatal(http.ListenAndServe(address, handler))
+	host := getEnv("HOST", defaultHost)
+	log.Printf("running on %s", host+address)
+	log.Fatal(http.ListenAndServe(host+address, handler))
 }
 
 func createHandler(config *config.Config) (http.Handler, error) {
@@ -66,11 +70,12 @@ func createHandler(config *config.Config) (http.Handler, error) {
 	return handler, nil
 }
 
-func getRootPath() string {
-	path := os.Getenv("Go_P_Zo_ROOT_PATH")
-	if path == "" {
-		return defaultRootPath
+func getEnv(key string, defaultValue string) string {
+	if val, isSet := os.LookupEnv(key); !isSet {
+		fmt.Printf("env[%s] is empty. default is %s \n", key, defaultValue)
+		return defaultValue
+	} else {
+		fmt.Printf("env[%s] is %s \n", key, val)
+		return val
 	}
-
-	return path
 }

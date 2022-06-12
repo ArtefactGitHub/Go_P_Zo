@@ -6,7 +6,8 @@ ENV Go_P_Zo_DB_USER=testuser
 ENV Go_P_Zo_DB_PASSWORD=""
 ENV Go_P_Zo_DB_ADDRESS=localhost:13306
 ENV Go_P_Zo_AUTH_SIGNKEY=""
-ENV Go_P_Zo_ROOT_PATH=../
+ENV Go_P_Zo_ROOT_PATH=./
+ENV HOST=""
 
 ENV ROOT=/usr/src/app
 WORKDIR ${ROOT}
@@ -19,6 +20,6 @@ RUN go mod download && go mod verify
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["air", "-c", ".air.toml"]
