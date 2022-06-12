@@ -20,7 +20,7 @@ type userCategoryRepository struct {
 }
 
 func (r *UserRepository) FindAll(ctx context.Context) ([]User, error) {
-	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM users")
+	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM Users")
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (r *UserRepository) FindAll(ctx context.Context) ([]User, error) {
 
 func (r *UserRepository) Find(ctx context.Context, id int) (*User, error) {
 	u := User{}
-	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM users WHERE id = ?", id).Scan(
+	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM Users WHERE id = ?", id).Scan(
 		&u.Id,
 		&u.GivenName,
 		&u.FamilyName,
@@ -71,7 +71,7 @@ func (r *UserRepository) Find(ctx context.Context, id int) (*User, error) {
 
 func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*User, error) {
 	u := User{}
-	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM users WHERE email = ?", email).Scan(
+	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM Users WHERE email = ?", email).Scan(
 		&u.Id,
 		&u.GivenName,
 		&u.FamilyName,
@@ -90,7 +90,7 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*User, 
 
 func (r *UserRepository) FindByEmailTx(ctx context.Context, tx *sql.Tx, email string) (*User, error) {
 	u := User{}
-	err := tx.QueryRowContext(ctx, "SELECT * FROM users WHERE email = ?", email).Scan(
+	err := tx.QueryRowContext(ctx, "SELECT * FROM Users WHERE email = ?", email).Scan(
 		&u.Id,
 		&u.GivenName,
 		&u.FamilyName,
@@ -110,7 +110,7 @@ func (r *UserRepository) FindByEmailTx(ctx context.Context, tx *sql.Tx, email st
 func (r *UserRepository) FindByIdentifier(ctx context.Context, identifier string, password string) (*User, error) {
 	result := &User{}
 	err := mydb.Db.QueryRowContext(ctx,
-		"SELECT * FROM users WHERE email = ?", identifier).
+		"SELECT * FROM Users WHERE email = ?", identifier).
 		Scan(
 			&result.Id,
 			&result.GivenName,
@@ -146,7 +146,7 @@ func (r *UserRepository) Create(ctx context.Context, u *User) (int, error) {
 	}
 
 	result, err := mydb.Db.ExecContext(ctx, `
-			INSERT INTO users(id, given_name, family_name, email, password, createdAt, updatedAt)
+			INSERT INTO Users(id, given_name, family_name, email, password, createdAt, updatedAt)
 			values(?, ?, ?, ?, ?, ?, ?)`,
 		nil,
 		&u.GivenName,
@@ -181,7 +181,7 @@ func (r *UserRepository) CreateTx(ctx context.Context, tx *sql.Tx, u *User) (int
 	}
 
 	result, err := tx.ExecContext(ctx, `
-			INSERT INTO users(id, given_name, family_name, email, password, createdAt, updatedAt)
+			INSERT INTO Users(id, given_name, family_name, email, password, createdAt, updatedAt)
 			values(?, ?, ?, ?, ?, ?)`,
 		nil,
 		&u.GivenName,
@@ -205,7 +205,7 @@ func (r *UserRepository) CreateTx(ctx context.Context, tx *sql.Tx, u *User) (int
 
 func (r *UserRepository) Update(ctx context.Context, u *User) error {
 	_, err := mydb.Db.ExecContext(ctx, `
-		UPDATE users
+		UPDATE Users
 		SET given_name = ?,
 				family_name = ?,
 				email = ?,
@@ -225,7 +225,7 @@ func (r *UserRepository) Update(ctx context.Context, u *User) error {
 
 func (r *UserRepository) Delete(ctx context.Context, id int) error {
 	_, err := mydb.Db.ExecContext(ctx, `
-		DELETE FROM users
+		DELETE FROM Users
 		WHERE id = ?`,
 		id)
 	if err != nil {
@@ -279,7 +279,7 @@ func (r *UserTokenRepository) Create(ctx context.Context, m *UserToken) (int, er
 
 // userCategoryRepository
 func (r *userCategoryRepository) FindAllByUserId(ctx context.Context, userId int) ([]UserCategory, error) {
-	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM usercategories WHERE user_id = ? order by id", userId)
+	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM UserCategories WHERE user_id = ? order by id", userId)
 	if err != nil {
 		return nil, err
 	}

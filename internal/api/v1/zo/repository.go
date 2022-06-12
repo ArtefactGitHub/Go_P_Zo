@@ -11,7 +11,7 @@ type ZoRepository struct {
 }
 
 func (r *ZoRepository) FindAll(ctx context.Context) ([]Zo, error) {
-	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM zos")
+	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM Zos")
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (r *ZoRepository) FindAll(ctx context.Context) ([]Zo, error) {
 }
 
 func (r *ZoRepository) FindAllByUserId(ctx context.Context, userId int) ([]Zo, error) {
-	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM zos WHERE user_id = ?", userId)
+	rows, err := mydb.Db.QueryContext(ctx, "SELECT * FROM Zos WHERE user_id = ?", userId)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (r *ZoRepository) FindAllByUserId(ctx context.Context, userId int) ([]Zo, e
 
 func (r *ZoRepository) Find(ctx context.Context, id int) (*Zo, error) {
 	z := Zo{}
-	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM zos WHERE id = ?", id).Scan(
+	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM Zos WHERE id = ?", id).Scan(
 		&z.Id,
 		&z.AchievementDate,
 		&z.Exp,
@@ -96,7 +96,7 @@ func (r *ZoRepository) Find(ctx context.Context, id int) (*Zo, error) {
 
 func (r *ZoRepository) Create(ctx context.Context, z *Zo) (int, error) {
 	result, err := mydb.Db.ExecContext(ctx, `
-		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
+		INSERT INTO Zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
 		            values(?, ?, ?, ?, ?, ?, ?, ?)`,
 		nil,
 		z.AchievementDate,
@@ -121,7 +121,7 @@ func (r *ZoRepository) Create(ctx context.Context, z *Zo) (int, error) {
 
 func (r *ZoRepository) CreateTx(ctx context.Context, tx *sql.Tx, z *Zo) (int, error) {
 	result, err := tx.ExecContext(ctx, `
-		INSERT INTO zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
+		INSERT INTO Zos(id, achievementDate, exp, categoryId, message, createdAt, updatedAt, user_id)
 		            values(?, ?, ?, ?, ?, ?, ?, ?)`,
 		nil,
 		z.AchievementDate,
@@ -146,7 +146,7 @@ func (r *ZoRepository) CreateTx(ctx context.Context, tx *sql.Tx, z *Zo) (int, er
 
 func (r *ZoRepository) Update(ctx context.Context, z *Zo) error {
 	_, err := mydb.Db.ExecContext(ctx, `
-		UPDATE zos
+		UPDATE Zos
 		SET achievementDate = ?,
 		    exp = ?,
 		    categoryId = ?,
@@ -170,7 +170,7 @@ func (r *ZoRepository) Update(ctx context.Context, z *Zo) error {
 
 func (r *ZoRepository) Delete(ctx context.Context, id int) error {
 	_, err := mydb.Db.ExecContext(ctx, `
-		DELETE FROM zos
+		DELETE FROM Zos
 		WHERE id = ?`,
 		id)
 	if err != nil {
