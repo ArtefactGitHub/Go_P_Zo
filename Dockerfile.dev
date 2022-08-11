@@ -19,9 +19,7 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
 COPY . .
-WORKDIR cmd
-RUN go build -v -o /usr/local/bin/app ./...
 
 EXPOSE 8080
 
-CMD ["app"]
+CMD ["air", "-c", ".air.toml"]
