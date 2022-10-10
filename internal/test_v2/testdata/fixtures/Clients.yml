@@ -1,0 +1,8 @@
+- id: 1
+  secret: secret-1
+  createdAt: RAW=NOW()
+  updatedAt: RAW=NOW()
+- id: 2
+  secret: secret-2
+  createdAt: RAW=NOW()
+  updatedAt: RAW=NOW()
