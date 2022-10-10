@@ -11,6 +11,7 @@ services:
     ports:
       - "13306:3306"
     volumes:
+      - ./infrastructure/mysql/:/docker-entrypoint-initdb.d/
       - zo_db_volume:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -27,6 +28,16 @@ services:
     volumes:
       - ./infrastructure/migrations:/migrations
     command: ["-path", "/migrations", "-database",  "mysql://testuser:${MYSQL_PASSWORD}@tcp(zo_db:3306)/Go_P_Zo?multiStatements=true", "up"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  migrate_test:
+    image: migrate/migrate
+    container_name: migrate_test
+    volumes:
+      - ./infrastructure/migrations:/migrations
+    command: [ "-path", "/migrations", "-database",  "mysql://testuser:${MYSQL_PASSWORD}@tcp(zo_db:3306)/Go_P_Zo_Test?multiStatements=true", "up" ]
     depends_on:
       db:
         condition: service_healthy
