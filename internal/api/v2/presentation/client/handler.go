@@ -39,25 +39,24 @@ func NewExist(e u.Exist, c u.CreateToken) Exist {
 func (h exist) Post(w http.ResponseWriter, r *http.Request, _ common.QueryMap) {
 	// リクエスト情報からモデルを生成
 	m, err := contentToModel(r)
-	t := d.AccessToken{}
 	if err != nil {
-		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(err, http.StatusInternalServerError, ""), t), http.StatusInternalServerError)
+		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(err, http.StatusInternalServerError, ""), nil), http.StatusInternalServerError)
 		return
 	}
 
 	exist, err := h.exist.Do(r.Context(), m.Id, m.Secret)
 	if err != nil {
-		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(err, http.StatusInternalServerError, ""), t), http.StatusInternalServerError)
+		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(err, http.StatusInternalServerError, ""), nil), http.StatusInternalServerError)
 		return
 	}
 	if !exist {
-		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(errors.New("client not found"), http.StatusNotFound, ""), t), http.StatusNotFound)
+		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(errors.New("client not found"), http.StatusNotFound, ""), nil), http.StatusNotFound)
 		return
 	}
 
 	token, err := h.createToken.Do()
 	if err != nil {
-		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(err, http.StatusInternalServerError, ""), t), http.StatusInternalServerError)
+		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(err, http.StatusInternalServerError, ""), nil), http.StatusInternalServerError)
 		return
 	}
 

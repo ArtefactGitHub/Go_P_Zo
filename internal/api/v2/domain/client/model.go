@@ -5,10 +5,30 @@ import (
 	"time"
 )
 
-type AccessToken struct {
-	Jwt       string `json:"jwt"`
-	ExpiresAt int64  `json:"expires_at"`
+const (
+	Issuer    = "zo.auth.service"
+	TokenType = "accessToken"
+)
+
+type AccessToken interface {
+	Jwt() string
+	ExpiresAt() int64
 }
+
+type accessToken struct {
+	jwt       string `json:"jwt"`
+	expiresAt int64  `json:"expires_at"`
+}
+
+func NewAccessToken(jwt string, expiresAt int64) AccessToken {
+	return accessToken{
+		jwt:       jwt,
+		expiresAt: expiresAt,
+	}
+}
+
+func (t accessToken) Jwt() string      { return t.jwt }
+func (t accessToken) ExpiresAt() int64 { return t.expiresAt }
 
 type Client interface {
 	Id() int

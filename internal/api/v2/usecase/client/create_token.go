@@ -1,8 +1,7 @@
 package client
 
 import (
-	d "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
-	"log"
+	domain "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
 	"time"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
@@ -12,7 +11,7 @@ import (
 
 type (
 	CreateToken interface {
-		Do() (d.AccessToken, error)
+		Do() (domain.AccessToken, error)
 	}
 	createToken struct{}
 )
@@ -21,31 +20,24 @@ func NewCreateToken() CreateToken {
 	return createToken{}
 }
 
-func (u createToken) Do() (d.AccessToken, error) {
-	result, err := u.create()
-	if err != nil {
-		return d.AccessToken{}, err
-	}
-
-	return result, nil
+func (u createToken) Do() (domain.AccessToken, error) {
+	return u.create()
 }
 
-func (u createToken) create() (d.AccessToken, error) {
+func (u createToken) create() (domain.AccessToken, error) {
 	claims := myauth.AuthClaims{StandardClaims: &jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.TokenExpiration)).Unix(),
-		Issuer:    "zo.auth.service",
+		Issuer:    domain.Issuer,
 	},
-		TokenType: "accessToken",
+		TokenType: domain.TokenType,
 	}
 
 	// https://pkg.go.dev/github.com/golang-jwt/jwt#NewWithClaims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	j, err := token.SignedString([]byte(config.Cfg.Auth.SignKey))
-	log.Printf("signed: %v", j)
-
 	if err != nil {
-		return d.AccessToken{}, err
+		return nil, err
 	}
 
-	return d.AccessToken{Jwt: j, ExpiresAt: claims.ExpiresAt}, nil
+	return domain.NewAccessToken(j, claims.ExpiresAt), nil
 }
