@@ -1,6 +1,6 @@
 module github.com/ArtefactGitHub/Go_P_Zo
 
-go 1.18
+go 1.16
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0
@@ -11,5 +11,3 @@ require (
 	golang.org/x/crypto v0.0.0-20220314234659-1baeb1ce4c0b
 	gopkg.in/yaml.v2 v2.4.0
 )
-
-require gopkg.in/yaml.v3 v3.0.1 // indirect

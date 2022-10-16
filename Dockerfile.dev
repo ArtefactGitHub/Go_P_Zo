@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 
-FROM golang:1.18.4-alpine3.16
+FROM golang:1.16-alpine
 
 ENV Go_P_Zo_DB_USER=testuser
 ENV Go_P_Zo_DB_PASSWORD=""
@@ -12,7 +12,7 @@ ENV HOST=""
 ENV ROOT=/usr/src/app
 WORKDIR ${ROOT}
 
-RUN go install github.com/cosmtrek/air@v1.40.4
+RUN go install github.com/cosmtrek/air@v1.29.0
 
 # pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
 COPY go.mod go.sum ./
