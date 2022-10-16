@@ -9,8 +9,8 @@ import (
 )
 
 type ResponseBase struct {
-	StatusCode int   `json:"statuscode"`
-	Error      error `json:"error"`
+	StatusCode int            `json:"statuscode"`
+	Error      *myerror.Error `json:"error"`
 }
 
 func NewResponse(err error, statusCode int, description string) *ResponseBase {

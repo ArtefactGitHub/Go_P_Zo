@@ -12,7 +12,7 @@ type (
 	}
 	PostResponse struct {
 		*myhttp.ResponseBase
-		AccessToken AccessToken `json:"access_token"`
+		AccessToken *AccessToken `json:"access_token,omitempty"`
 	}
 
 	AccessToken struct {
@@ -22,9 +22,12 @@ type (
 )
 
 func NewPostResponse(res *myhttp.ResponseBase, token d.AccessToken) *PostResponse {
-	t := AccessToken{
-		Jwt:       token.Jwt(),
-		ExpiresAt: token.ExpiresAt(),
+	var t *AccessToken
+	if token != nil {
+		t = &AccessToken{
+			Jwt:       token.Jwt(),
+			ExpiresAt: token.ExpiresAt(),
+		}
 	}
 	return &PostResponse{ResponseBase: res, AccessToken: t}
 }
