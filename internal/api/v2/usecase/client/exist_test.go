@@ -43,7 +43,8 @@ func Test_exist_Do(t *testing.T) {
 				id:     0,
 				secret: "dummy",
 			},
-			wantErr: true,
+			want:    false,
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {

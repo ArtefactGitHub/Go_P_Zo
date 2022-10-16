@@ -20,7 +20,7 @@ func NewExist(r d.Repository) Exist {
 
 func (u exist) Do(ctx context.Context, id int, secret string) (bool, error) {
 	_, err := u.r.Find(ctx, id, secret)
-	if err != nil {
+	if err != nil && err != e.NotFound {
 		return false, err
 	}
 
