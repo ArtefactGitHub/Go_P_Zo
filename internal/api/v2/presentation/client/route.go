@@ -13,9 +13,9 @@ import (
 var (
 	ue = u.NewExist(i.NewRepository())
 	uc = u.NewCreateToken()
-	h  = NewExist(ue, uc)
+	h  = NewCreateToken(ue, uc)
 )
 
 var Routes = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
-	{Path: "/api/v2/client/token", Method: "POST", NeedAuth: false}: h.Post,
+	{Path: "/api/v2/client/token", Method: "POST", NeedAuth: false}: h.Create,
 }

@@ -3,7 +3,6 @@ package client
 import (
 	"encoding/json"
 	"errors"
-	d "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
 	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
@@ -12,32 +11,20 @@ import (
 )
 
 type (
-	Exist interface {
-		Post(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
+	CreateToken interface {
+		Create(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
 	}
-	exist struct {
+	createToken struct {
 		exist       u.Exist
 		createToken u.CreateToken
 	}
-	PostRequest struct {
-		Id     int    `json:"id"`
-		Secret string `json:"secret"`
-	}
-	PostResponse struct {
-		*myhttp.ResponseBase
-		AccessToken d.AccessToken `json:"access_token"`
-	}
 )
 
-func NewPostResponse(res *myhttp.ResponseBase, token d.AccessToken) *PostResponse {
-	return &PostResponse{ResponseBase: res, AccessToken: token}
+func NewCreateToken(e u.Exist, c u.CreateToken) CreateToken {
+	return createToken{exist: e, createToken: c}
 }
 
-func NewExist(e u.Exist, c u.CreateToken) Exist {
-	return exist{exist: e, createToken: c}
-}
-
-func (h exist) Post(w http.ResponseWriter, r *http.Request, _ common.QueryMap) {
+func (h createToken) Create(w http.ResponseWriter, r *http.Request, _ common.QueryMap) {
 	// リクエスト情報からモデルを生成
 	m, err := contentToModel(r)
 	if err != nil {
