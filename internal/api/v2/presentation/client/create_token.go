@@ -38,7 +38,7 @@ func (h createToken) Create(w http.ResponseWriter, r *http.Request, _ common.Que
 		return
 	}
 	if !exist {
-		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(errors.New("client not found"), http.StatusNotFound, ""), nil), http.StatusNotFound)
+		myhttp.Write(w, NewPostResponse(myhttp.NewResponse(errors.New("invalid identifier"), http.StatusUnauthorized, ""), nil), http.StatusUnauthorized)
 		return
 	}
 

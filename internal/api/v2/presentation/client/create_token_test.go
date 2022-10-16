@@ -20,9 +20,10 @@ func Test_createToken_Create(t *testing.T) {
 		body PostRequest
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
+		name     string
+		fields   fields
+		args     args
+		wantCode int
 	}{
 		{
 			name: "success",
@@ -36,6 +37,30 @@ func Test_createToken_Create(t *testing.T) {
 					Secret: "secret-1",
 				},
 			},
+			wantCode: http.StatusOK,
+		},
+		{
+			name: "failed with wrong secret",
+			fields: fields{
+				exist:       u.NewExist(i.NewRepository()),
+				createToken: u.NewCreateToken(),
+			},
+			args: args{
+				body: PostRequest{
+					Id:     1,
+					Secret: "hoge",
+				},
+			},
+			wantCode: http.StatusUnauthorized,
+		},
+		{
+			name: "failed with no token",
+			fields: fields{
+				exist:       u.NewExist(i.NewRepository()),
+				createToken: u.NewCreateToken(),
+			},
+			args:     args{},
+			wantCode: http.StatusUnauthorized,
 		},
 	}
 	for _, tt := range tests {
@@ -49,6 +74,10 @@ func Test_createToken_Create(t *testing.T) {
 
 			h := NewCreateToken(tt.fields.exist, tt.fields.createToken)
 			h.Create(w, r, nil)
+
+			if w.Code != tt.wantCode {
+				t.Errorf("code = %v, wantCode = %v", w.Code, tt.wantCode)
+			}
 
 			var j PostResponse
 			if err = json.Unmarshal(w.Body.Bytes(), &j); err != nil {
