@@ -7,6 +7,7 @@ import (
 	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
+	"io"
 	"net/http"
 )
 
@@ -66,7 +67,7 @@ func (h exist) Post(w http.ResponseWriter, r *http.Request, _ common.QueryMap) {
 // リクエスト情報からモデルの生成
 func contentToModel(r *http.Request) (PostRequest, error) {
 	body := make([]byte, r.ContentLength)
-	if _, err := r.Body.Read(body); err != nil {
+	if _, err := r.Body.Read(body); err != nil && err != io.EOF {
 		return PostRequest{}, err
 	}
 	var result PostRequest
