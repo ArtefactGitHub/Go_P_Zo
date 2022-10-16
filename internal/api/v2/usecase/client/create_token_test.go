@@ -4,7 +4,6 @@ import (
 	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth"
-	"github.com/golang-jwt/jwt"
 	"testing"
 	"time"
 )
@@ -19,8 +18,8 @@ func Test_createToken_Do(t *testing.T) {
 	}{
 		{
 			name:          "success",
-			wantTokenType: "accessToken",
-			wantIssuer:    "zo.auth.service",
+			wantTokenType: myauth.TokenType,
+			wantIssuer:    myauth.Issuer,
 			wantExpiresAt: time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.TokenExpiration)),
 		},
 	}
@@ -33,19 +32,15 @@ func Test_createToken_Do(t *testing.T) {
 				return
 			}
 
-			tokenString := got.Jwt()
-			claims := myauth.AuthClaims{}
-			_, err = jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
-				return []byte(config.Cfg.Auth.SignKey), nil
-			})
+			claims, err := myauth.CreateUserTokenClaims(got.Jwt())
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Fatalf(err.Error())
 			}
 
-			if claims.TokenType != "accessToken" {
+			if claims.TokenType != myauth.TokenType {
 				t.Errorf("invalid TokenType got = %v, want %v", claims.TokenType, tt.wantTokenType)
 			}
-			if claims.Issuer != "zo.auth.service" {
+			if claims.Issuer != myauth.Issuer {
 				t.Errorf("invalid Issuer got = %v, want %v", claims.TokenType, tt.wantIssuer)
 			}
 			expiresAtSub := int64(tt.wantExpiresAt.Sub(time.Unix(claims.ExpiresAt, 0)) / time.Second)

@@ -5,19 +5,14 @@ import (
 	"time"
 )
 
-const (
-	Issuer    = "zo.auth.service"
-	TokenType = "accessToken"
-)
-
 type AccessToken interface {
 	Jwt() string
 	ExpiresAt() int64
 }
 
 type accessToken struct {
-	jwt       string `json:"jwt"`
-	expiresAt int64  `json:"expires_at"`
+	jwt       string
+	expiresAt int64
 }
 
 func NewAccessToken(jwt string, expiresAt int64) AccessToken {

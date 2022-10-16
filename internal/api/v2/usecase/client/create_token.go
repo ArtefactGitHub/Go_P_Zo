@@ -6,7 +6,6 @@ import (
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth"
-	"github.com/golang-jwt/jwt"
 )
 
 type (
@@ -25,19 +24,11 @@ func (u createToken) Do() (domain.AccessToken, error) {
 }
 
 func (u createToken) create() (domain.AccessToken, error) {
-	claims := myauth.AuthClaims{StandardClaims: &jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.TokenExpiration)).Unix(),
-		Issuer:    domain.Issuer,
-	},
-		TokenType: domain.TokenType,
-	}
-
-	// https://pkg.go.dev/github.com/golang-jwt/jwt#NewWithClaims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	j, err := token.SignedString([]byte(config.Cfg.Auth.SignKey))
+	expiredAt := time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.TokenExpiration))
+	jwt, err := myauth.CreateAccessTokenJwt(expiredAt)
 	if err != nil {
 		return nil, err
 	}
 
-	return domain.NewAccessToken(j, claims.ExpiresAt), nil
+	return domain.NewAccessToken(jwt, expiredAt.Unix()), nil
 }

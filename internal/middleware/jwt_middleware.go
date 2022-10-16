@@ -77,7 +77,7 @@ func (m *JwtMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func (m *JwtMiddleware) verifyToken(token *jwt.Token) (*myauth.AuthClaims, error) {
 	if claims, ok := token.Claims.(*myauth.AuthClaims); ok {
 		log.Printf("claims: %v", claims)
-		if claims.Issuer != "zo.auth.service" {
+		if claims.Issuer != myauth.Issuer {
 			return nil, errors.New("invalid issuer")
 		}
 		now := time.Now().Unix()
