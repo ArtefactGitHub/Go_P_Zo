@@ -5,6 +5,9 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    paths:
+      - "**.go"
+      - .github/workflows/golangci.yml
   workflow_dispatch:
 
 jobs:
@@ -34,8 +37,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+      - name: golang-lint
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          golangci_lint_flags: "--config=./.golangci.yml ./..."
+          fail_on_error: true
+          reporter: "github-pr-review"
 
       - name: Fetch required Go modules
         run: go mod download
