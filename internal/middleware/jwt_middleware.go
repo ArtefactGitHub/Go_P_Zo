@@ -26,11 +26,12 @@ type JwtMiddleware struct {
 }
 
 func NewJwtMiddleware(config *config.Config) (IMiddleware, error) {
-	if config == nil {
+	switch {
+	case config == nil:
 		return nil, errors.New("config not found")
-	} else if config.Auth.SignKey == "" {
+	case config.Auth.SignKey == "":
 		return nil, errors.New("config.SignKey not found")
-	} else {
+	default:
 		return &JwtMiddleware{authKey: config.Auth.SignKey}, nil
 	}
 }
@@ -77,7 +78,7 @@ func (m *JwtMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func (m *JwtMiddleware) verifyToken(token *jwt.Token) (*myauth.AuthClaims, error) {
 	if claims, ok := token.Claims.(*myauth.AuthClaims); ok {
 		log.Printf("claims: %v", claims)
-		if claims.Issuer != "zo.auth.service" {
+		if claims.Issuer != myauth.Issuer {
 			return nil, errors.New("invalid issuer")
 		}
 		now := time.Now().Unix()
@@ -108,16 +109,18 @@ func parseJwtToken(tokenString string, authKey string) (*jwt.Token, error) {
 	})
 
 	if token.Valid {
-	} else if ve, ok := err.(*jwt.ValidationError); ok {
-		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+		return token, nil
+	}
+	if ve, ok := err.(*jwt.ValidationError); ok {
+		switch {
+		case ve.Errors&jwt.ValidationErrorMalformed != 0:
 			return nil, fmt.Errorf("token is malformed. %v", token)
-		} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
+		case ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0:
 			return nil, fmt.Errorf("token is either expired or not active yet. %v", token)
-		} else {
+		default:
 			return nil, fmt.Errorf("couldn't handle this token. %s", err)
 		}
 	} else {
 		return nil, fmt.Errorf("couldn't handle this token. %s", err)
 	}
-	return token, nil
 }

@@ -35,9 +35,9 @@ func (s *clientService) find(ctx context.Context, id int, secret string) (*Clien
 func (s *clientService) createAccessToken() (*AccessToken, error) {
 	claims := myauth.AuthClaims{StandardClaims: &jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.TokenExpiration)).Unix(),
-		Issuer:    "zo.auth.service",
+		Issuer:    myauth.Issuer,
 	},
-		TokenType: "accessToken",
+		TokenType: myauth.TokenType,
 	}
 
 	// https://pkg.go.dev/github.com/golang-jwt/jwt#NewWithClaims

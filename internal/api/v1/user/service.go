@@ -94,7 +94,7 @@ func (s *userTokenService) Post(ctx context.Context, m *UserTokenRequest) (*User
 }
 
 func (s *userTokenService) createUserToken(userId int) (*UserToken, error) {
-	expiredAt := time.Now().Add(time.Duration(time.Minute * time.Duration(config.Cfg.Auth.UserTokenExpiration)))
+	expiredAt := time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.UserTokenExpiration))
 	jwt, err := myauth.CreateUserTokenJwt(userId, expiredAt)
 	if err != nil {
 		return nil, err

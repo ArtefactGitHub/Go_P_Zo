@@ -1,46 +1,64 @@
 package main
 
 import (
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/client"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/middleware"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
-	"net/http"
-	"os"
 )
 
-const address = ":8000"
+const (
+	address         = ":8080"
+	defaultRootPath = "../"
+	defaultHost     = "localhost"
+)
 
-var defaultRootPath = "../"
+var (
+	exitCode int
+)
 
 func main() {
-	// 設定ファイルの取得
-	rootPath := getRootPath()
-	cfg, err := config.LoadConfig(rootPath + "configs/config.yml")
+	defer func() {
+		os.Exit(exitCode)
+	}()
 
+	// 設定ファイルの取得
+	rootPath := getEnv("Go_P_Zo_ROOT_PATH", defaultRootPath)
+	cfg, err := config.LoadConfig(rootPath + "configs/config.yml")
 	config.Cfg = cfg
 	if err != nil {
-		panic(err)
+		exitByError(fmt.Sprintf("could not to load config: %v", err))
+		return
 	}
 
 	err = mydb.Init(cfg)
 	if err != nil {
-		panic(err)
+		exitByError(fmt.Sprintf("could  not connect to database: %v", err))
+		return
 	}
 	defer mydb.Finalize()
 
 	handler, err := createHandler(cfg)
 	if err != nil {
-		panic(err)
+		exitByError(fmt.Sprintf("could not create handler: %v", err))
+		return
 	}
 
-	log.Printf("running on %s", address)
-	log.Fatal(http.ListenAndServe(address, handler))
+	host := getEnv("HOST", defaultHost)
+	log.Printf("running on %s", host+address)
+	if err = http.ListenAndServe(host+address, handler); err != nil {
+		exitByError(fmt.Sprintf("failed to ListenAndServe: %v", err))
+		return
+	}
 }
 
 func createHandler(config *config.Config) (http.Handler, error) {
@@ -66,11 +84,17 @@ func createHandler(config *config.Config) (http.Handler, error) {
 	return handler, nil
 }
 
-func getRootPath() string {
-	path := os.Getenv("Go_P_Zo_ROOT_PATH")
-	if path == "" {
-		return defaultRootPath
+func getEnv(key string, defaultValue string) string {
+	if val, isSet := os.LookupEnv(key); !isSet {
+		fmt.Printf("env[%s] is empty. default is %s \n", key, defaultValue)
+		return defaultValue
+	} else {
+		fmt.Printf("env[%s] is %s \n", key, val)
+		return val
 	}
+}
 
-	return path
+func exitByError(msg string) {
+	log.Println(msg)
+	exitCode = 1
 }

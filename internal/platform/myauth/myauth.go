@@ -9,36 +9,60 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-type AuthClaims struct {
-	*jwt.StandardClaims
-	TokenType string
-}
+const (
+	Issuer        = "zo.auth.service"
+	TokenType     = "accessToken"
+	UserTokenType = "userToken"
+)
 
-type UserTokenClaims struct {
-	*jwt.StandardClaims
-	TokenType string
-	UserId    int
+type (
+	AuthClaims struct {
+		*jwt.StandardClaims
+		TokenType string
+	}
+	UserTokenClaims struct {
+		*jwt.StandardClaims
+		TokenType string
+		UserId    int
+	}
+)
+
+func CreateAccessTokenJwt(expiredAt time.Time) (string, error) {
+	claims := AuthClaims{StandardClaims: &jwt.StandardClaims{
+		ExpiresAt: expiredAt.Unix(),
+		Issuer:    Issuer,
+	},
+		TokenType: TokenType,
+	}
+
+	// https://pkg.go.dev/github.com/golang-jwt/jwt#NewWithClaims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	j, err := token.SignedString([]byte(config.Cfg.Auth.SignKey))
+	if err != nil {
+		return "", err
+	}
+
+	return j, nil
 }
 
 func CreateUserTokenJwt(userId int, expiredAt time.Time) (string, error) {
 	claims := UserTokenClaims{StandardClaims: &jwt.StandardClaims{
 		ExpiresAt: expiredAt.Unix(),
-		Issuer:    "zo.auth.service",
+		Issuer:    Issuer,
 	},
-		TokenType: "userToken",
+		TokenType: UserTokenType,
 		UserId:    userId,
 	}
 
 	// https://pkg.go.dev/github.com/golang-jwt/jwt#NewWithClaims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	jwt, err := token.SignedString([]byte(config.Cfg.Auth.SignKey))
-	log.Printf("signed usertoken: %v", jwt)
+	j, err := token.SignedString([]byte(config.Cfg.Auth.SignKey))
 
 	if err != nil {
 		return "", err
 	}
 
-	return jwt, nil
+	return j, nil
 }
 
 func CreateUserTokenClaims(userToken string) (*UserTokenClaims, error) {

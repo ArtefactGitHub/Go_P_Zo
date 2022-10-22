@@ -2,22 +2,22 @@ package myerror
 
 import "fmt"
 
-type myError struct {
+type Error struct {
 	Message string `json:"message"`
 	Origin  error  `json:"-"`
 }
 
-func (e *myError) Error() string {
+func (e *Error) Error() string {
 	return e.Message
 }
 
-func NewError(err error, desc string) error {
+func NewError(err error, desc string) *Error {
 	switch {
 	case err == nil:
 		return nil
 	case desc == "":
-		return &myError{Message: err.Error(), Origin: err}
+		return &Error{Message: err.Error(), Origin: err}
 	default:
-		return &myError{Message: fmt.Sprintf("%s: %s", desc, err.Error()), Origin: err}
+		return &Error{Message: fmt.Sprintf("%s: %s", desc, err.Error()), Origin: err}
 	}
 }

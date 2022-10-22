@@ -9,8 +9,8 @@ import (
 )
 
 type ResponseBase struct {
-	StatusCode int   `json:"statuscode"`
-	Error      error `json:"error"`
+	StatusCode int            `json:"statuscode"`
+	Error      *myerror.Error `json:"error"`
 }
 
 func NewResponse(err error, statusCode int, description string) *ResponseBase {
@@ -23,7 +23,9 @@ func Write(w http.ResponseWriter, response interface{}, statusCode int) {
 	result, _ := json.MarshalIndent(response, "", "\t")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(statusCode)
-	w.Write(result)
+	if _, err := w.Write(result); err != nil {
+		log.Println(err)
+	}
 	log.Println(string(result))
 }
 
@@ -32,7 +34,9 @@ func WriteSuccessWithLocation(w http.ResponseWriter, response interface{}, statu
 	w.Header().Set("Location", location)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(statusCode)
-	w.Write(result)
+	if _, err := w.Write(result); err != nil {
+		log.Println(err)
+	}
 	log.Println(string(result))
 }
 
@@ -43,7 +47,9 @@ func WriteError(w http.ResponseWriter, err error, statusCode int, description st
 	result, _ := json.MarshalIndent(response, "", "\t")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(statusCode)
-	w.Write(result)
+	if _, we := w.Write(result); we != nil {
+		log.Println(we)
+	}
 	log.Printf("WriteError() %v", err)
 	log.Println(string(result))
 }
