@@ -21,30 +21,43 @@ const (
 	defaultHost     = "localhost"
 )
 
+var (
+	exitCode int
+)
+
 func main() {
+	defer func() {
+		os.Exit(exitCode)
+	}()
+
 	// 設定ファイルの取得
 	rootPath := getEnv("Go_P_Zo_ROOT_PATH", defaultRootPath)
 	cfg, err := config.LoadConfig(rootPath + "configs/config.yml")
-
 	config.Cfg = cfg
 	if err != nil {
-		panic(err)
+		exitByError(fmt.Sprintf("could not to load config: %v", err))
+		return
 	}
 
 	err = mydb.Init(cfg)
 	if err != nil {
-		panic(err)
+		exitByError(fmt.Sprintf("could  not connect to database: %v", err))
+		return
 	}
 	defer mydb.Finalize()
 
 	handler, err := createHandler(cfg)
 	if err != nil {
-		panic(err)
+		exitByError(fmt.Sprintf("could not create handler: %v", err))
+		return
 	}
 
 	host := getEnv("HOST", defaultHost)
 	log.Printf("running on %s", host+address)
-	log.Fatal(http.ListenAndServe(host+address, handler))
+	if err = http.ListenAndServe(host+address, handler); err != nil {
+		exitByError(fmt.Sprintf("failed to ListenAndServe: %v", err))
+		return
+	}
 }
 
 func createHandler(config *config.Config) (http.Handler, error) {
@@ -78,4 +91,9 @@ func getEnv(key string, defaultValue string) string {
 		fmt.Printf("env[%s] is %s \n", key, val)
 		return val
 	}
+}
+
+func exitByError(msg string) {
+	log.Println(msg)
+	exitCode = 1
 }
