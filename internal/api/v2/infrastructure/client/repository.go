@@ -3,10 +3,11 @@ package client
 import (
 	"context"
 	"database/sql"
+	"time"
+
 	d "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
 	e "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/error"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
-	"time"
 )
 
 type repository struct {

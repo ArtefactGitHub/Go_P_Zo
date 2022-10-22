@@ -1,8 +1,9 @@
 package client
 
 import (
-	domain "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
 	"time"
+
+	domain "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myauth"

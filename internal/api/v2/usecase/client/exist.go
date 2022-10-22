@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+
 	d "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
 	e "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/error"
 )
