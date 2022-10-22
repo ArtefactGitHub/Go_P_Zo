@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -226,7 +227,9 @@ func (c *userCategoryController) post(w http.ResponseWriter, r *http.Request, ps
 // リクエスト情報からモデルの生成
 func contentToModel(r *http.Request, model interface{}) error {
 	body := make([]byte, r.ContentLength)
-	r.Body.Read(body)
+	if _, err := r.Body.Read(body); err != nil && err != io.EOF {
+		return err
+	}
 	err := json.Unmarshal(body, model)
 	if err != nil {
 		return err

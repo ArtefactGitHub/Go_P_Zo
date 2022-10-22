@@ -47,7 +47,12 @@ func Tran(ctx context.Context, f func(ctx context.Context, tx *sql.Tx) (interfac
 		return nil, err
 	}
 	// Defer a rollback in case anything fails.
-	defer tx.Rollback()
+	defer func(tx *sql.Tx) {
+		err := tx.Rollback()
+		if err != nil {
+			log.Println(err)
+		}
+	}(tx)
 
 	result, err := f(ctx, tx)
 	if err != nil {

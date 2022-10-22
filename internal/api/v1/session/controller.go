@@ -3,6 +3,7 @@ package session
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"log"
 	"net/http"
 
@@ -39,7 +40,9 @@ func (c *sessionController) post(w http.ResponseWriter, r *http.Request, ps comm
 // リクエスト情報からモデルの生成
 func (c *sessionController) contentToModel(r *http.Request) (*SessionRequest, error) {
 	body := make([]byte, r.ContentLength)
-	r.Body.Read(body)
+	if _, err := r.Body.Read(body); err != nil && err != io.EOF {
+		return nil, err
+	}
 	var result SessionRequest
 	err := json.Unmarshal(body, &result)
 	if err != nil {
