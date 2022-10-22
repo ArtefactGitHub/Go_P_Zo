@@ -1,8 +1,9 @@
 package client_test
 
 import (
-	test "github.com/ArtefactGitHub/Go_P_Zo/internal/test_v2"
 	"testing"
+
+	test "github.com/ArtefactGitHub/Go_P_Zo/internal/test_v2"
 
 	_ "github.com/go-sql-driver/mysql"
 )

@@ -3,12 +3,13 @@ package client_test
 import (
 	"bytes"
 	"encoding/json"
-	i "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure/client"
-	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/client"
-	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/client"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	i "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure/client"
+	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/client"
+	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/client"
 )
 
 func Test_createToken_Create(t *testing.T) {

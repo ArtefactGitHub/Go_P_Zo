@@ -2,10 +2,11 @@ package client_test
 
 import (
 	"context"
+	"testing"
+
 	domain "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/client"
 	infra "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure/client"
 	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/client"
-	"testing"
 )
 
 func Test_exist_Do(t *testing.T) {

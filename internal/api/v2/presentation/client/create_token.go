@@ -3,11 +3,12 @@ package client
 import (
 	"encoding/json"
 	"errors"
+	"io"
+	"net/http"
+
 	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/client"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
-	"io"
-	"net/http"
 )
 
 type (
