@@ -1,0 +1,14 @@
+- id: 1
+  given_name: hoge
+  family_name: fuga
+  email: test@com
+  password: "$2a$12$WuUu/23oIOuvQO7M1CuF7.BOHFoCEaAChoNXjALMq/S.uIkrPg4Gy"
+  createdAt: RAW=NOW()
+  updatedAt: RAW=NOW()
+- id: 2
+  given_name: hoge2
+  family_name: fuga2
+  email: test2@com
+  password: "$2a$12$WuUu/23oIOuvQO7M1CuF7.BOHFoCEaAChoNXjALMq/S.uIkrPg4Gy"
+  createdAt: RAW=NOW()
+  updatedAt: RAW=NOW()
