@@ -5,7 +5,7 @@ user: ${Go_P_Zo_DB_USER}
 password: ${Go_P_Zo_DB_PASSWORD}
 protocol: tcp
 address: 127.0.0.1:13306
-database: Go_P_Zo_Test?parseTime=true
+database: Go_P_Zo_Test?parseTime=true&loc=Local
 
 auth:
   token_expiration: 1200

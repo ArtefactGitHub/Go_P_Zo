@@ -2,11 +2,12 @@ package test_v2
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-testfixtures/testfixtures/v3"
-	"log"
 )
 
 func Setup() func() {
