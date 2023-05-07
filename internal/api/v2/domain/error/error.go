@@ -5,6 +5,7 @@ import (
 )
 
 var (
-	NotFound   = errors.New("not found")
-	BadRequest = errors.New("bad request")
+	BadRequest   = errors.New("bad request")
+	Unauthorized = errors.New("unauthorized")
+	NotFound     = errors.New("not found")
 )

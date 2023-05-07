@@ -8,9 +8,9 @@ import (
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/client"
-	v2 "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/session"
+	v2session "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/session"
+	v2zo "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/middleware"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
@@ -78,8 +78,8 @@ func createHandler(config *config.Config) (http.Handler, error) {
 		middleware.NewRouterMiddleware(
 			client.Routes,
 			session.Routes,
-			v2.Routes,
-			zo.Routes,
+			v2session.Routes,
+			v2zo.Routes,
 			user.Routes,
 		),
 	)

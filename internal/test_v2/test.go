@@ -1,13 +1,20 @@
 package test_v2
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
+
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-testfixtures/testfixtures/v3"
-	"log"
 )
+
+func SetupV2() (*sql.DB, func(db *sql.DB)) {
+	_ = Setup()
+	return mydb.Db, mydb.FinalizeV2
+}
 
 func Setup() func() {
 	// 設定ファイルの取得
