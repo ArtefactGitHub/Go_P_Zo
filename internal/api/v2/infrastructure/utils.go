@@ -6,9 +6,11 @@ import (
 	"fmt"
 )
 
-const (
-	KeyDB = "DB"
-	KeyTX = "TX"
+type ContextKey string
+
+var (
+	KeyDB ContextKey = "DB"
+	KeyTX ContextKey = "TX"
 )
 
 func GetDB(ctx context.Context) (*sql.DB, error) {
