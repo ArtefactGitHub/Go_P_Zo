@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"log"
 
+	derr "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/error"
 	d "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/zo"
 	infra "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure"
 )
@@ -117,7 +118,7 @@ func (r *repository) Find(ctx context.Context, id int) (*d.Zo, error) {
 		&z.UpdatedAt,
 		&z.UserId)
 	if err == sql.ErrNoRows {
-		return nil, nil
+		return nil, derr.NotFound
 	} else if err != nil {
 		return nil, err
 	}
