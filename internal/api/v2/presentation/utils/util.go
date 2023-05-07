@@ -67,3 +67,9 @@ func HandleError(w http.ResponseWriter, err error) {
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "エラーが発生しました")
 	}
 }
+
+// Wrap see: https://github.com/golang/pkgsite/blob/master/internal/derrors/derrors.go
+func Wrap(err error, format string, args ...interface{}) error {
+	result := fmt.Errorf("%s: %w", fmt.Sprintf(format, args...), err)
+	return result
+}

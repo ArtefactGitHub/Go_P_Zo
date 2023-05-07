@@ -1,6 +1,7 @@
 package zo
 
 import (
+	"fmt"
 	"net/http"
 
 	derr "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/error"
@@ -27,7 +28,8 @@ func (h find) Find(w http.ResponseWriter, r *http.Request, params common.QueryMa
 	// ユーザーIDの取得
 	userId, err := util.GetUserIdFromToken(r.Context())
 	if err != nil {
-		util.HandleError(w, derr.Unauthorized)
+		e := util.Wrap(derr.Unauthorized, fmt.Sprintf("error with GetUserIdFromToken: %#v", err))
+		util.HandleError(w, e)
 		return
 	}
 
@@ -46,7 +48,8 @@ func (h find) Find(w http.ResponseWriter, r *http.Request, params common.QueryMa
 
 	// 非リソース所有者の場合
 	if userId != zo.UserId {
-		util.HandleError(w, derr.Unauthorized)
+		e := util.Wrap(derr.Unauthorized, fmt.Sprintf("difference userID. request: %d, resource: %d", userId, zo.UserId))
+		util.HandleError(w, e)
 		return
 	}
 
