@@ -36,8 +36,12 @@ func Init(config *config.Config) error {
 }
 
 func Finalize() {
-	if Db != nil {
-		err := Db.Close()
+	FinalizeV2(Db)
+}
+
+func FinalizeV2(db *sql.DB) {
+	if db != nil {
+		err := db.Close()
 		if err != nil {
 			log.Println(err)
 			return

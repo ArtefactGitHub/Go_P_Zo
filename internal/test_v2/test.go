@@ -1,6 +1,7 @@
 package test_v2
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -9,6 +10,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-testfixtures/testfixtures/v3"
 )
+
+func SetupV2() (*sql.DB, func(db *sql.DB)) {
+	_ = Setup()
+	return mydb.Db, mydb.FinalizeV2
+}
 
 func Setup() func() {
 	// 設定ファイルの取得
