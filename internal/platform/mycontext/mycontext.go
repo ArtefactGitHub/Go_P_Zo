@@ -28,10 +28,15 @@ func FromContextBool(ctx context.Context, key interface{}) (bool, error) {
 
 func FromContextStr(ctx context.Context, key interface{}) (string, error) {
 	v := ctx.Value(key)
+	if v == nil {
+		log.Println(runtime.Caller(1))
+		return "", fmt.Errorf("<%s> header not found", key)
+	}
+
 	value, ok := v.(string)
 	if !ok {
 		log.Println(runtime.Caller(1))
-		return "", fmt.Errorf("%s header not found", key)
+		return "", fmt.Errorf("<%s> header can not convert to string. value: %#v", key, v)
 	}
 
 	return value, nil
