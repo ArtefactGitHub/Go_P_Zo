@@ -1,0 +1,13 @@
+environment: test_v2
+
+sqldriver: mysql
+user: ${Go_P_Zo_DB_USER}
+password: ${Go_P_Zo_DB_PASSWORD}
+protocol: tcp
+address: 127.0.0.1:13306
+database: Go_P_Zo_Test?parseTime=true&loc=Local
+
+auth:
+  token_expiration: 1200
+  usertoken_expiration: 1200
+  signkey: ${Go_P_Zo_AUTH_SIGNKEY}

@@ -1,0 +1,24 @@
+- id: 1
+  achievementDate: "2023-01-01 01:00"
+  exp: 100
+  categoryId: 1
+  message: "メッセージ1"
+  createdAt: "2023-01-01 01:00"
+  updatedAt: "2023-01-01 01:00"
+  user_id: 1
+- id: 2
+  achievementDate: "2023-01-01 02:00"
+  exp: 200
+  categoryId: 1
+  message: "メッセージ2"
+  createdAt: "2023-01-01 02:00"
+  updatedAt: "2023-01-01 02:00"
+  user_id: 1
+- id: 3
+  achievementDate: "2023-01-01 03:00"
+  exp: 300
+  categoryId: 1
+  message: "メッセージ3"
+  createdAt: "2023-01-01 03:00"
+  updatedAt: "2023-01-01 03:00"
+  user_id: 1

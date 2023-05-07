@@ -54,7 +54,10 @@ func test_user_route_getall(t *testing.T) {
 	}
 
 	var res GetAllResponse
-	json.Unmarshal(writer.Body.Bytes(), &res)
+	err = json.Unmarshal(writer.Body.Bytes(), &res)
+	if err != nil {
+		t.Fatalf("json.Unmarshal failuer. %v", err)
+	}
 	if res.StatusCode != want || res.Error != nil {
 		t.Fatalf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
 	}
@@ -77,7 +80,10 @@ func test_user_route_get(t *testing.T) {
 	}
 
 	var res GetResponse
-	json.Unmarshal(writer.Body.Bytes(), &res)
+	err = json.Unmarshal(writer.Body.Bytes(), &res)
+	if err != nil {
+		t.Fatalf("json.Unmarshal failuer. %v", err)
+	}
 	if res.StatusCode != want || res.Error != nil {
 		t.Fatalf("Invalid Response. StatusCode = %d, Error = %v", res.StatusCode, res.Error)
 	}
