@@ -5,26 +5,6 @@ import (
 	"time"
 )
 
-type AccessToken interface {
-	Jwt() string
-	ExpiresAt() int64
-}
-
-type accessToken struct {
-	jwt       string
-	expiresAt int64
-}
-
-func NewAccessToken(jwt string, expiresAt int64) AccessToken {
-	return accessToken{
-		jwt:       jwt,
-		expiresAt: expiresAt,
-	}
-}
-
-func (t accessToken) Jwt() string      { return t.jwt }
-func (t accessToken) ExpiresAt() int64 { return t.expiresAt }
-
 type Client interface {
 	Id() int
 	Secret() string
@@ -46,10 +26,10 @@ func NewClient(
 }
 
 type client struct {
-	id        int          `json:"id"`
-	secret    string       `json:"secret"`
-	createdAt time.Time    `json:"create_date"`
-	updatedAt sql.NullTime `json:"update_date"`
+	id        int
+	secret    string
+	createdAt time.Time
+	updatedAt sql.NullTime
 }
 
 func (c client) Id() int                 { return c.id }

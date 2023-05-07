@@ -1,0 +1,5 @@
+insert into Clients
+values(0, "go_p_zo_webcli_secret", now(), now());
+
+insert into Users
+values(0, "hoge", "fuga", "test@com","$2a$12$J7aGNex.IfhLFbsdsVqZveZTT/7Rc05WhfMMBf72fUFSFr5JW/PIy", now(), now());
