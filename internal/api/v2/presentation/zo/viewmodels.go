@@ -9,6 +9,12 @@ import (
 )
 
 type (
+	PostRequest struct {
+		AchievementDate time.Time `json:"achievementdate"`
+		Exp             int       `json:"exp"`
+		CategoryId      int       `json:"category_id"`
+		Message         string    `json:"message"`
+	}
 	PostResponse struct {
 		*myhttp.ResponseBase
 		Zo Zo `json:"zo"`

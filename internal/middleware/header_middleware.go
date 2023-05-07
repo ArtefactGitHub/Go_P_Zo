@@ -8,7 +8,7 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
 )
 
-var headerNames map[string]mycontext.ContextKey = map[string]mycontext.ContextKey{
+var headerNames = map[string]mycontext.ContextKey{
 	myhttp.UserTokenHeaderName: mycontext.UserTokenKey,
 }
 
