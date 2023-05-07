@@ -57,6 +57,8 @@ func GetResourceIdStr(params common.QueryMap, resourceKey string) (string, error
 
 func HandleError(w http.ResponseWriter, err error) {
 	switch {
+	case errors.Is(err, derr.BadRequest):
+		myhttp.WriteError(w, err, http.StatusBadRequest, "リクエストが正しくありません")
 	case errors.Is(err, derr.NotFound):
 		myhttp.WriteError(w, err, http.StatusNotFound, "リソースが存在しません")
 	case errors.Is(err, derr.Unauthorized):
