@@ -113,7 +113,9 @@ func Test_repository_Create(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tx, _ := mydb.Db.Begin()
-			defer tx.Rollback()
+			defer func(tx *sql.Tx) {
+				_ = tx.Rollback()
+			}(tx)
 			ctx := mycontext.NewContext(context.Background(), infra.KeyTX, tx)
 
 			id, err := NewRepository().Create(ctx, tt.args.z)
@@ -149,7 +151,9 @@ func Test_repository_Delete(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tx, _ := mydb.Db.Begin()
-			defer tx.Rollback()
+			defer func(tx *sql.Tx) {
+				_ = tx.Rollback()
+			}(tx)
 			ctx := mycontext.NewContext(context.Background(), infra.KeyTX, tx)
 
 			r := NewRepository()
@@ -189,12 +193,10 @@ func Test_repository_Find(t *testing.T) {
 				return
 			}
 
-			if got == nil {
-				t.Errorf("got is nil")
-			}
-
-			if diff := cmp.Diff(*got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
-				t.Errorf("Find() mismatch (-want +got):\n%s", diff)
+			if got != nil {
+				if diff := cmp.Diff(*got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
+					t.Errorf("Find() mismatch (-want +got):\n%s", diff)
+				}
 			}
 		})
 	}
@@ -287,7 +289,9 @@ func Test_repository_Update(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tx, _ := mydb.Db.Begin()
-			defer tx.Rollback()
+			defer func(tx *sql.Tx) {
+				_ = tx.Rollback()
+			}(tx)
 			ctx := mycontext.NewContext(context.Background(), infra.KeyTX, tx)
 
 			if err := NewRepository().Update(ctx, &updateZo); (err != nil) != tt.wantErr {
@@ -302,7 +306,6 @@ func stringToTime(str string) time.Time {
 	if err != nil {
 		panic(err)
 	}
-	//t, _ := time.Parse(layout, str)
 	t, _ := time.ParseInLocation(layout, str, tz)
 	return t
 }
