@@ -11,10 +11,16 @@ import (
 )
 
 var (
-	uc = u.NewFind(i.NewRepository())
-	h  = NewFind(uc)
+	uf = u.NewFind(i.NewRepository())
+	uc = u.NewCreate(i.NewRepository())
+	uu = u.NewUpdate(i.NewRepository())
+	hf = NewFind(uf)
+	hc = NewCreate(uc)
+	hu = NewUpdate(uu)
 )
 
 var Routes = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
-	{Path: "/api/v2/zos/:zo_id", Method: "GET", NeedAuth: true}: h.Find,
+	{Path: "/api/v2/zos/:zo_id", Method: "GET", NeedAuth: true}: hf.Find,
+	{Path: "/api/v2/zos", Method: "POST", NeedAuth: true}:       hc.Create,
+	{Path: "/api/v2/zos/:zo_id", Method: "PUT", NeedAuth: true}: hu.Update,
 }

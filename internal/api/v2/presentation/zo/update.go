@@ -1,7 +1,6 @@
 package zo
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,23 +12,24 @@ import (
 	util "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/utils"
 	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mytime"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
 
 type (
-	Create interface {
-		Create(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
+	Update interface {
+		Update(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
 	}
-	create struct {
-		create u.Create
+	update struct {
+		update u.Update
 	}
 )
 
-func NewCreate(uc u.Create) Create {
-	return create{create: uc}
+func NewUpdate(uc u.Update) Update {
+	return update{update: uc}
 }
 
-func (h create) Create(w http.ResponseWriter, r *http.Request, _ common.QueryMap) {
+func (h update) Update(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// ユーザーIDの取得
 	userID, err := util.GetUserIdFromToken(r.Context())
 	if err != nil {
@@ -38,14 +38,21 @@ func (h create) Create(w http.ResponseWriter, r *http.Request, _ common.QueryMap
 		return
 	}
 
-	// リクエスト情報からモデルを生成
-	m, err := contentToCreateModel(r, userID)
+	// 指定リソースの取得
+	id, err := util.GetResourceId(params, util.ResourceIdZo)
 	if err != nil {
 		util.HandleError(w, err)
 		return
 	}
 
-	z, err := h.create.Do(r.Context(), m)
+	// リクエスト情報からモデルを生成
+	m, err := contentToUpdateModel(r, id, userID)
+	if err != nil {
+		util.HandleError(w, err)
+		return
+	}
+
+	z, err := h.update.Do(r.Context(), m)
 	if err != nil {
 		util.HandleError(w, err)
 		return
@@ -54,7 +61,7 @@ func (h create) Create(w http.ResponseWriter, r *http.Request, _ common.QueryMap
 	myhttp.Write(w, NewGetResponse(myhttp.NewResponse(nil, http.StatusOK, ""), z), http.StatusOK)
 }
 
-func contentToCreateModel(r *http.Request, userID int) (zo.Zo, error) {
+func contentToUpdateModel(r *http.Request, id int, userID int) (zo.Zo, error) {
 	body := make([]byte, r.ContentLength)
 	if _, err := r.Body.Read(body); err != nil && err != io.EOF {
 		return zo.Zo{}, err
@@ -65,5 +72,14 @@ func contentToCreateModel(r *http.Request, userID int) (zo.Zo, error) {
 		return zo.Zo{}, err
 	}
 
-	return zo.NewZo(0, req.AchievementDate, req.Exp, req.CategoryId, req.Message, time.Now(), sql.NullTime{}, userID), nil
+	return zo.NewZo(
+			id,
+			req.AchievementDate,
+			req.Exp,
+			req.CategoryId,
+			req.Message,
+			time.Now(),
+			mytime.NullTime(time.Now()),
+			userID),
+		nil
 }

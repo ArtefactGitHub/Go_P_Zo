@@ -25,5 +25,5 @@ func (u find) Do(ctx context.Context, id int) (domain.Zo, error) {
 		return domain.Zo{}, err
 	}
 
-	return *v, nil
+	return v, nil
 }

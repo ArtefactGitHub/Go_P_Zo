@@ -21,6 +21,7 @@ func GetUserIdFromToken(ctx context.Context) (int, error) {
 	// ユーザートークンの取得
 	userToken, err := mycontext.FromContextStr(ctx, mycontext.UserTokenKey)
 	if err != nil {
+		log.Printf("FromContextStr() err: %#v \n", err)
 		return -1, err
 	}
 
