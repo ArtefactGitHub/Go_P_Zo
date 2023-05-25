@@ -101,10 +101,10 @@ func (r *repository) FindAllByUserId(ctx context.Context, userId int) ([]d.Zo, e
 	return result, nil
 }
 
-func (r *repository) Find(ctx context.Context, id int) (*d.Zo, error) {
+func (r *repository) Find(ctx context.Context, id int) (d.Zo, error) {
 	db, err := infra.GetDB(ctx)
 	if err != nil {
-		return nil, err
+		return d.Zo{}, err
 	}
 
 	z := d.Zo{}
@@ -118,12 +118,12 @@ func (r *repository) Find(ctx context.Context, id int) (*d.Zo, error) {
 		&z.UpdatedAt,
 		&z.UserId)
 	if err == sql.ErrNoRows {
-		return nil, derr.NotFound
+		return d.Zo{}, derr.NotFound
 	} else if err != nil {
-		return nil, err
+		return d.Zo{}, err
 	}
 
-	return &z, nil
+	return z, nil
 }
 
 func (r *repository) Create(ctx context.Context, z d.Zo) (int, error) {
@@ -156,7 +156,7 @@ func (r *repository) Create(ctx context.Context, z d.Zo) (int, error) {
 	return z.Id, nil
 }
 
-func (r *repository) Update(ctx context.Context, z *d.Zo) error {
+func (r *repository) Update(ctx context.Context, z d.Zo) error {
 	tx, err := infra.GetTX(ctx)
 	if err != nil {
 		return err

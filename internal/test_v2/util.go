@@ -40,8 +40,18 @@ func WithDBAndTokenContext(ctx context.Context, db *sql.DB, userID int, expirati
 	return WithTokenContext(c, userID, expiration)
 }
 
+func WithTXAndTokenContext(ctx context.Context, db *sql.DB, tx *sql.Tx, userID int, expiration time.Time) context.Context {
+	c := WithDBContext(ctx, db)
+	c = WithTXContext(c, tx)
+	return WithTokenContext(c, userID, expiration)
+}
+
 func WithDBContext(ctx context.Context, db *sql.DB) context.Context {
 	return context.WithValue(ctx, infra.KeyDB, db)
+}
+
+func WithTXContext(ctx context.Context, tx *sql.Tx) context.Context {
+	return context.WithValue(ctx, infra.KeyTX, tx)
 }
 
 func WithTokenContext(ctx context.Context, userID int, expiration time.Time) context.Context {

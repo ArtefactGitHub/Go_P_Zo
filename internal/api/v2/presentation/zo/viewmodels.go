@@ -9,9 +9,18 @@ import (
 )
 
 type (
+	PostRequest struct {
+		AchievementDate time.Time `json:"achievementdate"`
+		Exp             int       `json:"exp"`
+		CategoryId      int       `json:"category_id"`
+		Message         string    `json:"message"`
+	}
 	PostResponse struct {
 		*myhttp.ResponseBase
 		Zo Zo `json:"zo"`
+	}
+	SimpleResponse struct {
+		*myhttp.ResponseBase
 	}
 
 	Zo struct {
@@ -26,7 +35,11 @@ type (
 	}
 )
 
-func NewGetResponse(res *myhttp.ResponseBase, zo d.Zo) *PostResponse {
+func NewSimpleResponse(res *myhttp.ResponseBase) *SimpleResponse {
+	return &SimpleResponse{ResponseBase: res}
+}
+
+func NewZoResponse(res *myhttp.ResponseBase, zo d.Zo) *PostResponse {
 	z := ToResponse(zo)
 	return &PostResponse{ResponseBase: res, Zo: z}
 }

@@ -193,8 +193,8 @@ func Test_repository_Find(t *testing.T) {
 				return
 			}
 
-			if got != nil {
-				if diff := cmp.Diff(*got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
+			if err == nil {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
 					t.Errorf("Find() mismatch (-want +got):\n%s", diff)
 				}
 			}
@@ -294,7 +294,7 @@ func Test_repository_Update(t *testing.T) {
 			}(tx)
 			ctx := mycontext.NewContext(context.Background(), infra.KeyTX, tx)
 
-			if err := NewRepository().Update(ctx, &updateZo); (err != nil) != tt.wantErr {
+			if err := NewRepository().Update(ctx, updateZo); (err != nil) != tt.wantErr {
 				t.Errorf("Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
