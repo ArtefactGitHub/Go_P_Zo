@@ -20,3 +20,7 @@ func ToNullTime(str string) sql.NullTime {
 	t, _ := time.ParseInLocation(ToTimeLayout, str, jst)
 	return sql.NullTime{Time: t, Valid: true}
 }
+
+func NullTime(time time.Time) sql.NullTime {
+	return sql.NullTime{Time: time, Valid: true}
+}

@@ -21,6 +21,7 @@ func GetUserIdFromToken(ctx context.Context) (int, error) {
 	// ユーザートークンの取得
 	userToken, err := mycontext.FromContextStr(ctx, mycontext.UserTokenKey)
 	if err != nil {
+		log.Printf("FromContextStr() err: %#v \n", err)
 		return -1, err
 	}
 
@@ -66,4 +67,10 @@ func HandleError(w http.ResponseWriter, err error) {
 	default:
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "エラーが発生しました")
 	}
+}
+
+// Wrap see: https://github.com/golang/pkgsite/blob/master/internal/derrors/derrors.go
+func Wrap(err error, format string, args ...interface{}) error {
+	result := fmt.Errorf("%s: %w", fmt.Sprintf(format, args...), err)
+	return result
 }

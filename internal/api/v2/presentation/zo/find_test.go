@@ -19,6 +19,7 @@ import (
 func Test_find_Find(t *testing.T) {
 	var (
 		expiration = time.Now().Add(time.Hour * 24)
+		expired    = time.Now().Add(time.Hour * -24)
 	)
 	type fields struct {
 		ctx  context.Context
@@ -77,12 +78,23 @@ func Test_find_Find(t *testing.T) {
 			},
 			wantStatus: http.StatusUnauthorized,
 		},
+		{
+			name: "【異常系】トークンが有効期限切れの場合",
+			fields: fields{
+				ctx:  test_v2.WithDBAndTokenContext(context.Background(), DB, 1, expired),
+				find: u.NewFind(i.NewRepository()),
+			},
+			args: args{
+				params: common.QueryMap{util.ResourceIdZo: "1"},
+			},
+			wantStatus: http.StatusUnauthorized,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodPost, "/api/v2/zo/"+test_v2.GetResourceIdStr(tt.args.params, util.ResourceIdZo), nil)
+			r := httptest.NewRequest(http.MethodGet, "/api/v2/zo/"+test_v2.GetResourceIdStr(tt.args.params, util.ResourceIdZo), nil)
 
 			// テストケースに応じたcontextをセットする
 			req := r.WithContext(tt.fields.ctx)

@@ -12,21 +12,22 @@ import (
 )
 
 type (
-	Find interface {
-		Find(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
+	Delete interface {
+		Delete(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
 	}
-	find struct {
-		find u.Find
+	deleteUsecase struct {
+		delete u.Delete
 	}
 )
 
-func NewFind(uc u.Find) Find {
-	return find{find: uc}
+func NewDelete(uc u.Delete) Delete {
+	return deleteUsecase{delete: uc}
 }
 
-func (h find) Find(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
+func (h deleteUsecase) Delete(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
 	// ユーザーIDの取得
-	userId, err := util.GetUserIdFromToken(r.Context())
+	// TODO: userID検証
+	_, err := util.GetUserIdFromToken(r.Context())
 	if err != nil {
 		e := util.Wrap(derr.Unauthorized, fmt.Sprintf("error with GetUserIdFromToken: %#v", err))
 		util.HandleError(w, e)
@@ -40,18 +41,11 @@ func (h find) Find(w http.ResponseWriter, r *http.Request, params common.QueryMa
 		return
 	}
 
-	zo, err := h.find.Do(r.Context(), id)
+	err = h.delete.Do(r.Context(), id)
 	if err != nil {
 		util.HandleError(w, err)
 		return
 	}
 
-	// 非リソース所有者の場合
-	if userId != zo.UserId {
-		e := util.Wrap(derr.Unauthorized, fmt.Sprintf("difference userID. request: %d, resource: %d", userId, zo.UserId))
-		util.HandleError(w, e)
-		return
-	}
-
-	myhttp.Write(w, NewZoResponse(myhttp.NewResponse(nil, http.StatusOK, ""), zo), http.StatusOK)
+	myhttp.Write(w, NewSimpleResponse(myhttp.NewResponse(nil, http.StatusOK, "")), http.StatusOK)
 }
