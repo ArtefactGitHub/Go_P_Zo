@@ -58,7 +58,7 @@ func (h update) Update(w http.ResponseWriter, r *http.Request, params common.Que
 		return
 	}
 
-	myhttp.Write(w, NewGetResponse(myhttp.NewResponse(nil, http.StatusOK, ""), z), http.StatusOK)
+	myhttp.Write(w, NewZoResponse(myhttp.NewResponse(nil, http.StatusOK, ""), z), http.StatusOK)
 }
 
 func contentToUpdateModel(r *http.Request, id int, userID int) (zo.Zo, error) {

@@ -19,6 +19,9 @@ type (
 		*myhttp.ResponseBase
 		Zo Zo `json:"zo"`
 	}
+	SimpleResponse struct {
+		*myhttp.ResponseBase
+	}
 
 	Zo struct {
 		Id              int          `json:"id"`
@@ -32,7 +35,11 @@ type (
 	}
 )
 
-func NewGetResponse(res *myhttp.ResponseBase, zo d.Zo) *PostResponse {
+func NewSimpleResponse(res *myhttp.ResponseBase) *SimpleResponse {
+	return &SimpleResponse{ResponseBase: res}
+}
+
+func NewZoResponse(res *myhttp.ResponseBase, zo d.Zo) *PostResponse {
 	z := ToResponse(zo)
 	return &PostResponse{ResponseBase: res, Zo: z}
 }

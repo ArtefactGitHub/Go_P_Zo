@@ -51,7 +51,7 @@ func (h create) Create(w http.ResponseWriter, r *http.Request, _ common.QueryMap
 		return
 	}
 
-	myhttp.Write(w, NewGetResponse(myhttp.NewResponse(nil, http.StatusOK, ""), z), http.StatusOK)
+	myhttp.Write(w, NewZoResponse(myhttp.NewResponse(nil, http.StatusOK, ""), z), http.StatusOK)
 }
 
 func contentToCreateModel(r *http.Request, userID int) (zo.Zo, error) {

@@ -63,7 +63,7 @@ func Test_update_Do(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "異常系：存在しないIDを指定する",
+			name:    "異常系：存在しないユーザーIDを指定する",
 			fields:  fields{r: inZo.NewRepository()},
 			args:    args{target: invalidUserID},
 			wantErr: true,
