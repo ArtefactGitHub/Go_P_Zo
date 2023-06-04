@@ -9,14 +9,14 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 )
 
-type Repository struct {
+type repository struct {
 }
 
-func NewRepository() Repository {
-	return Repository{}
+func NewRepository() auth.Repository {
+	return &repository{}
 }
 
-func (r *Repository) Create(ctx context.Context, m auth.UserToken) (int, error) {
+func (r *repository) Create(ctx context.Context, m auth.UserToken) (int, error) {
 	result, err := mydb.Db.ExecContext(ctx, `
 		INSERT INTO UserTokens(id, user_id, token, expiredAt, createdAt, updatedAt)
 			VALUES(?,?,?,?,?,?)`,
@@ -39,7 +39,7 @@ func (r *Repository) Create(ctx context.Context, m auth.UserToken) (int, error) 
 	return m.Id, nil
 }
 
-func (r Repository) Find(ctx context.Context, id int) (auth.UserToken, error) {
+func (r repository) Find(ctx context.Context, id int) (auth.UserToken, error) {
 	result := auth.UserToken{}
 	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM UserTokens WHERE id = ?",
 		id).
