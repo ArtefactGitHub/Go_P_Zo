@@ -11,7 +11,6 @@ import (
 	"time"
 
 	i "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure/zo"
-	util "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/utils"
 	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/zo"
 	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
@@ -58,7 +57,7 @@ func Test_update_Update(t *testing.T) {
 			},
 			args: args{
 				body:   postReqest,
-				params: common.QueryMap{util.ResourceIdZo: "1"},
+				params: common.QueryMap{resourceKey: "1"},
 			},
 			want: PostResponse{
 				ResponseBase: &myhttp.ResponseBase{
@@ -141,7 +140,7 @@ func Test_update_Update(t *testing.T) {
 			}
 			fmt.Printf("params: %#v \n", tt.args.params)
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodPut, "/api/v2/zo"+test_v2.GetResourceIdStr(tt.args.params, util.ResourceIdZo), bytes.NewBuffer(js))
+			r := httptest.NewRequest(http.MethodPut, "/api/v2/zo"+test_v2.GetResourceIdStr(tt.args.params, resourceKey), bytes.NewBuffer(js))
 
 			// テストケースに応じたcontextをセットする
 			req := r.WithContext(tt.fields.ctx)
