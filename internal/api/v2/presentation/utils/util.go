@@ -15,8 +15,6 @@ import (
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 )
 
-const ResourceIdZo = "zo_id"
-
 func GetUserIdFromToken(ctx context.Context) (int, error) {
 	// ユーザートークンの取得
 	userToken, err := mycontext.FromContextStr(ctx, mycontext.UserTokenKey)

@@ -7,9 +7,10 @@ import (
 	"os"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/session"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v1/user"
+	v2auth "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/auth"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/client"
 	v2session "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/session"
+	v2user "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/user"
 	v2zo "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/config"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/middleware"
@@ -80,7 +81,8 @@ func createHandler(config *config.Config) (http.Handler, error) {
 			session.Routes,
 			v2session.Routes,
 			v2zo.Routes,
-			user.Routes,
+			v2auth.Routes,
+			v2user.Routes,
 		),
 	)
 	return handler, nil

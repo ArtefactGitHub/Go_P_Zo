@@ -2,12 +2,15 @@ package myrouter
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mycontext"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myerror"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/myhttp"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/test_v2"
 	"github.com/ArtefactGitHub/Go_P_Zo/pkg/common"
 	"github.com/julienschmidt/httprouter"
 )
@@ -88,7 +91,35 @@ func createHandle(f func(
 			}
 		}
 
+		// TODO: リファクタ
+		// データベースオブジェクトをcontextに詰めておく
+		tx, err := mydb.Db.BeginTx(req.Context(), nil)
+		if err != nil {
+			myhttp.WriteError(w, myerror.NewError(errors.New(fmt.Sprintf("createHandle BeginTx error: %#v \n", err)), ""), http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+		ctx := test_v2.WithDBContext(req.Context(), mydb.Db)
+		ctx = test_v2.WithTXContext(ctx, tx)
+		req = req.WithContext(ctx)
+		defer func() {
+			if rec := recover(); rec != nil {
+				log.Print("recover in defer")
+				msg := fmt.Sprintf("cause panic: %#v", rec)
+				if txErr := tx.Rollback(); txErr != nil {
+					msg = fmt.Sprintf("%s and rollback error in recover: %#v \n", msg, txErr)
+				}
+				log.Print(msg)
+				myhttp.WriteError(w, myerror.NewError(errors.New(msg), ""), http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+				return
+			}
+		}()
+
 		f(w, req, queryMap)
+		if txErr := tx.Commit(); txErr != nil {
+			log.Printf("commit error: %#v \n", txErr)
+			myhttp.WriteError(w, myerror.NewError(errors.New(fmt.Sprintf("commit error: %#v \n", err)), ""), http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
 	}
 }
 
