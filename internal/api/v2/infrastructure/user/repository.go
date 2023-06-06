@@ -7,7 +7,7 @@ import (
 
 	derr "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/error"
 	domain "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/user"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
+	infra "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -29,9 +29,14 @@ func NewRepository() domain.Repository {
 	return &repository{}
 }
 
-func (r *repository) FindByIdentifier(ctx context.Context, identifier string, password string) (*domain.User, error) {
+func (r *repository) FindByIdentifier(ctx context.Context, identifier string, password string) (domain.User, error) {
+	db, err := infra.GetDB(ctx)
+	if err != nil {
+		return domain.User{}, err
+	}
+
 	record := userRecord{}
-	err := mydb.Db.QueryRowContext(ctx,
+	err = db.QueryRowContext(ctx,
 		"SELECT * FROM Users WHERE email = ?", identifier).
 		Scan(
 			&record.Id,
@@ -42,20 +47,44 @@ func (r *repository) FindByIdentifier(ctx context.Context, identifier string, pa
 			&record.CreatedAt,
 			&record.UpdatedAt)
 	if err == sql.ErrNoRows {
-		return nil, derr.NotFound
+		return domain.User{}, derr.NotFound
 	} else if err != nil {
-		return nil, err
+		return domain.User{}, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(record.Password), []byte(password))
 	if err != nil {
-		return nil, err
+		return domain.User{}, err
 	}
 
 	return toUser(record), nil
 }
 
-func toUser(record userRecord) *domain.User {
+func (r *repository) Find(ctx context.Context, id int) (domain.User, error) {
+	db, err := infra.GetDB(ctx)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	record := userRecord{}
+	err = db.QueryRowContext(ctx, "SELECT * FROM Users WHERE id = ?", id).Scan(
+		&record.Id,
+		&record.GivenName,
+		&record.FamilyName,
+		&record.Email,
+		&record.Password,
+		&record.CreatedAt,
+		&record.UpdatedAt)
+	if err == sql.ErrNoRows {
+		return domain.User{}, derr.NotFound
+	} else if err != nil {
+		return domain.User{}, err
+	}
+
+	return toUser(record), nil
+}
+
+func toUser(record userRecord) domain.User {
 	result := domain.NewUser(
 		record.Id,
 		record.GivenName,
@@ -65,5 +94,5 @@ func toUser(record userRecord) *domain.User {
 		record.CreatedAt,
 		record.UpdatedAt,
 	)
-	return &result
+	return result
 }

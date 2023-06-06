@@ -19,7 +19,8 @@ type (
 	}
 
 	Repository interface {
-		FindByIdentifier(ctx context.Context, identifier string, password string) (*User, error)
+		FindByIdentifier(ctx context.Context, identifier string, password string) (User, error)
+		Find(ctx context.Context, id int) (User, error)
 	}
 )
 
