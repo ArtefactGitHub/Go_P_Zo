@@ -8,7 +8,6 @@ import (
 	"time"
 
 	i "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure/zo"
-	util "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/utils"
 	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/presentation/zo"
 	u "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mytime"
@@ -52,7 +51,7 @@ func Test_delete_Delete(t *testing.T) {
 			},
 			args: args{
 				body:   postReqest,
-				params: common.QueryMap{util.ResourceIdZo: "1"},
+				params: common.QueryMap{resourceKey: "1"},
 			},
 			wantStatus: http.StatusOK,
 		},
@@ -83,7 +82,7 @@ func Test_delete_Delete(t *testing.T) {
 			},
 			args: args{
 				body:   postReqest,
-				params: common.QueryMap{util.ResourceIdZo: "999"},
+				params: common.QueryMap{resourceKey: "999"},
 			},
 			wantStatus: http.StatusUnauthorized,
 		},
@@ -114,7 +113,7 @@ func Test_delete_Delete(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodDelete, "/api/v2/zo"+test_v2.GetResourceIdStr(tt.args.params, util.ResourceIdZo), nil)
+			r := httptest.NewRequest(http.MethodDelete, "/api/v2/zo"+test_v2.GetResourceIdStr(tt.args.params, resourceKey), nil)
 
 			// テストケースに応じたcontextをセットする
 			req := r.WithContext(tt.fields.ctx)

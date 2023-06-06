@@ -39,7 +39,7 @@ func (h update) Update(w http.ResponseWriter, r *http.Request, params common.Que
 	}
 
 	// 指定リソースの取得
-	id, err := util.GetResourceId(params, util.ResourceIdZo)
+	id, err := util.GetResourceId(params, resourceKey)
 	if err != nil {
 		util.HandleError(w, err)
 		return

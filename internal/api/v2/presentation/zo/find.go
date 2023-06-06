@@ -20,6 +20,8 @@ type (
 	}
 )
 
+const resourceKey = "zo_id"
+
 func NewFind(uc u.Find) Find {
 	return find{find: uc}
 }
@@ -34,7 +36,7 @@ func (h find) Find(w http.ResponseWriter, r *http.Request, params common.QueryMa
 	}
 
 	// 指定リソースの取得
-	id, err := util.GetResourceId(params, util.ResourceIdZo)
+	id, err := util.GetResourceId(params, resourceKey)
 	if err != nil {
 		util.HandleError(w, err)
 		return

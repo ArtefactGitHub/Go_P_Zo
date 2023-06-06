@@ -6,7 +6,7 @@ import (
 
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/auth"
 	e "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/error"
-	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
+	infra "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure"
 )
 
 type repository struct {
@@ -17,7 +17,12 @@ func NewRepository() auth.Repository {
 }
 
 func (r *repository) Create(ctx context.Context, m auth.UserToken) (int, error) {
-	result, err := mydb.Db.ExecContext(ctx, `
+	tx, err := infra.GetTX(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := tx.ExecContext(ctx, `
 		INSERT INTO UserTokens(id, user_id, token, expiredAt, createdAt, updatedAt)
 			VALUES(?,?,?,?,?,?)`,
 		nil,
@@ -40,8 +45,13 @@ func (r *repository) Create(ctx context.Context, m auth.UserToken) (int, error) 
 }
 
 func (r repository) Find(ctx context.Context, id int) (auth.UserToken, error) {
+	db, err := infra.GetDB(ctx)
+	if err != nil {
+		return auth.UserToken{}, err
+	}
+
 	result := auth.UserToken{}
-	err := mydb.Db.QueryRowContext(ctx, "SELECT * FROM UserTokens WHERE id = ?",
+	err = db.QueryRowContext(ctx, "SELECT * FROM UserTokens WHERE id = ?",
 		id).
 		Scan(
 			&result.Id,
