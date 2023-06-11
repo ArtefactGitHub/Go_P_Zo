@@ -1,7 +1,6 @@
 package user
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -16,11 +15,6 @@ type (
 		Password   string       `json:"password"`
 		CreatedAt  time.Time    `json:"createdat"`
 		UpdatedAt  sql.NullTime `json:"updatedat"`
-	}
-
-	Repository interface {
-		FindByIdentifier(ctx context.Context, identifier string, password string) (User, error)
-		Find(ctx context.Context, id int) (User, error)
 	}
 )
 

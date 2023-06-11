@@ -8,6 +8,7 @@ import (
 	derr "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/error"
 	domain "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/user"
 	infra "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure"
+	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mydb"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -82,6 +83,44 @@ func (r *repository) Find(ctx context.Context, id int) (domain.User, error) {
 	}
 
 	return toUser(record), nil
+}
+
+func (r *repository) Create(ctx context.Context, u domain.User) (domain.User, error) {
+	password := []byte(u.Password)
+	hashed, err := bcrypt.GenerateFromPassword(password, 12)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	createdAt := time.Now()
+	result, err := mydb.Db.ExecContext(ctx, `
+			INSERT INTO Users(id, given_name, family_name, email, password, createdAt, updatedAt)
+			values(?, ?, ?, ?, ?, ?, ?)`,
+		nil,
+		&u.GivenName,
+		&u.FamilyName,
+		&u.Email,
+		&hashed,
+		&createdAt,
+		nil)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	return domain.NewUser(
+			int(id),
+			u.GivenName,
+			u.FamilyName,
+			u.Email,
+			"",
+			createdAt,
+			sql.NullTime{}),
+		nil
 }
 
 func toUser(record userRecord) domain.User {
