@@ -16,5 +16,5 @@ var (
 )
 
 var Routes = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
-	{Path: "/api/v2/login", Method: "POST", NeedAuth: true}: h.Create,
+	{Path: "/api/v2/login", Method: "POST", NeedAuth: true}: h.Login,
 }
