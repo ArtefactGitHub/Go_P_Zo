@@ -59,7 +59,7 @@ func (r *repository) FindAll(ctx context.Context) ([]d.Zo, error) {
 	return result, nil
 }
 
-func (r *repository) FindAllByUserId(ctx context.Context, userId int) ([]d.Zo, error) {
+func (r *repository) Finds(ctx context.Context, userId int) ([]d.Zo, error) {
 	db, err := infra.GetDB(ctx)
 	if err != nil {
 		return nil, err
