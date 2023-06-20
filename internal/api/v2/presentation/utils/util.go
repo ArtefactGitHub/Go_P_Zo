@@ -62,6 +62,8 @@ func HandleError(w http.ResponseWriter, err error) {
 		myhttp.WriteError(w, err, http.StatusNotFound, "リソースが存在しません")
 	case errors.Is(err, derr.Unauthorized):
 		myhttp.WriteError(w, err, http.StatusUnauthorized, "指定のリソースへアクセスする権限がありません")
+	case errors.Is(err, derr.Conflict):
+		myhttp.WriteError(w, err, http.StatusConflict, "リソースの競合が発生しました")
 	default:
 		myhttp.WriteError(w, err, http.StatusInternalServerError, "エラーが発生しました")
 	}
