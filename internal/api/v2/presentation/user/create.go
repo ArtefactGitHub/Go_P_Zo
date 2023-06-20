@@ -48,7 +48,7 @@ func (h create) Create(w http.ResponseWriter, r *http.Request, _ common.QueryMap
 		return
 	}
 
-	myhttp.Write(w, NewResponse(myhttp.NewResponse(nil, http.StatusOK, ""), user), http.StatusOK)
+	myhttp.Write(w, NewResponse(myhttp.NewResponse(nil, http.StatusCreated, ""), user), http.StatusOK)
 }
 
 // リクエスト情報からモデルの生成
