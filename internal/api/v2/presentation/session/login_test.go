@@ -75,7 +75,7 @@ func Test_login_Create(t *testing.T) {
 			r := httptest.NewRequest(http.MethodPost, "/api/v2/login", bytes.NewBuffer(js))
 
 			h := NewLogin(tt.fields.login)
-			h.Create(w, r, nil)
+			h.Login(w, r, nil)
 
 			if w.Code != tt.wantCode {
 				t.Errorf("code = %v, wantCode = %v", w.Code, tt.wantCode)

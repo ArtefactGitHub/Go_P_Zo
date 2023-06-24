@@ -235,8 +235,9 @@ func Test_repository_FindAll(t *testing.T) {
 	}
 }
 
-func Test_repository_FindAllByUserId(t *testing.T) {
+func Test_repository_Finds(t *testing.T) {
 	type args struct {
+		ctx    context.Context
 		userId int
 	}
 	tests := []struct {
@@ -256,7 +257,7 @@ func Test_repository_FindAllByUserId(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := mycontext.NewContext(context.Background(), infra.KeyDB, mydb.Db)
 
-			got, err := NewRepository().FindAll(ctx)
+			got, err := NewRepository().Finds(ctx, 1)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Find() error = %v, wantErr %v", err, tt.wantErr)
 				return
