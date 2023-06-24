@@ -20,8 +20,6 @@ func NewCreate(r domain.Repository) Create {
 }
 
 func (u create) Do(ctx context.Context, zo domain.Zo) (domain.Zo, error) {
-	// TODO: zo.UserID検証
-
 	_, err := u.r.Create(ctx, zo)
 	if err != nil {
 		return domain.Zo{}, err
