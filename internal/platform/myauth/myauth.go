@@ -2,6 +2,7 @@ package myauth
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -74,7 +75,7 @@ func CreateUserTokenClaims(userToken string) (*UserTokenClaims, error) {
 		return []byte(config.Cfg.Auth.SignKey), nil
 	})
 	if err != nil {
-		return nil, errors.New("can not parse userToken")
+		return nil, fmt.Errorf("can not parse userToken: %s \n", err.Error())
 	}
 
 	if claims, ok := token.Claims.(*UserTokenClaims); ok && token.Valid {

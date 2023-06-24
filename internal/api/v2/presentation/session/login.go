@@ -15,7 +15,7 @@ import (
 
 type (
 	Login interface {
-		Create(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
+		Login(w http.ResponseWriter, r *http.Request, ps common.QueryMap)
 	}
 	login struct {
 		login u.Login
@@ -26,7 +26,7 @@ func NewLogin(u u.Login) Login {
 	return login{login: u}
 }
 
-func (h login) Create(w http.ResponseWriter, r *http.Request, _ common.QueryMap) {
+func (h login) Login(w http.ResponseWriter, r *http.Request, _ common.QueryMap) {
 	// リクエスト情報からモデルを生成
 	m, err := contentToModel(r)
 	if err != nil {

@@ -19,6 +19,10 @@ type (
 		*myhttp.ResponseBase
 		Zo Zo `json:"zo"`
 	}
+	ZosResponse struct {
+		*myhttp.ResponseBase
+		Zos []Zo `json:"zos"`
+	}
 	SimpleResponse struct {
 		*myhttp.ResponseBase
 	}
@@ -42,6 +46,15 @@ func NewSimpleResponse(res *myhttp.ResponseBase) *SimpleResponse {
 func NewZoResponse(res *myhttp.ResponseBase, zo d.Zo) *PostResponse {
 	z := ToResponse(zo)
 	return &PostResponse{ResponseBase: res, Zo: z}
+}
+
+func NewZosResponse(res *myhttp.ResponseBase, zos []d.Zo) *ZosResponse {
+	z := []Zo{}
+	for _, v := range zos {
+		z = append(z, ToResponse(v))
+
+	}
+	return &ZosResponse{ResponseBase: res, Zos: z}
 }
 
 func ToResponse(zo d.Zo) Zo {
