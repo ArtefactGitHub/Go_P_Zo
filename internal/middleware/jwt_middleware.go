@@ -3,7 +3,6 @@ package middleware
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -45,17 +44,17 @@ func (m *JwtMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	tokenHeader := req.Header.Get(myhttp.AuthTokenHeaderName)
 
 	if tokenHeader != "" {
-		log.Printf("tokenHeader: %s", tokenHeader)
+		//log.Printf("tokenHeader: %s", tokenHeader)
 
 		tokenString, err := getExtractedJwtToken(tokenHeader)
-		log.Printf("tokenString: %s", tokenHeader)
+		//log.Printf("tokenString: %s", tokenHeader)
 		if err != nil {
 			myhttp.WriteError(w, err, http.StatusUnauthorized, "")
 			return
 		}
 
 		token, err := parseJwtToken(tokenString, m.authKey)
-		log.Printf("token: %v", token)
+		//log.Printf("token: %v", token)
 		if err != nil {
 			myhttp.WriteError(w, err, http.StatusUnauthorized, "parse token failure")
 			return
@@ -77,7 +76,7 @@ func (m *JwtMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 func (m *JwtMiddleware) verifyToken(token *jwt.Token) (*myauth.AuthClaims, error) {
 	if claims, ok := token.Claims.(*myauth.AuthClaims); ok {
-		log.Printf("claims: %v", claims)
+		//log.Printf("claims: %v", claims)
 		if claims.Issuer != myauth.Issuer {
 			return nil, errors.New("invalid issuer")
 		}
