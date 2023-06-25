@@ -23,8 +23,6 @@ func NewUpdate(r domain.Repository) Update {
 }
 
 func (u update) Do(ctx context.Context, target domain.Zo) (domain.Zo, error) {
-	// TODO: zo.UserID検証
-
 	z, err := u.r.Find(ctx, target.Id)
 	if err != nil {
 		return domain.Zo{}, err

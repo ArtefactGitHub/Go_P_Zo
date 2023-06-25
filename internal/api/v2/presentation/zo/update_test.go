@@ -75,25 +75,6 @@ func Test_update_Update(t *testing.T) {
 			},
 			wantStatus: http.StatusOK,
 		},
-		// TODO: zo.UserID検証
-		//{
-		//	name: "異常系：存在しないユーザー指定の場合",
-		//	fields: fields{
-		//		ctx:    test_v2.WithTXAndTokenContext(context.Background(), DB, TX, dummyUserID, expiration),
-		//		update: u.NewUpdate(i.NewRepository()),
-		//	},
-		//	args: args{
-		//		body: postReqest,
-		//	},
-		//	want: PostResponse{
-		//		ResponseBase: &myhttp.ResponseBase{
-		//			StatusCode: http.StatusBadRequest,
-		//			Error:      nil,
-		//		},
-		//		Zo: Zo{},
-		//	},
-		//	wantStatus: http.StatusBadRequest,
-		//},
 		{
 			name: "異常系：トークンが存在しない場合",
 			fields: fields{

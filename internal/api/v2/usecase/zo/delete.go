@@ -23,8 +23,6 @@ func NewDelete(r domain.Repository) Delete {
 }
 
 func (u deleteUsecase) Do(ctx context.Context, id int) error {
-	// TODO: zo.UserID検証
-
 	z, err := u.r.Find(ctx, id)
 	if err != nil {
 		return err
