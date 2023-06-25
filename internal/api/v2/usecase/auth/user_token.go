@@ -33,27 +33,27 @@ func NewCreate(r auth.Repository, ur du.Repository) Create {
 func (u create) Do(ctx context.Context, data CreateTokenData) (auth.UserToken, error) {
 	user, err := u.ur.FindByIdentifier(ctx, data.Identifier, data.Secret)
 	if err != nil {
-		return auth.UserToken{}, err
+		return nil, err
 	}
 
 	ut, err := toCreateUserToken(ctx, user.Id)
 	if err != nil {
-		return auth.UserToken{}, err
+		return nil, err
 	}
 
-	_, err = u.r.Create(ctx, ut)
+	result, err := u.r.Create(ctx, ut)
 	if err != nil {
-		return auth.UserToken{}, err
+		return nil, err
 	}
 
-	return ut, nil
+	return result, nil
 }
 
 func toCreateUserToken(_ context.Context, userId int) (auth.UserToken, error) {
 	expiredAt := time.Now().Add(time.Minute * time.Duration(config.Cfg.Auth.UserTokenExpiration))
 	jwt, err := myauth.CreateUserTokenJwt(userId, expiredAt)
 	if err != nil {
-		return auth.UserToken{}, err
+		return nil, err
 	}
 
 	return auth.NewUserToken(

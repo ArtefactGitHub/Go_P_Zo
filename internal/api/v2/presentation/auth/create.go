@@ -37,7 +37,7 @@ func (h createToken) Create(w http.ResponseWriter, r *http.Request, _ common.Que
 		return
 	}
 
-	myhttp.Write(w, NewPostResponse(myhttp.NewResponse(nil, http.StatusOK, ""), &token), http.StatusOK)
+	myhttp.Write(w, NewPostResponse(myhttp.NewResponse(nil, http.StatusOK, ""), token), http.StatusOK)
 }
 
 // リクエスト情報からモデルの生成

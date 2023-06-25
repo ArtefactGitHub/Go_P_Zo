@@ -77,7 +77,7 @@ func (r *repository) Finds(ctx context.Context, userId int) ([]d.Zo, error) {
 	}(rows)
 
 	var z d.Zo
-	var result []d.Zo
+	result := []d.Zo{}
 	for rows.Next() {
 		err := rows.Scan(
 			&z.Id,
