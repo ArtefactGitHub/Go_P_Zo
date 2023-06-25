@@ -60,10 +60,11 @@ func Test_repository_Create(t *testing.T) {
 			defer func(tx *sql.Tx) {
 				_ = tx.Rollback()
 			}(tx)
-			ctx := mycontext.NewContext(context.Background(), infra.KeyTX, tx)
+			ctx := mycontext.NewContext(context.Background(), infra.KeyDB, tx)
+			ctx = mycontext.NewContext(ctx, infra.KeyTX, tx)
 
 			r := NewRepository()
-			gotID, err := r.Create(ctx, tt.args.token)
+			got, err := r.Create(ctx, tt.args.token)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Create() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -71,22 +72,8 @@ func Test_repository_Create(t *testing.T) {
 			if err != nil {
 				return
 			}
-			if gotID != tt.wantID {
-				t.Errorf("Create() value is mismatch: gotID=%d, tt.wantID=%d", gotID, tt.wantID)
-			}
 
-			got, err := r.Find(ctx, gotID)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Find() error = %v", err)
-				return
-			}
-			if err != nil {
-				return
-			}
-			opts := cmp.Options{
-				cmp.AllowUnexported(auth.UserToken{}),
-			}
-			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
+			if diff := cmp.Diff(got, tt.want, cmp.Options{cmp.AllowUnexported(tt.want)}); diff != "" {
 				t.Errorf("Find() value is mismatch: %s", diff)
 			}
 		})

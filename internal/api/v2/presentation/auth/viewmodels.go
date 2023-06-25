@@ -20,14 +20,14 @@ type (
 	}
 )
 
-func NewPostResponse(res *myhttp.ResponseBase, token *auth.UserToken) *PostResponse {
+func NewPostResponse(res *myhttp.ResponseBase, token auth.UserToken) *PostResponse {
 	if token == nil {
 		return &PostResponse{ResponseBase: res, UserToken: nil}
 	}
 	t := &UserToken{
-		UserId:    token.UserId,
-		Token:     token.Token,
-		ExpiredAt: token.ExpiredAt,
+		UserId:    token.UserID(),
+		Token:     token.Token(),
+		ExpiredAt: token.ExpiredAt(),
 	}
 	return &PostResponse{ResponseBase: res, UserToken: t}
 }

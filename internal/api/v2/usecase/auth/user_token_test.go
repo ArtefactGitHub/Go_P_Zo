@@ -106,12 +106,16 @@ func Test_create_Do(t *testing.T) {
 				return
 			}
 
-			if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreFields(auth.UserToken{}, "Token", "ExpiredAt", "CreatedAt", "UpdatedAt")); diff != "" {
+			opts := cmp.Options{
+				cmp.AllowUnexported(tt.want),
+				cmpopts.IgnoreFields(tt.want, "token", "expiredAt", "createdAt", "updatedAt"),
+			}
+			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("u.Do() value is mismatch: %s", diff)
 			}
 
 			// claimsの検証
-			claims, err := myauth.CreateUserTokenClaims(got.Token)
+			claims, err := myauth.CreateUserTokenClaims(got.Token())
 			if err != nil {
 				t.Errorf("CreateUserTokenClaims() error = %v", err)
 				return
@@ -127,7 +131,7 @@ func Test_create_Do(t *testing.T) {
 				t.Errorf("invalid expiresAt got = %v, want %v", claims.ExpiresAt, tt.wantExpiresAt.Unix())
 			}
 			if claims.UserId != tt.wantUserId {
-				t.Errorf("invalid UserId got = %v, want %v", claims.UserId, tt.wantUserId)
+				t.Errorf("invalid userID got = %v, want %v", claims.UserId, tt.wantUserId)
 			}
 		})
 	}
