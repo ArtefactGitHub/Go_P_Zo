@@ -25,8 +25,6 @@ func NewDelete(uc u.Delete) Delete {
 }
 
 func (h deleteUsecase) Delete(w http.ResponseWriter, r *http.Request, params common.QueryMap) {
-	// ユーザーIDの取得
-	// TODO: userID検証
 	_, err := util.GetUserIdFromToken(r.Context())
 	if err != nil {
 		e := util.Wrap(derr.Unauthorized, fmt.Sprintf("error with GetUserIdFromToken: %#v", err))

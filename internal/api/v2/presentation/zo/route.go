@@ -24,9 +24,9 @@ var (
 )
 
 var Routes = map[myrouter.RouteKey]func(w http.ResponseWriter, r *http.Request, ps common.QueryMap){
-	{Path: "/api/v2/zos", Method: http.MethodGet, NeedAuth: true}:           hfs.Finds,
-	{Path: "/api/v2/zos/:zo_id", Method: http.MethodGet, NeedAuth: true}:    hf.Find,
-	{Path: "/api/v2/zos", Method: http.MethodPost, NeedAuth: true}:          hc.Create,
-	{Path: "/api/v2/zos/:zo_id", Method: http.MethodPut, NeedAuth: true}:    hu.Update,
-	{Path: "/api/v2/zos/:zo_id", Method: http.MethodDelete, NeedAuth: true}: hd.Delete,
+	{Path: "/api/v2/me/zos", Method: http.MethodGet, NeedAuth: true}:           hfs.Finds,
+	{Path: "/api/v2/me/zos/:zo_id", Method: http.MethodGet, NeedAuth: true}:    hf.Find,
+	{Path: "/api/v2/me/zos", Method: http.MethodPost, NeedAuth: true}:          hc.Create,
+	{Path: "/api/v2/me/zos/:zo_id", Method: http.MethodPut, NeedAuth: true}:    hu.Update,
+	{Path: "/api/v2/me/zos/:zo_id", Method: http.MethodDelete, NeedAuth: true}: hd.Delete,
 }
