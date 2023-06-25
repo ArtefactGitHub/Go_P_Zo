@@ -16,10 +16,10 @@ func NewRepository() auth.Repository {
 	return &repository{}
 }
 
-func (r *repository) Create(ctx context.Context, m auth.UserToken) (int, error) {
+func (r *repository) Create(ctx context.Context, m auth.UserToken) (auth.UserToken, error) {
 	tx, err := infra.GetTX(ctx)
 	if err != nil {
-		return 0, err
+		return auth.UserToken{}, err
 	}
 
 	result, err := tx.ExecContext(ctx, `
@@ -32,16 +32,22 @@ func (r *repository) Create(ctx context.Context, m auth.UserToken) (int, error) 
 		&m.CreatedAt,
 		&m.UpdatedAt)
 	if err != nil {
-		return -1, err
+		return auth.UserToken{}, err
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		return -1, err
+		return auth.UserToken{}, err
 	}
 
-	m.Id = int(id)
-	return m.Id, nil
+	return auth.NewUserToken(
+			int(id),
+			m.UserId,
+			m.Token,
+			m.ExpiredAt,
+			m.CreatedAt,
+			m.UpdatedAt),
+		nil
 }
 
 func (r repository) Find(ctx context.Context, id int) (auth.UserToken, error) {

@@ -41,12 +41,12 @@ func (u create) Do(ctx context.Context, data CreateTokenData) (auth.UserToken, e
 		return auth.UserToken{}, err
 	}
 
-	_, err = u.r.Create(ctx, ut)
+	result, err := u.r.Create(ctx, ut)
 	if err != nil {
 		return auth.UserToken{}, err
 	}
 
-	return ut, nil
+	return result, nil
 }
 
 func toCreateUserToken(_ context.Context, userId int) (auth.UserToken, error) {
