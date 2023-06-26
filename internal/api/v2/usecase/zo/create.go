@@ -22,7 +22,7 @@ func NewCreate(r domain.Repository) Create {
 func (u create) Do(ctx context.Context, zo domain.Zo) (domain.Zo, error) {
 	_, err := u.r.Create(ctx, zo)
 	if err != nil {
-		return domain.Zo{}, err
+		return nil, err
 	}
 
 	return zo, nil

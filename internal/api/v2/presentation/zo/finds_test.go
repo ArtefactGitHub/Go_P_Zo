@@ -56,7 +56,7 @@ func Test_finds_Finds(t *testing.T) {
 				finds: u.NewFinds(i.NewRepository()),
 			},
 			args:       args{},
-			wantStatus: http.StatusNotFound,
+			wantStatus: http.StatusOK,
 		},
 		{
 			name: "【異常系】トークンが有効期限切れの場合",

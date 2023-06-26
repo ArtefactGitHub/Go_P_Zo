@@ -193,8 +193,12 @@ func Test_repository_Find(t *testing.T) {
 				return
 			}
 
+			opts := cmp.Options{
+				cmp.AllowUnexported(tt.want),
+				cmpopts.IgnoreFields(tt.want, "createdAt", "updatedAt"),
+			}
 			if err == nil {
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
+				if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 					t.Errorf("Find() mismatch (-want +got):\n%s", diff)
 				}
 			}
@@ -228,7 +232,11 @@ func Test_repository_FindAll(t *testing.T) {
 				return
 			}
 
-			if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
+			opts := cmp.Options{
+				cmp.AllowUnexported(findZo),
+				cmpopts.IgnoreFields(findZo, "createdAt", "updatedAt"),
+			}
+			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("Find() mismatch (-want +got):\n%s", diff)
 			}
 		})
@@ -263,7 +271,11 @@ func Test_repository_Finds(t *testing.T) {
 				return
 			}
 
-			if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
+			opts := cmp.Options{
+				cmp.AllowUnexported(findZo),
+				cmpopts.IgnoreFields(findZo, "createdAt", "updatedAt"),
+			}
+			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("Find() mismatch (-want +got):\n%s", diff)
 			}
 		})

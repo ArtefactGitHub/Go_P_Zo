@@ -22,7 +22,7 @@ func NewFind(r domain.Repository) Find {
 func (u find) Do(ctx context.Context, id int) (domain.Zo, error) {
 	v, err := u.r.Find(ctx, id)
 	if err != nil {
-		return domain.Zo{}, err
+		return nil, err
 	}
 
 	return v, nil

@@ -23,33 +23,33 @@ func NewUpdate(r domain.Repository) Update {
 }
 
 func (u update) Do(ctx context.Context, target domain.Zo) (domain.Zo, error) {
-	z, err := u.r.Find(ctx, target.Id)
+	z, err := u.r.Find(ctx, target.ID())
 	if err != nil {
-		return domain.Zo{}, err
+		return nil, err
 	}
-	if z.UserId != target.UserId {
+	if z.UserID() != target.UserID() {
 		e := util.Wrap(derr.BadRequest, fmt.Sprintf("can not access by userID"))
-		return domain.Zo{}, e
+		return nil, e
 	}
 
 	updateModel := toUpdateModel(z, target)
 	err = u.r.Update(ctx, updateModel)
 	if err != nil {
-		return domain.Zo{}, err
+		return nil, err
 	}
 
 	return updateModel, nil
 }
 
 func toUpdateModel(z domain.Zo, target domain.Zo) domain.Zo {
-	return domain.Zo{
-		Id:              z.Id,
-		AchievementDate: target.AchievementDate,
-		Exp:             target.Exp,
-		CategoryId:      target.CategoryId,
-		Message:         target.Message,
-		CreatedAt:       z.CreatedAt,
-		UpdatedAt:       target.UpdatedAt,
-		UserId:          z.UserId,
-	}
+	return domain.NewZo(
+		z.ID(),
+		target.AchievementDate(),
+		target.Exp(),
+		target.CategoryID(),
+		target.Message(),
+		z.CreatedAt(),
+		target.UpdatedAt(),
+		z.UserID(),
+	)
 }

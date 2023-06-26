@@ -27,7 +27,7 @@ func (u deleteUsecase) Do(ctx context.Context, id int) error {
 	if err != nil {
 		return err
 	}
-	if z.UserId != id {
+	if z.UserID() != id {
 		e := util.Wrap(derr.BadRequest, fmt.Sprintf("can not access by userID"))
 		return e
 	}

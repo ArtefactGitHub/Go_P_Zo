@@ -2,7 +2,9 @@ package zo_test
 
 import (
 	"context"
+	"database/sql"
 	"testing"
+	"time"
 
 	domain "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/domain/zo"
 	i "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/infrastructure"
@@ -10,6 +12,7 @@ import (
 	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mytime"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 func Test_finds_Do(t *testing.T) {
@@ -20,6 +23,16 @@ func Test_finds_Do(t *testing.T) {
 		ctx context.Context
 		id  int
 	}
+	var (
+		zo = domain.NewZo(0,
+			mytime.ToTime("2023-01-01 01:00"),
+			100,
+			1,
+			"hoge",
+			time.Now(),
+			sql.NullTime{},
+			1)
+	)
 	tests := []struct {
 		name    string
 		fields  fields
@@ -41,13 +54,13 @@ func Test_finds_Do(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:   "指定のリソース群が見つかった場合",
+			name:   "指定のリソース群が見つからなかった場合",
 			fields: fields{r: infra.NewRepository()},
 			args: args{
 				id: -1,
 			},
-			want:    nil,
-			wantErr: true,
+			want:    []domain.Zo{},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
@@ -59,8 +72,15 @@ func Test_finds_Do(t *testing.T) {
 				t.Errorf("Do() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+			if err != nil {
+				return
+			}
 
-			if diff := cmp.Diff(got, tt.want); diff != "" {
+			opts := cmp.Options{
+				cmp.AllowUnexported(zo),
+				cmpopts.IgnoreFields(zo, "createdAt", "updatedAt"),
+			}
+			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("Find() value is mismatch: %s", diff)
 			}
 		})

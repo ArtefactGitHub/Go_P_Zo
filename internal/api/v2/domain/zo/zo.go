@@ -5,15 +5,26 @@ import (
 	"time"
 )
 
-type Zo struct {
-	Id              int          `json:"id"`
-	AchievementDate time.Time    `json:"achievementdate"`
-	Exp             int          `json:"exp"`
-	CategoryId      int          `json:"category_id"`
-	Message         string       `json:"message"`
-	CreatedAt       time.Time    `json:"createdat"`
-	UpdatedAt       sql.NullTime `json:"updatedat"`
-	UserId          int          `json:"user_id"`
+type Zo interface {
+	ID() int
+	AchievementDate() time.Time
+	Exp() int
+	CategoryID() int
+	Message() string
+	CreatedAt() time.Time
+	UpdatedAt() sql.NullTime
+	UserID() int
+}
+
+type zo struct {
+	id              int
+	achievementDate time.Time
+	exp             int
+	categoryID      int
+	message         string
+	createdAt       time.Time
+	updatedAt       sql.NullTime
+	userID          int
 }
 
 func NewZo(
@@ -26,13 +37,38 @@ func NewZo(
 	updatedAt sql.NullTime,
 	userId int,
 ) Zo {
-	return Zo{
-		Id:              id,
-		AchievementDate: achievementDate,
-		Exp:             exp,
-		CategoryId:      categoryId,
-		Message:         message,
-		CreatedAt:       createdAt,
-		UpdatedAt:       updatedAt,
-		UserId:          userId}
+	return zo{
+		id:              id,
+		achievementDate: achievementDate,
+		exp:             exp,
+		categoryID:      categoryId,
+		message:         message,
+		createdAt:       createdAt,
+		updatedAt:       updatedAt,
+		userID:          userId}
+}
+
+func (v zo) ID() int {
+	return v.id
+}
+func (v zo) AchievementDate() time.Time {
+	return v.achievementDate
+}
+func (v zo) Exp() int {
+	return v.exp
+}
+func (v zo) CategoryID() int {
+	return v.categoryID
+}
+func (v zo) Message() string {
+	return v.message
+}
+func (v zo) CreatedAt() time.Time {
+	return v.createdAt
+}
+func (v zo) UpdatedAt() sql.NullTime {
+	return v.updatedAt
+}
+func (v zo) UserID() int {
+	return v.userID
 }

@@ -59,13 +59,13 @@ func NewZosResponse(res *myhttp.ResponseBase, zos []d.Zo) *ZosResponse {
 
 func ToResponse(zo d.Zo) Zo {
 	return Zo{
-		Id:              zo.Id,
-		AchievementDate: zo.AchievementDate,
-		Exp:             zo.Exp,
-		CategoryId:      zo.CategoryId,
-		Message:         zo.Message,
-		CreatedAt:       zo.CreatedAt,
-		UpdatedAt:       zo.UpdatedAt,
-		UserId:          zo.UserId,
+		Id:              zo.ID(),
+		AchievementDate: zo.AchievementDate(),
+		Exp:             zo.Exp(),
+		CategoryId:      zo.CategoryID(),
+		Message:         zo.Message(),
+		CreatedAt:       zo.CreatedAt(),
+		UpdatedAt:       zo.UpdatedAt(),
+		UserId:          zo.UserID(),
 	}
 }

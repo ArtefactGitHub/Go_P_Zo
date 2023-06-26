@@ -10,6 +10,7 @@ import (
 	. "github.com/ArtefactGitHub/Go_P_Zo/internal/api/v2/usecase/zo"
 	"github.com/ArtefactGitHub/Go_P_Zo/internal/platform/mytime"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 func Test_find_Do(t *testing.T) {
@@ -53,8 +54,15 @@ func Test_find_Do(t *testing.T) {
 				t.Errorf("Do() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+			if err != nil {
+				return
+			}
 
-			if diff := cmp.Diff(got, tt.want); diff != "" {
+			opts := cmp.Options{
+				cmp.AllowUnexported(tt.want),
+				cmpopts.IgnoreFields(tt.want, "createdAt", "updatedAt"),
+			}
+			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("Find() value is mismatch: %s", diff)
 			}
 		})

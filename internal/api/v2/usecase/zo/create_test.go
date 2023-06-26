@@ -63,7 +63,11 @@ func Test_create_Do(t *testing.T) {
 				return
 			}
 
-			if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreFields(d.Zo{}, "CreatedAt", "UpdatedAt")); diff != "" {
+			opts := cmp.Options{
+				cmp.AllowUnexported(tt.want),
+				cmpopts.IgnoreFields(tt.want, "createdAt", "updatedAt"),
+			}
+			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("Find() value is mismatch: %s", diff)
 			}
 		})

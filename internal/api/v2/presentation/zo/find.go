@@ -49,8 +49,8 @@ func (h find) Find(w http.ResponseWriter, r *http.Request, params common.QueryMa
 	}
 
 	// 非リソース所有者の場合
-	if userId != zo.UserId {
-		e := util.Wrap(derr.Unauthorized, fmt.Sprintf("difference userID. request: %d, resource: %d", userId, zo.UserId))
+	if userId != zo.UserID() {
+		e := util.Wrap(derr.Unauthorized, fmt.Sprintf("difference userID. request: %d, resource: %d", userId, zo.UserID()))
 		util.HandleError(w, e)
 		return
 	}

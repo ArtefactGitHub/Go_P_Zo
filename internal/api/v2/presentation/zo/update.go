@@ -64,12 +64,12 @@ func (h update) Update(w http.ResponseWriter, r *http.Request, params common.Que
 func contentToUpdateModel(r *http.Request, id int, userID int) (zo.Zo, error) {
 	body := make([]byte, r.ContentLength)
 	if _, err := r.Body.Read(body); err != nil && err != io.EOF {
-		return zo.Zo{}, err
+		return nil, err
 	}
 	var req PostRequest
 	err := json.Unmarshal(body, &req)
 	if err != nil {
-		return zo.Zo{}, err
+		return nil, err
 	}
 
 	return zo.NewZo(
