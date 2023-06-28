@@ -12,3 +12,7 @@ type Repository interface {
 	Update(ctx context.Context, z Zo) error
 	Delete(ctx context.Context, id int) error
 }
+type CategoryRepository interface {
+	Finds(ctx context.Context, userId int) ([]Category, error)
+	Create(ctx context.Context, v Category) (int, error)
+}

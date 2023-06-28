@@ -10,6 +10,7 @@ type Zo interface {
 	AchievementDate() time.Time
 	Exp() int
 	CategoryID() int
+	Category() Category
 	Message() string
 	CreatedAt() time.Time
 	UpdatedAt() sql.NullTime
@@ -21,6 +22,7 @@ type zo struct {
 	achievementDate time.Time
 	exp             int
 	categoryID      int
+	category        Category
 	message         string
 	createdAt       time.Time
 	updatedAt       sql.NullTime
@@ -37,7 +39,7 @@ func NewZo(
 	updatedAt sql.NullTime,
 	userId int,
 ) Zo {
-	return zo{
+	return &zo{
 		id:              id,
 		achievementDate: achievementDate,
 		exp:             exp,
@@ -48,27 +50,30 @@ func NewZo(
 		userID:          userId}
 }
 
-func (v zo) ID() int {
+func (v *zo) ID() int {
 	return v.id
 }
-func (v zo) AchievementDate() time.Time {
+func (v *zo) AchievementDate() time.Time {
 	return v.achievementDate
 }
-func (v zo) Exp() int {
+func (v *zo) Exp() int {
 	return v.exp
 }
-func (v zo) CategoryID() int {
+func (v *zo) CategoryID() int {
 	return v.categoryID
 }
-func (v zo) Message() string {
+func (v *zo) Category() Category {
+	return v.category
+}
+func (v *zo) Message() string {
 	return v.message
 }
-func (v zo) CreatedAt() time.Time {
+func (v *zo) CreatedAt() time.Time {
 	return v.createdAt
 }
-func (v zo) UpdatedAt() sql.NullTime {
+func (v *zo) UpdatedAt() sql.NullTime {
 	return v.updatedAt
 }
-func (v zo) UserID() int {
+func (v *zo) UserID() int {
 	return v.userID
 }
